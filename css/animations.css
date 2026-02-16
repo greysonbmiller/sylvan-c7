@@ -1,0 +1,260 @@
+/* =========================================
+   Sylvan C7 — Animations & Scroll Reveals
+   ========================================= */
+
+/* ---- Base Reveal States ---- */
+
+.reveal {
+  opacity: 0;
+  transition:
+    opacity var(--duration-reveal) var(--ease-out),
+    transform var(--duration-reveal) var(--ease-out);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none !important;
+}
+
+/* ---- Reveal Variants ---- */
+
+.reveal--up {
+  transform: translateY(40px);
+}
+
+.reveal--down {
+  transform: translateY(-40px);
+}
+
+.reveal--left {
+  transform: translateX(-40px);
+}
+
+.reveal--right {
+  transform: translateX(40px);
+}
+
+.reveal--scale {
+  transform: scale(0.92);
+}
+
+.reveal--fade {
+  /* Just opacity, no transform */
+  transform: none;
+}
+
+/* ---- Stagger Delays ---- */
+
+.stagger-1 { transition-delay: 100ms; }
+.stagger-2 { transition-delay: 200ms; }
+.stagger-3 { transition-delay: 300ms; }
+.stagger-4 { transition-delay: 400ms; }
+.stagger-5 { transition-delay: 500ms; }
+.stagger-6 { transition-delay: 600ms; }
+
+/* ---- Hero Text Reveal ---- */
+
+.hero-line {
+  overflow: hidden;
+  display: block;
+}
+
+.hero-line__inner {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 0.9s var(--ease-out);
+}
+
+.hero-line.visible .hero-line__inner {
+  transform: translateY(0);
+}
+
+.hero-line:nth-child(1) .hero-line__inner { transition-delay: 200ms; }
+.hero-line:nth-child(2) .hero-line__inner { transition-delay: 350ms; }
+.hero-line:nth-child(3) .hero-line__inner { transition-delay: 500ms; }
+
+/* ---- Keyframes ---- */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--accent-glow-strong);
+  }
+}
+
+@keyframes lineGrow {
+  from { width: 0; }
+  to { width: 60px; }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ---- Hero Subtitle Fade ---- */
+
+.hero-subtitle {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: slideUp 0.8s var(--ease-out) 0.9s forwards;
+}
+
+.hero-cta {
+  opacity: 0;
+  animation: fadeIn 0.6s var(--ease-out) 1.3s forwards;
+}
+
+/* ---- Animated Accent Line ---- */
+
+.accent-line {
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.8s var(--ease-out);
+}
+
+.accent-line.visible {
+  width: 60px;
+}
+
+/* ---- Loading Spinner ---- */
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-subtle);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: rotate 0.8s linear infinite;
+}
+
+/* ---- Scroll Progress Bar ---- */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: calc(var(--z-nav) + 1);
+  width: 0%;
+  transition: width 50ms linear;
+}
+
+/* ---- Magnetic Button Wrapper ---- */
+
+.magnetic-wrap {
+  display: inline-block;
+  position: relative;
+}
+
+/* ---- Card Glow Effect ---- */
+
+.card--glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--accent-glow), transparent, var(--accent-glow));
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+  z-index: -1;
+}
+
+.card--glow:hover::before {
+  opacity: 1;
+}
+
+/* ---- Text Split Animation (for about page) ---- */
+
+.split-reveal span {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: all 0.6s var(--ease-out);
+}
+
+.split-reveal.visible span {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ---- Count-up Numbers ---- */
+
+.count-up {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Page Transition Overlay ---- */
+
+.page-transition {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-deep);
+  z-index: 10000;
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+/* ---- Reduced Motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-line__inner,
+  .hero-subtitle,
+  .hero-cta {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .accent-line {
+    width: 60px !important;
+  }
+}

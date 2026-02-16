@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore our portfolio of digital infrastructure, cloud architecture, web development, and technology strategy projects. See how Sylvan C7 delivers measurable results.">
+  <title>Work — Sylvan C7</title>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/pages.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+      <div class="nav__links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="services.html" class="nav__link">Services</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="work.html" class="nav__link active">Work</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Start a Project</a>
+      </div>
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="navOverlay"></div>
+  <div class="nav__mobile" id="navMobile">
+    <a href="index.html" class="nav__mobile-link">Home</a>
+    <a href="services.html" class="nav__mobile-link">Services</a>
+    <a href="about.html" class="nav__mobile-link">About</a>
+    <a href="work.html" class="nav__mobile-link active">Work</a>
+    <a href="contact.html" class="nav__mobile-link">Contact</a>
+    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Start a Project</a>
+  </div>
+
+  <!-- Page Header -->
+  <section class="section page-header">
+    <div class="container">
+      <span class="label reveal reveal--up">Portfolio</span>
+      <h1 class="display-lg reveal reveal--up stagger-1">Our Work</h1>
+      <p class="text-lg reveal reveal--up stagger-2" style="max-width: 55ch; margin-top: var(--space-6);">
+        A track record of delivering digital infrastructure, applications, and strategy
+        that drives real business outcomes. Every project here started with a problem worth solving.
+      </p>
+    </div>
+  </section>
+
+  <!-- Filter Tags -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="work-filters flex flex--gap-sm flex--wrap reveal reveal--up">
+        <button class="tag active" data-filter="all">All</button>
+        <button class="tag" data-filter="infrastructure">Infrastructure</button>
+        <button class="tag" data-filter="web">Web</button>
+        <button class="tag" data-filter="cloud">Cloud</button>
+        <button class="tag" data-filter="data">Data</button>
+        <button class="tag" data-filter="strategy">Strategy</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Grid -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="work-grid">
+
+        <!-- TEMPLATE: Replace with real project -->
+        <div class="project-card project-card--lg reveal reveal--up stagger-1" data-category="infrastructure cloud">
+          <div class="project-card__placeholder">
+            <span>Project Image</span>
+          </div>
+          <div class="project-card__overlay">
+            <div class="project-card__tags">
+              <span class="tag">Infrastructure</span>
+              <span class="tag">Cloud</span>
+            </div>
+            <h3 class="project-card__title">Project Name</h3>
+            <p class="project-card__desc">Enterprise-grade hybrid cloud migration for a national logistics provider, consolidating 12 legacy data centers into a unified multi-cloud architecture.</p>
+          </div>
+        </div>
+
+        <!-- TEMPLATE: Replace with real project -->
+        <div class="project-card reveal reveal--up stagger-2" data-category="web">
+          <div class="project-card__placeholder">
+            <span>Project Image</span>
+          </div>
+          <div class="project-card__overlay">
+            <div class="project-card__tags">
+              <span class="tag">Web</span>
+            </div>
+            <h3 class="project-card__title">Project Name</h3>
+            <p class="project-card__desc">High-performance e-commerce platform rebuild handling 50K+ concurrent users during peak traffic events.</p>
+          </div>
+        </div>
+
+        <!-- TEMPLATE: Replace with real project -->
+        <div class="project-card reveal reveal--up stagger-3" data-category="data">
+          <div class="project-card__placeholder">
+            <span>Project Image</span>
+          </div>
+          <div class="project-card__overlay">
+            <div class="project-card__tags">
+              <span class="tag">Data</span>
+            </div>
+            <h3 class="project-card__title">Project Name</h3>
+            <p class="project-card__desc">Real-time analytics pipeline processing 2M+ events per day for a financial services firm's fraud detection system.</p>
+          </div>
+        </div>
+
+        <!-- TEMPLATE: Replace with real project -->
+        <div class="project-card reveal reveal--up stagger-1" data-category="security">
+          <div class="project-card__placeholder">
+            <span>Project Image</span>
+          </div>
+          <div class="project-card__overlay">
+            <div class="project-card__tags">
+              <span class="tag">Security</span>
+            </div>
+            <h3 class="project-card__title">Project Name</h3>
+            <p class="project-card__desc">Zero-trust security architecture and SOC 2 Type II compliance program for a healthcare SaaS platform.</p>
+          </div>
+        </div>
+
+        <!-- TEMPLATE: Replace with real project -->
+        <div class="project-card reveal reveal--up stagger-2" data-category="strategy">
+          <div class="project-card__placeholder">
+            <span>Project Image</span>
+          </div>
+          <div class="project-card__overlay">
+            <div class="project-card__tags">
+              <span class="tag">Strategy</span>
+            </div>
+            <h3 class="project-card__title">Project Name</h3>
+            <p class="project-card__desc">Digital transformation roadmap and technology audit for a mid-market manufacturing company entering direct-to-consumer sales.</p>
+          </div>
+        </div>
+
+        <!-- TEMPLATE: Replace with real project -->
+        <div class="project-card project-card--lg reveal reveal--up stagger-3" data-category="cloud web">
+          <div class="project-card__placeholder">
+            <span>Project Image</span>
+          </div>
+          <div class="project-card__overlay">
+            <div class="project-card__tags">
+              <span class="tag">Cloud</span>
+              <span class="tag">Web</span>
+            </div>
+            <h3 class="project-card__title">Project Name</h3>
+            <p class="project-card__desc">Serverless application platform and developer portal powering a network of 200+ microservices for a global media company.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Case Study (Expanded Project Detail) -->
+  <!-- TEMPLATE: Replace with real case study -->
+  <section class="section section--alt" id="caseStudy">
+    <div class="container">
+      <span class="label reveal reveal--up">Case Study</span>
+      <h2 class="reveal reveal--up stagger-1" style="margin-top: var(--space-3);">Featured Project</h2>
+
+      <div class="case-study reveal reveal--up stagger-2" style="margin-top: var(--space-10);">
+        <div class="case-study__header">
+          <!-- TEMPLATE: Replace with real project details -->
+          <h3 class="display-sm">Hybrid Cloud Migration &amp; Infrastructure Modernization</h3>
+          <p class="text-lg" style="margin-top: var(--space-4); opacity: 0.7;">
+            Client: <strong>[Client Name]</strong> &mdash; National Logistics Provider
+          </p>
+        </div>
+
+        <div class="case-study__body" style="margin-top: var(--space-10); display: grid; grid-template-columns: 1fr; gap: var(--space-10);">
+
+          <div>
+            <h4 style="margin-bottom: var(--space-4);">The Challenge</h4>
+            <p class="text-md" style="max-width: 65ch;">
+              <!-- TEMPLATE: Replace with real challenge description -->
+              The client operated 12 aging data centers across multiple regions, each running siloed applications with inconsistent security policies. Downtime events were costing an estimated $2.4M annually, and the infrastructure couldn't scale to meet seasonal demand spikes. They needed a unified architecture that could handle 10x traffic growth without proportional cost increases.
+            </p>
+          </div>
+
+          <div>
+            <h4 style="margin-bottom: var(--space-4);">The Solution</h4>
+            <p class="text-md" style="max-width: 65ch;">
+              <!-- TEMPLATE: Replace with real solution description -->
+              We designed and executed a phased migration to a hybrid multi-cloud architecture spanning AWS and Azure, with on-premise edge nodes for latency-sensitive operations. The project included containerization of 85+ legacy applications, implementation of infrastructure-as-code across all environments, and a custom observability stack providing real-time visibility into system health and cost allocation.
+            </p>
+          </div>
+
+          <div>
+            <h4 style="margin-bottom: var(--space-4);">The Results</h4>
+            <!-- TEMPLATE: Replace with real metrics -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6); margin-top: var(--space-4);">
+              <div>
+                <span class="display-sm accent">[X] months</span>
+                <p style="margin-top: var(--space-2); opacity: 0.7;">Migration timeline</p>
+              </div>
+              <div>
+                <span class="display-sm accent">[X]%</span>
+                <p style="margin-top: var(--space-2); opacity: 0.7;">Infrastructure cost reduction</p>
+              </div>
+              <div>
+                <span class="display-sm accent">[X]%</span>
+                <p style="margin-top: var(--space-2); opacity: 0.7;">Uptime improvement</p>
+              </div>
+              <div>
+                <span class="display-sm accent">[X]x</span>
+                <p style="margin-top: var(--space-2); opacity: 0.7;">Deployment frequency increase</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END TEMPLATE: Case Study -->
+
+  <!-- CTA Section -->
+  <section class="section cta-section">
+    <div class="container" style="text-align: center;">
+      <span class="label mb-6 reveal reveal--up">Your Project Next</span>
+      <h2 class="display-lg reveal reveal--up stagger-1">Let's build something worth showing off.</h2>
+      <p class="text-lg reveal reveal--up stagger-2" style="margin: var(--space-6) auto 0; max-width: 45ch;">
+        Every project in our portfolio started with a single conversation.
+        Ready to add yours?
+      </p>
+      <div class="reveal reveal--up stagger-3" style="margin-top: var(--space-10);">
+        <div class="magnetic-wrap">
+          <a href="contact.html" class="btn btn--primary btn--lg">Start a Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+          <p>Digital infrastructure and technology services built for businesses that refuse to stand still.</p>
+        </div>
+        <div>
+          <h4 class="footer__heading">Navigate</h4>
+          <a href="index.html" class="footer__link">Home</a>
+          <a href="services.html" class="footer__link">Services</a>
+          <a href="about.html" class="footer__link">About</a>
+          <a href="work.html" class="footer__link">Work</a>
+          <a href="contact.html" class="footer__link">Contact</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Services</h4>
+          <a href="services.html" class="footer__link">Infrastructure</a>
+          <a href="services.html" class="footer__link">Web & Apps</a>
+          <a href="services.html" class="footer__link">Cloud</a>
+          <a href="services.html" class="footer__link">Data</a>
+          <a href="services.html" class="footer__link">Security</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Connect</h4>
+          <!-- TEMPLATE: Replace with real contact info -->
+          <a href="mailto:hello@sylvanc7.com" class="footer__link">hello@sylvanc7.com</a>
+          <a href="tel:+15551234567" class="footer__link">+1 (555) 123-4567</a>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
+        <div class="footer__socials">
+          <a href="#" class="footer__social" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" class="footer__social" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+          <a href="#" class="footer__social" aria-label="Twitter/X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/animations.js"></script>
+  <script src="js/interactions.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

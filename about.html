@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About Sylvan C7 — Where the organic meets the digital. We build resilient, adaptive technology infrastructure rooted in natural growth patterns.">
+  <title>About — Sylvan C7</title>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/pages.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
+
+  <style>
+    /* ---- About Page Specific Styles ---- */
+
+    .about-philosophy {
+      text-align: center;
+      max-width: 52ch;
+      margin: 0 auto;
+    }
+
+    /* Brand Story */
+    .brand-story {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: var(--space-16);
+      align-items: center;
+    }
+
+    .brand-story__text p {
+      max-width: 55ch;
+    }
+
+    .brand-story__text p + p {
+      margin-top: var(--space-6);
+    }
+
+    .brand-story__visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .brand-story__visual svg {
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+    }
+
+    /* Constellation animation */
+    .constellation-node {
+      transition: r 0.4s var(--ease-out);
+    }
+
+    .brand-story__visual:hover .constellation-node {
+      r: 6;
+    }
+
+    .constellation-line {
+      stroke-dasharray: 4 4;
+      animation: constellationPulse 4s ease-in-out infinite;
+    }
+
+    .constellation-line:nth-child(odd) {
+      animation-delay: -2s;
+    }
+
+    @keyframes constellationPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    .constellation-glow {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .constellation-glow:nth-child(2) {
+      animation-delay: -2s;
+    }
+
+    .constellation-glow:nth-child(3) {
+      animation-delay: -4s;
+    }
+
+    /* Values Section — Distinctive Layouts */
+    .values-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: var(--space-8);
+    }
+
+    .value-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      transition: all var(--duration-normal) var(--ease-out);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .value-card:hover {
+      border-color: var(--border-medium);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .value-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, var(--accent-glow), transparent, var(--accent-glow));
+      opacity: 0;
+      transition: opacity var(--duration-normal) var(--ease-out);
+      z-index: 0;
+    }
+
+    .value-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Value 1 — Full width, horizontal layout */
+    .value-card--wide {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-10);
+      align-items: center;
+      padding: var(--space-10) var(--space-12);
+    }
+
+    .value-card--wide .value-card__number {
+      font-family: var(--font-display);
+      font-size: var(--text-7xl);
+      font-weight: 800;
+      color: var(--accent);
+      opacity: 0.15;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .value-card--wide .value-card__content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .value-card--wide .value-card__title {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    .value-card--wide .value-card__text {
+      color: var(--text-secondary);
+      font-size: var(--text-base);
+      line-height: var(--leading-loose);
+      max-width: 60ch;
+    }
+
+    /* Value 2 — Tall card, top accent bar */
+    .value-card--tall {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .value-card--tall .value-card__accent-bar {
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .value-card--tall .value-card__inner {
+      padding: var(--space-8);
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .value-card--tall .value-card__number {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: var(--tracking-widest);
+      margin-bottom: var(--space-6);
+    }
+
+    .value-card--tall .value-card__title {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+
+    .value-card--tall .value-card__text {
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      line-height: var(--leading-loose);
+    }
+
+    /* Value 3 — Compact with side stripe */
+    .value-card--stripe {
+      display: grid;
+      grid-template-columns: 4px 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    .value-card--stripe .value-card__side-stripe {
+      background: var(--accent);
+      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    }
+
+    .value-card--stripe .value-card__inner {
+      padding: var(--space-8);
+      position: relative;
+      z-index: 1;
+    }
+
+    .value-card--stripe .value-card__number {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: var(--tracking-widest);
+      margin-bottom: var(--space-6);
+    }
+
+    .value-card--stripe .value-card__title {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+
+    .value-card--stripe .value-card__text {
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      line-height: var(--leading-loose);
+    }
+
+    /* Value 4 — Bottom-aligned, large number background */
+    .value-card--bold {
+      grid-column: 1 / -1;
+      padding: var(--space-10) var(--space-12);
+      position: relative;
+      text-align: center;
+    }
+
+    .value-card--bold .value-card__bg-number {
+      font-family: var(--font-display);
+      font-size: 8rem;
+      font-weight: 800;
+      color: var(--accent);
+      opacity: 0.05;
+      position: absolute;
+      right: var(--space-12);
+      top: 50%;
+      transform: translateY(-50%);
+      line-height: 1;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .value-card--bold .value-card__content {
+      position: relative;
+      z-index: 1;
+      max-width: 50ch;
+      margin: 0 auto;
+    }
+
+    .value-card--bold .value-card__number {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: var(--tracking-widest);
+      margin-bottom: var(--space-4);
+    }
+
+    .value-card--bold .value-card__title {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    .value-card--bold .value-card__text {
+      color: var(--text-secondary);
+      font-size: var(--text-base);
+      line-height: var(--leading-loose);
+    }
+
+    /* Stats Section */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-8);
+      padding: var(--space-12) 0;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .stat__suffix {
+      font-size: 0.6em;
+      opacity: 0.7;
+    }
+
+    /* Team Section */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-8);
+    }
+
+    .team-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8);
+      text-align: center;
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+
+    .team-card:hover {
+      border-color: var(--border-medium);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .team-card__photo {
+      width: 96px;
+      height: 96px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--bg-surface), var(--border-subtle));
+      margin: 0 auto var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-card__photo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 2px solid var(--border-subtle);
+      transition: border-color var(--duration-normal) var(--ease-out);
+    }
+
+    .team-card:hover .team-card__photo::after {
+      border-color: var(--accent);
+    }
+
+    .team-card__photo-placeholder {
+      font-family: var(--font-heading);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      letter-spacing: var(--tracking-wide);
+    }
+
+    .team-card__name {
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-1);
+    }
+
+    .team-card__role {
+      font-family: var(--font-heading);
+      font-size: var(--text-sm);
+      color: var(--accent);
+      margin-bottom: var(--space-4);
+    }
+
+    .team-card__bio {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-loose);
+      max-width: 30ch;
+      margin: 0 auto;
+    }
+
+    /* ---- Responsive ---- */
+
+    @media (max-width: 1024px) {
+      .brand-story {
+        gap: var(--space-10);
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .value-card--bold .value-card__bg-number {
+        font-size: 6rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .brand-story {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+      }
+
+      .brand-story__visual {
+        order: -1;
+      }
+
+      .brand-story__visual svg {
+        max-width: 300px;
+      }
+
+      .values-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .value-card--wide {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+        padding: var(--space-8);
+      }
+
+      .value-card--bold {
+        padding: var(--space-8);
+      }
+
+      .value-card--bold .value-card__bg-number {
+        font-size: 4rem;
+        right: var(--space-4);
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-6);
+      }
+
+      .team-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+      <div class="nav__links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="services.html" class="nav__link">Services</a>
+        <a href="about.html" class="nav__link active">About</a>
+        <a href="work.html" class="nav__link">Work</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Start a Project</a>
+      </div>
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="navOverlay"></div>
+  <div class="nav__mobile" id="navMobile">
+    <a href="index.html" class="nav__mobile-link">Home</a>
+    <a href="services.html" class="nav__mobile-link">Services</a>
+    <a href="about.html" class="nav__mobile-link active">About</a>
+    <a href="work.html" class="nav__mobile-link">Work</a>
+    <a href="contact.html" class="nav__mobile-link">Contact</a>
+    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Start a Project</a>
+  </div>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="container">
+      <span class="label reveal reveal--up">Who We Are</span>
+      <h1 class="reveal reveal--up stagger-1" style="margin-top: var(--space-4);">About</h1>
+    </div>
+  </header>
+
+  <!-- Philosophy Statement -->
+  <section class="section section--sm">
+    <div class="container">
+      <div class="about-philosophy reveal reveal--up">
+        <p class="display-lg">
+          Technology should work like <span class="accent">nature</span> — resilient, adaptive, and quietly powerful.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand Story -->
+  <section class="section" id="brandStory">
+    <div class="container">
+      <div class="brand-story">
+        <div class="brand-story__text">
+          <span class="label mb-6 reveal reveal--up">Our Story</span>
+          <h2 class="reveal reveal--up stagger-1" style="margin-top: var(--space-4); margin-bottom: var(--space-8);">Where the forest<br>meets the code</h2>
+          <p class="text-lg reveal reveal--up stagger-2">
+            Sylvan C7 is named for the intersection of the organic and the digital. <strong style="color: var(--text-primary);">Sylvan</strong> — of the forest, evoking resilience, interconnection, and natural growth patterns. <strong style="color: var(--text-primary);">C7</strong> — the precision of code, the seventh iteration, always refining.
+          </p>
+          <p class="reveal reveal--up stagger-3">
+            We were founded on a simple belief: the best technology mirrors nature. A forest doesn't fight its environment — it adapts, connects, and endures. Root systems share resources silently. Canopies optimize for light without a single line of code. Every layer serves a purpose.
+          </p>
+          <p class="reveal reveal--up stagger-4">
+            That's the kind of infrastructure we build. Resilient, adaptive, and quietly powerful. We create the digital backbone that lets businesses focus on what they do best — growing, serving, creating — while the systems beneath them hold steady through whatever comes next.
+          </p>
+        </div>
+
+        <div class="brand-story__visual reveal reveal--scale stagger-2">
+          <!-- Abstract constellation / network SVG -->
+          <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Glow definitions -->
+            <defs>
+              <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+              </radialGradient>
+              <filter id="softGlow">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Connection lines -->
+            <line x1="80" y1="100" x2="200" y2="80" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
+            <line x1="200" y1="80" x2="310" y2="130" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
+            <line x1="200" y1="80" x2="160" y2="200" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
+            <line x1="80" y1="100" x2="60" y2="240" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
+            <line x1="80" y1="100" x2="160" y2="200" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
+            <line x1="160" y1="200" x2="60" y2="240" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
+            <line x1="160" y1="200" x2="280" y2="220" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
+            <line x1="310" y1="130" x2="280" y2="220" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
+            <line x1="310" y1="130" x2="350" y2="260" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
+            <line x1="280" y1="220" x2="350" y2="260" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
+            <line x1="280" y1="220" x2="200" y2="320" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
+            <line x1="60" y1="240" x2="120" y2="340" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
+            <line x1="160" y1="200" x2="200" y2="320" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
+            <line x1="200" y1="320" x2="120" y2="340" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
+            <line x1="200" y1="320" x2="350" y2="260" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
+            <line x1="60" y1="240" x2="160" y2="200" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.1" stroke-width="1"/>
+
+            <!-- Background glow circles -->
+            <circle cx="200" cy="80" r="40" fill="url(#nodeGlow)" class="constellation-glow"/>
+            <circle cx="160" cy="200" r="50" fill="url(#nodeGlow)" class="constellation-glow"/>
+            <circle cx="280" cy="220" r="35" fill="url(#nodeGlow)" class="constellation-glow"/>
+
+            <!-- Primary nodes -->
+            <circle cx="200" cy="80" r="5" fill="var(--accent)" class="constellation-node" filter="url(#softGlow)"/>
+            <circle cx="160" cy="200" r="7" fill="var(--accent)" class="constellation-node" filter="url(#softGlow)"/>
+            <circle cx="280" cy="220" r="5" fill="var(--accent)" class="constellation-node" filter="url(#softGlow)"/>
+            <circle cx="200" cy="320" r="5" fill="var(--accent)" class="constellation-node" filter="url(#softGlow)"/>
+
+            <!-- Secondary nodes -->
+            <circle cx="80" cy="100" r="4" fill="var(--accent)" opacity="0.7" class="constellation-node"/>
+            <circle cx="310" cy="130" r="4" fill="var(--accent)" opacity="0.7" class="constellation-node"/>
+            <circle cx="60" cy="240" r="3.5" fill="var(--accent)" opacity="0.6" class="constellation-node"/>
+            <circle cx="350" cy="260" r="3.5" fill="var(--accent)" opacity="0.6" class="constellation-node"/>
+            <circle cx="120" cy="340" r="3" fill="var(--accent)" opacity="0.5" class="constellation-node"/>
+
+            <!-- Tiny accent nodes -->
+            <circle cx="140" cy="140" r="1.5" fill="var(--accent)" opacity="0.3"/>
+            <circle cx="240" cy="150" r="1.5" fill="var(--accent)" opacity="0.3"/>
+            <circle cx="100" cy="170" r="1.5" fill="var(--accent)" opacity="0.25"/>
+            <circle cx="220" cy="270" r="1.5" fill="var(--accent)" opacity="0.3"/>
+            <circle cx="320" cy="190" r="1.5" fill="var(--accent)" opacity="0.25"/>
+            <circle cx="170" cy="280" r="1.5" fill="var(--accent)" opacity="0.2"/>
+
+            <!-- Outer ring suggestion -->
+            <circle cx="200" cy="200" r="170" stroke="var(--accent)" stroke-opacity="0.06" stroke-width="1" fill="none" stroke-dasharray="6 10"/>
+            <circle cx="200" cy="200" r="120" stroke="var(--accent)" stroke-opacity="0.04" stroke-width="1" fill="none" stroke-dasharray="4 8"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section section--alt" id="values">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="label section-header__label reveal reveal--up">What Drives Us</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">Our values</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          Four principles that shape every system we design, every line of code we write, and every relationship we build.
+        </p>
+      </div>
+
+      <div class="values-grid">
+        <!-- Value 1 — Full-width horizontal card -->
+        <div class="value-card value-card--wide reveal reveal--up stagger-1">
+          <div class="value-card__number">01</div>
+          <div class="value-card__content">
+            <h3 class="value-card__title">Resilient Systems</h3>
+            <p class="value-card__text">We design for failure so that nothing fails. Every system we build assumes the worst — network partitions, hardware faults, traffic spikes — and responds gracefully. Redundancy isn't an afterthought; it's the foundation. Because when your infrastructure holds steady at 3 AM on a holiday weekend, that's not luck. That's engineering.</p>
+          </div>
+        </div>
+
+        <!-- Value 2 — Tall card with top accent bar -->
+        <div class="value-card value-card--tall reveal reveal--up stagger-2">
+          <div class="value-card__accent-bar"></div>
+          <div class="value-card__inner">
+            <span class="value-card__number">02</span>
+            <h3 class="value-card__title">Organic Growth</h3>
+            <p class="value-card__text">The strongest trees don't grow overnight. We build systems that scale naturally — expanding capacity when demand calls for it, consolidating when it doesn't. No over-provisioning, no panic scaling. Just architecture that breathes with your business, growing roots deeper as the canopy spreads wider.</p>
+          </div>
+        </div>
+
+        <!-- Value 3 — Card with side stripe accent -->
+        <div class="value-card value-card--stripe reveal reveal--up stagger-3">
+          <div class="value-card__side-stripe"></div>
+          <div class="value-card__inner">
+            <span class="value-card__number">03</span>
+            <h3 class="value-card__title">Radical Clarity</h3>
+            <p class="value-card__text">We refuse to hide behind jargon or manufacture complexity for its own sake. Every decision, every architecture diagram, every status update — clear enough that anyone in the room can understand it. If we can't explain it simply, we haven't thought it through well enough.</p>
+          </div>
+        </div>
+
+        <!-- Value 4 — Full-width centered with large background number -->
+        <div class="value-card value-card--bold reveal reveal--up stagger-4">
+          <span class="value-card__bg-number">04</span>
+          <div class="value-card__content">
+            <span class="value-card__number">04</span>
+            <h3 class="value-card__title">Long-term Thinking</h3>
+            <p class="value-card__text">We optimize for years, not quarters. The technology decisions you make today compound — for better or worse. We choose tools, patterns, and architectures that age well, resist vendor lock-in, and leave room for the future you haven't imagined yet. Short-term shortcuts create long-term debt. We'd rather build it right.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section" id="stats">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="label section-header__label reveal reveal--up">By the Numbers</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">Built to last</h2>
+      </div>
+
+      <div class="stats-grid reveal reveal--up stagger-2">
+        <div class="stat">
+          <div class="stat__number count-up" data-target="150">0</div>
+          <div class="stat__label">Projects Delivered</div>
+        </div>
+        <div class="stat">
+          <div class="stat__number count-up" data-target="99.9">0</div>
+          <div class="stat__label">Uptime Guarantee</div>
+        </div>
+        <div class="stat">
+          <div class="stat__number count-up" data-target="47">0</div>
+          <div class="stat__label">Team Members</div>
+        </div>
+        <div class="stat">
+          <div class="stat__number count-up" data-target="8">0</div>
+          <div class="stat__label">Years Building</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section section--alt" id="team">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="label section-header__label reveal reveal--up">The People</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">Meet the team</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          Engineers, strategists, and builders who believe great infrastructure is invisible — and the people behind it shouldn't be.
+        </p>
+      </div>
+
+      <!-- TEMPLATE: Replace with real team members -->
+      <div class="team-grid">
+        <div class="team-card reveal reveal--up stagger-1">
+          <div class="team-card__photo">
+            <span class="team-card__photo-placeholder">Photo</span>
+          </div>
+          <h3 class="team-card__name">Team Member Name</h3>
+          <p class="team-card__role">Founder & CEO</p>
+          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
+        </div>
+
+        <div class="team-card reveal reveal--up stagger-2">
+          <div class="team-card__photo">
+            <span class="team-card__photo-placeholder">Photo</span>
+          </div>
+          <h3 class="team-card__name">Team Member Name</h3>
+          <p class="team-card__role">CTO</p>
+          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
+        </div>
+
+        <div class="team-card reveal reveal--up stagger-3">
+          <div class="team-card__photo">
+            <span class="team-card__photo-placeholder">Photo</span>
+          </div>
+          <h3 class="team-card__name">Team Member Name</h3>
+          <p class="team-card__role">Head of Engineering</p>
+          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
+        </div>
+
+        <div class="team-card reveal reveal--up stagger-4">
+          <div class="team-card__photo">
+            <span class="team-card__photo-placeholder">Photo</span>
+          </div>
+          <h3 class="team-card__name">Team Member Name</h3>
+          <p class="team-card__role">Lead Architect</p>
+          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
+        </div>
+
+        <div class="team-card reveal reveal--up stagger-5">
+          <div class="team-card__photo">
+            <span class="team-card__photo-placeholder">Photo</span>
+          </div>
+          <h3 class="team-card__name">Team Member Name</h3>
+          <p class="team-card__role">Director of Strategy</p>
+          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
+        </div>
+
+        <div class="team-card reveal reveal--up stagger-6">
+          <div class="team-card__photo">
+            <span class="team-card__photo-placeholder">Photo</span>
+          </div>
+          <h3 class="team-card__name">Team Member Name</h3>
+          <p class="team-card__role">Head of Operations</p>
+          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
+        </div>
+      </div>
+      <!-- END TEMPLATE -->
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section cta-section">
+    <div class="container" style="text-align: center;">
+      <span class="label mb-6 reveal reveal--up">Join Us</span>
+      <h2 class="display-lg reveal reveal--up stagger-1">Ready to build<br>something <span class="accent">resilient?</span></h2>
+      <p class="text-lg reveal reveal--up stagger-2" style="margin: var(--space-6) auto 0; max-width: 45ch;">
+        Every great system starts with a conversation.
+        Let's talk about what you're building.
+      </p>
+      <div class="reveal reveal--up stagger-3" style="margin-top: var(--space-10);">
+        <div class="magnetic-wrap">
+          <a href="contact.html" class="btn btn--primary btn--lg">Start a Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+          <p>Digital infrastructure and technology services built for businesses that refuse to stand still.</p>
+        </div>
+        <div>
+          <h4 class="footer__heading">Navigate</h4>
+          <a href="index.html" class="footer__link">Home</a>
+          <a href="services.html" class="footer__link">Services</a>
+          <a href="about.html" class="footer__link">About</a>
+          <a href="work.html" class="footer__link">Work</a>
+          <a href="contact.html" class="footer__link">Contact</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Services</h4>
+          <a href="services.html" class="footer__link">Infrastructure</a>
+          <a href="services.html" class="footer__link">Web & Apps</a>
+          <a href="services.html" class="footer__link">Cloud</a>
+          <a href="services.html" class="footer__link">Data</a>
+          <a href="services.html" class="footer__link">Security</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Connect</h4>
+          <!-- TEMPLATE: Replace with real contact info -->
+          <a href="mailto:hello@sylvanc7.com" class="footer__link">hello@sylvanc7.com</a>
+          <a href="tel:+15551234567" class="footer__link">+1 (555) 123-4567</a>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
+        <div class="footer__socials">
+          <a href="#" class="footer__social" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" class="footer__social" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+          <a href="#" class="footer__social" aria-label="Twitter/X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/animations.js"></script>
+  <script src="js/interactions.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
