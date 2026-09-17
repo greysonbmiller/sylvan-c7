@@ -88,6 +88,12 @@
   gap: var(--space-8);
 }
 
+/* Grid items default to min-width:auto, so one long word inside a card can
+   push the whole track wider than the viewport. */
+.grid > * {
+  min-width: 0;
+}
+
 .grid--2 {
   grid-template-columns: repeat(2, 1fr);
 }
@@ -256,5 +262,20 @@
   .container {
     padding-left: var(--space-3);
     padding-right: var(--space-3);
+  }
+}
+
+/* ---- Very narrow phones (320-380px) ---- */
+
+/* At 320px the default 24px container gutter plus 32px card padding leaves
+   too little room for content, pushing grids past the viewport. */
+@media (max-width: 380px) {
+  .container {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+
+  .grid {
+    gap: var(--space-5);
   }
 }

@@ -3,9 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sylvan C7 services — Digital infrastructure, web development, cloud architecture, data analytics, security, and strategic consulting.">
-  <title>Services — Sylvan C7</title>
+  <meta name="description" content="Website design, development, e-commerce, SEO, redesigns, and ongoing care from Sylvan C7 — a Los Angeles-based studio building fast, custom websites for small and mid-sized businesses.">
 
+  <!-- SEO:START -->
+  <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/services.html">
+  <meta name="theme-color" content="#0a100d">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sylvan C7">
+  <meta property="og:title" content="Website Design, Development, SEO &amp; E-commerce Services | Sylvan C7">
+  <meta property="og:description" content="Website design, development, e-commerce, SEO, redesigns, and ongoing care from Sylvan C7 — a Los Angeles-based studio building fast, custom websites for small and mid-sized businesses.">
+  <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/services.html">
+  <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sylvan C7 — websites that turn visitors into customers.">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Website Design, Development, SEO &amp; E-commerce Services | Sylvan C7">
+  <meta name="twitter:description" content="Website design, development, e-commerce, SEO, redesigns, and ongoing care from Sylvan C7 — a Los Angeles-based studio building fast, custom websites for small and mid-sized businesses.">
+  <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+<!-- SEO:END -->
+
+  
+  
+  
+    <title>Website Design, Development, SEO &amp; E-commerce Services | Sylvan C7</title>
+
+  <!-- FONTS:START -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap">
+  <!-- FONTS:END -->
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -14,6 +45,82 @@
   <link rel="stylesheet" href="css/pages.css">
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
+
+  <style>
+    .services-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+    }
+    .service-deliverables {
+      list-style: none;
+      margin-top: var(--space-4);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .service-deliverables li {
+      position: relative;
+      padding-left: var(--space-5);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    .service-deliverables li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .includes-card {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      padding: var(--space-6);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+    }
+    .includes-card__icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+    }
+    .includes-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: var(--space-2);
+    }
+    .includes-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+  </style>
+  <!-- NOSCRIPT:START -->
+  <noscript>
+    <style>
+      /* Scroll-reveal animations start hidden and are released by JS. If JS is
+         blocked or fails to load, show everything rather than a blank page. */
+      .reveal,
+      .hero-line,
+      .accent-line { opacity: 1 !important; transform: none !important; }
+      .hero-line__inner { transform: none !important; }
+      .timeline__step { opacity: 1 !important; }
+      .timeline__step::before { height: 100% !important; }
+      .scroll-progress { display: none !important; }
+    </style>
+  </noscript>
+  <!-- NOSCRIPT:END -->
 </head>
 <body>
 
@@ -24,38 +131,53 @@
   <nav class="nav" id="nav">
     <div class="container nav__inner">
       <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+
       <div class="nav__links">
         <a href="index.html" class="nav__link">Home</a>
         <a href="services.html" class="nav__link active">Services</a>
-        <a href="about.html" class="nav__link">About</a>
         <a href="work.html" class="nav__link">Work</a>
+        <a href="industries.html" class="nav__link">Industries</a>
+        <a href="pricing.html" class="nav__link">Pricing</a>
+        <a href="about.html" class="nav__link">About</a>
         <a href="contact.html" class="nav__link">Contact</a>
-        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Start a Project</a>
+        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Get a Free Quote</a>
       </div>
-      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMobile">
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
     </div>
   </nav>
+
+  <!-- Mobile Menu -->
   <div class="nav__mobile-overlay" id="navOverlay"></div>
   <div class="nav__mobile" id="navMobile">
     <a href="index.html" class="nav__mobile-link">Home</a>
     <a href="services.html" class="nav__mobile-link active">Services</a>
-    <a href="about.html" class="nav__mobile-link">About</a>
     <a href="work.html" class="nav__mobile-link">Work</a>
+    <a href="industries.html" class="nav__mobile-link">Industries</a>
+    <a href="pricing.html" class="nav__mobile-link">Pricing</a>
+    <a href="about.html" class="nav__mobile-link">About</a>
     <a href="contact.html" class="nav__mobile-link">Contact</a>
-    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Start a Project</a>
+    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Get a Free Quote</a>
   </div>
 
   <!-- Page Header -->
   <section class="page-header">
     <div class="container">
       <span class="label reveal reveal--up">What We Do</span>
-      <h1 class="display-xl reveal reveal--up stagger-1">Our Services</h1>
+      <h1 class="display-xl reveal reveal--up stagger-1">Custom-built websites for small and mid-sized businesses.</h1>
       <p class="text-lg reveal reveal--up stagger-2" style="max-width: 55ch; margin-top: var(--space-6);">
-        Six disciplines, forged together. We deliver end-to-end technology services
-        that transform how businesses operate, compete, and scale.
+        Sylvan C7 handles every part of getting your business online, from the first
+        design concept to the care that keeps the site running after launch. We work
+        remotely with clients across the US.
       </p>
+      <div class="services-links reveal reveal--up stagger-3">
+        <a href="pricing.html" class="btn btn--primary">See Pricing &mdash; Launch projects from $2,500</a>
+        <a href="work.html" class="btn btn--outline">See how we work</a>
+      </div>
     </div>
   </section>
 
@@ -64,35 +186,35 @@
     <div class="container">
       <div class="grid grid--asymmetric">
 
-        <!-- Service 1: Digital Infrastructure -->
+        <!-- Service 1: Website Design -->
         <div class="card card--tilt reveal reveal--up stagger-1">
           <div class="card__icon">
-            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="6" y="6" width="36" height="12" rx="3"/>
-              <rect x="6" y="22" width="36" height="12" rx="3"/>
-              <circle cx="14" cy="12" r="2" fill="currentColor" stroke="none"/>
-              <circle cx="20" cy="12" r="2" fill="currentColor" stroke="none"/>
-              <circle cx="14" cy="28" r="2" fill="currentColor" stroke="none"/>
-              <circle cx="20" cy="28" r="2" fill="currentColor" stroke="none"/>
-              <path d="M32 12h4M32 28h4"/>
-              <path d="M18 38h12M24 34v4"/>
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="6" y="6" width="36" height="36" rx="3"/>
+              <path d="M6 16h36"/>
+              <path d="M14 16v26"/>
+              <path d="M20 24h14M20 30h10"/>
             </svg>
           </div>
-          <span class="label">Infrastructure</span>
-          <h3>Digital Infrastructure</h3>
+          <span class="label">Design</span>
+          <h3>Website Design</h3>
           <p>
-            The invisible backbone that everything else depends on. We design, deploy, and
-            manage server environments, network architectures, and hybrid infrastructure
-            that deliver five-nines uptime without the five-figure surprises. From bare-metal
-            configurations to fully orchestrated container platforms, we build the foundation
-            your business runs on.
+            A custom design built around how your business actually wins customers &mdash;
+            not a recycled template. Every layout starts from your brand, your offer, and
+            what you need visitors to do next.
           </p>
+          <ul class="service-deliverables">
+            <li>Wireframes &amp; page layouts</li>
+            <li>Custom visual design</li>
+            <li>Responsive design for phone, tablet &amp; desktop</li>
+            <li>Brand-consistent styling</li>
+          </ul>
         </div>
 
-        <!-- Service 2: Web & Application Development -->
+        <!-- Service 2: Website Development -->
         <div class="card card--tilt reveal reveal--up stagger-2" style="margin-top: var(--space-12);">
           <div class="card__icon">
-            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="4" y="8" width="40" height="32" rx="3"/>
               <path d="M4 16h40"/>
               <circle cx="10" cy="12" r="1.5" fill="currentColor" stroke="none"/>
@@ -104,102 +226,235 @@
             </svg>
           </div>
           <span class="label">Development</span>
-          <h3>Web & Application Development</h3>
+          <h3>Website Development</h3>
           <p>
-            Websites that do more than look good -- they convert, perform, and scale.
-            We build custom web applications, marketing sites, progressive web apps,
-            and enterprise portals using modern frameworks and battle-tested engineering
-            practices. Every line of code is written for maintainability, every interface
-            designed for the humans who use it.
+            Hand-built, fast, clean code &mdash; not bloated page-builder output that slows
+            your site down.
           </p>
+          <ul class="service-deliverables">
+            <li>Hand-coded, lightweight pages</li>
+            <li>Cross-browser testing &mdash; checked on Chrome, Safari, Firefox and Edge, on real phones, tablets and laptops</li>
+            <li>Fast page-load performance</li>
+            <li>Clean, maintainable code you own</li>
+          </ul>
         </div>
 
-        <!-- Service 3: Cloud Architecture -->
+        <!-- Service 3: E-commerce & Online Booking -->
         <div class="card card--tilt reveal reveal--up stagger-1">
           <div class="card__icon">
-            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M36 34H14a10 10 0 01-1.1-19.9A12 12 0 0136.8 18 8 8 0 0136 34z"/>
-              <path d="M20 28l4-4 4 4"/>
-              <path d="M24 24v10"/>
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="18" cy="40" r="2.5" fill="currentColor" stroke="none"/>
+              <circle cx="34" cy="40" r="2.5" fill="currentColor" stroke="none"/>
+              <path d="M6 8h6l4 22h22l4-16H14"/>
+              <path d="M30 4v10M25 9h10"/>
             </svg>
           </div>
-          <span class="label">Cloud</span>
-          <h3>Cloud Architecture</h3>
+          <span class="label">E-commerce</span>
+          <h3>E-commerce & Online Booking</h3>
           <p>
-            Your cloud should be an accelerator, not a cost center. We architect
-            multi-cloud and hybrid environments across AWS, Azure, and GCP --
-            optimizing for performance, cost, and resilience. Whether you are migrating
-            legacy workloads or building cloud-native from day one, we design
-            infrastructure that elastically meets demand without burning budget.
+            Sell products or take reservations directly from your site. We set up
+            catalogs, carts, checkout, and payment processing &mdash; or booking and
+            scheduling if you take appointments instead of orders.
           </p>
+          <ul class="service-deliverables">
+            <li>Product catalog &amp; shopping cart</li>
+            <li>Secure checkout &amp; payment processing</li>
+            <li>Appointment &amp; reservation scheduling</li>
+            <li>Inventory sync &mdash; stock counts update on their own as items sell, so the site never offers something you are out of</li>
+          </ul>
         </div>
 
-        <!-- Service 4: Data & Analytics -->
+        <!-- Service 4: SEO & Local Search -->
         <div class="card card--tilt reveal reveal--up stagger-2" style="margin-top: var(--space-12);">
           <div class="card__icon">
-            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M10 38V24"/>
-              <path d="M18 38V18"/>
-              <path d="M26 38V28"/>
-              <path d="M34 38V12"/>
-              <circle cx="10" cy="24" r="2.5"/>
-              <circle cx="18" cy="18" r="2.5"/>
-              <circle cx="26" cy="28" r="2.5"/>
-              <circle cx="34" cy="12" r="2.5"/>
-              <path d="M12.2 22.6l4-3.5"/>
-              <path d="M20.5 19.8l3 6.4"/>
-              <path d="M28.3 26.2l3.5-12"/>
-              <path d="M6 42h36"/>
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="21" cy="21" r="14"/>
+              <path d="M31 31l11 11"/>
+              <path d="M21 14v14l9 5"/>
             </svg>
           </div>
-          <span class="label">Analytics</span>
-          <h3>Data & Analytics</h3>
+          <span class="label">SEO</span>
+          <h3>SEO & Local Search</h3>
           <p>
-            Raw data is a liability. Structured data is a weapon. We build the pipelines,
-            warehouses, and visualization layers that transform scattered information into
-            executive-ready insights. From real-time dashboards to predictive models and
-            BI platforms, we help you stop guessing and start knowing.
+            A great site does not help if no one finds it. We structure your pages,
+            speed up load times, and set up your Google Business Profile &mdash; the free
+            listing that puts your business on Google Maps and in the local results &mdash;
+            so nearby customers searching for what you offer actually land on your site.
           </p>
+          <ul class="service-deliverables">
+            <li>On-page SEO &mdash; the page titles, headings and wording search engines read to work out what you do</li>
+            <li>Page speed optimization</li>
+            <li>Google Business Profile setup &mdash; your free Google Maps and local-results listing</li>
+            <li>Local search optimization</li>
+          </ul>
         </div>
 
-        <!-- Service 5: Security & Compliance -->
+        <!-- Service 5: Website Redesign & Rescue -->
         <div class="card card--tilt reveal reveal--up stagger-1">
           <div class="card__icon">
-            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 24a14 14 0 0124-9.5"/>
+              <path d="M38 24a14 14 0 01-24 9.5"/>
+              <path d="M34 8v7h-7"/>
+              <path d="M14 40v-7h7"/>
+            </svg>
+          </div>
+          <span class="label">Redesign</span>
+          <h3>Website Redesign & Rescue</h3>
+          <p>
+            If your current site is slow, dated, hard to edit, or broken on phones, we
+            will rebuild it right. If you are stuck on a platform you do not like, we
+            handle the migration and preserve your existing content.
+          </p>
+          <ul class="service-deliverables">
+            <li>Full redesign of an outdated site</li>
+            <li>Migration off a locked-in platform</li>
+            <li>Content preserved &amp; reorganized</li>
+            <li>Mobile &amp; speed fixes</li>
+          </ul>
+        </div>
+
+        <!-- Service 6: Care & Maintenance -->
+        <div class="card card--tilt reveal reveal--up stagger-2" style="margin-top: var(--space-12);">
+          <div class="card__icon">
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M24 4L8 12v12c0 10.5 6.8 18.3 16 22 9.2-3.7 16-11.5 16-22V12L24 4z"/>
               <path d="M18 24l4 4 8-8"/>
             </svg>
           </div>
-          <span class="label">Security</span>
-          <h3>Security & Compliance</h3>
+          <span class="label">Care</span>
+          <h3>Care & Maintenance</h3>
           <p>
-            A breach is not a matter of if, but when your defenses get tested. We
-            conduct penetration testing, infrastructure audits, and vulnerability
-            assessments that expose weaknesses before attackers do. Then we harden your
-            systems and implement compliance frameworks -- SOC 2, HIPAA, GDPR, ISO 27001
-            -- so you pass audits and sleep at night.
+            Optional, ongoing support so your site keeps running smoothly after launch.
+            Hosting, backups, and security updates are handled for you, with no
+            long-term lock-in if you would rather manage it yourself.
           </p>
+          <ul class="service-deliverables">
+            <li>Hosting, backups &amp; SSL</li>
+            <li>Security updates &amp; uptime monitoring</li>
+            <li>Content edits &amp; small changes</li>
+            <li>Performance tuning</li>
+          </ul>
         </div>
 
-        <!-- Service 6: Digital Strategy Consulting -->
-        <div class="card card--tilt reveal reveal--up stagger-2" style="margin-top: var(--space-12);">
-          <div class="card__icon">
-            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="24" cy="24" r="18"/>
-              <path d="M24 12v12l8 8"/>
-              <path d="M10 6l4 4M38 6l-4 4"/>
-              <path d="M16 8l2 2M32 8l-2 2"/>
-              <circle cx="24" cy="24" r="3"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- What Every Site Will Include -->
+  <section class="section section--alt" id="includes">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">The Baseline</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">What every site will include</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          Whatever your project needs, every site we build includes these fundamentals.
+          It is the standard we commit to, not an upgrade.
+        </p>
+      </div>
+
+      <div class="grid">
+
+        <div class="includes-card reveal reveal--up stagger-1">
+          <div class="includes-card__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="7" y="2" width="10" height="20" rx="2"/>
+              <path d="M11 18h2"/>
             </svg>
           </div>
-          <span class="label">Strategy</span>
-          <h3>Digital Strategy Consulting</h3>
-          <p>
-            Technology without a roadmap is just expensive improvisation. Our consultants
-            work alongside your leadership to audit existing systems, identify high-impact
-            opportunities, and build phased transformation plans that align IT investment
-            with business outcomes. We turn ambiguity into a clear, actionable path forward.
-          </p>
+          <div>
+            <h3>Mobile-first &amp; responsive</h3>
+            <p>Designed for phones first, then scaled up &mdash; not the other way around.</p>
+          </div>
+        </div>
+
+        <div class="includes-card reveal reveal--up stagger-2">
+          <div class="includes-card__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M8 12l3 3 5-6"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Accessibility considered</h3>
+            <p>Readable contrast, keyboard navigation, and semantic markup from the start.</p>
+          </div>
+        </div>
+
+        <div class="includes-card reveal reveal--up stagger-3">
+          <div class="includes-card__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Fast load times</h3>
+            <p>Lightweight, hand-built pages that load quickly on any connection.</p>
+          </div>
+        </div>
+
+        <div class="includes-card reveal reveal--up stagger-4">
+          <div class="includes-card__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="M21 21l-4.3-4.3"/>
+            </svg>
+          </div>
+          <div>
+            <h3>SEO fundamentals</h3>
+            <p>Clean structure, page titles, and metadata set up correctly from day one.</p>
+          </div>
+        </div>
+
+        <div class="includes-card reveal reveal--up stagger-1">
+          <div class="includes-card__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2L4 6v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-4z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <div>
+            <h3>SSL &amp; security</h3>
+            <p>Encrypted connections and sound security practices, built in from launch.</p>
+          </div>
+        </div>
+
+        <div class="includes-card reveal reveal--up stagger-2">
+          <div class="includes-card__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 20V10M12 20V4M20 20v-7"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Analytics</h3>
+            <p>Traffic tracking set up so you can see who visits and what they do.</p>
+          </div>
+        </div>
+
+        <div class="includes-card reveal reveal--up stagger-3">
+          <div class="includes-card__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 15a4 4 0 100-8 4 4 0 000 8z"/>
+              <path d="M5 12H3M21 12h-2M12 5V3M12 21v-2"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Full ownership</h3>
+            <p>The code and every account &mdash; domain, hosting, analytics &mdash; belong to you.</p>
+          </div>
+        </div>
+
+        <div class="includes-card reveal reveal--up stagger-4">
+          <div class="includes-card__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Training &amp; documentation</h3>
+            <p>You leave knowing how to make simple updates yourself, with notes to match.</p>
+          </div>
         </div>
 
       </div>
@@ -207,14 +462,15 @@
   </section>
 
   <!-- Process Timeline -->
-  <section class="section section--alt" id="process">
+  <section class="section" id="process">
     <div class="container">
       <div class="section-header">
         <span class="label section-header__label reveal reveal--up">How We Work</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">From concept to continuous support</h2>
+        <h2 class="section-header__title reveal reveal--up stagger-1">From first call to launch day</h2>
         <p class="section-header__subtitle reveal reveal--up stagger-2">
-          Every engagement follows a proven five-phase framework designed
-          to eliminate guesswork and deliver measurable results.
+          The same five steps on every project, with scope and price agreed upfront
+          and a chance to review the work at every stage. Ongoing care afterwards is
+          an optional add-on, never a sixth step you have to buy.
         </p>
       </div>
 
@@ -225,11 +481,10 @@
             <span>1</span>
           </div>
           <div class="timeline__content">
-            <h3>Discovery</h3>
+            <h3>Discovery call</h3>
             <p>
-              We start by listening. Deep-dive workshops, stakeholder interviews,
-              and technical audits help us understand your current systems,
-              business objectives, and the gaps between them.
+              A free call, by phone or video, about your business, how you currently get
+              customers, and what you need your website to do. No obligation, no pressure.
             </p>
           </div>
         </div>
@@ -239,11 +494,10 @@
             <span>2</span>
           </div>
           <div class="timeline__content">
-            <h3>Design</h3>
+            <h3>Fixed quote in writing</h3>
             <p>
-              Architecture blueprints, UX wireframes, and technical specifications
-              take shape. Every decision is validated against your requirements,
-              budget, and timeline before a single line of code is written.
+              You get a clear scope, timeline, and price before any work begins &mdash;
+              no surprise invoices and no vague hourly estimate.
             </p>
           </div>
         </div>
@@ -253,11 +507,10 @@
             <span>3</span>
           </div>
           <div class="timeline__content">
-            <h3>Build</h3>
+            <h3>Design you approve</h3>
             <p>
-              Agile sprints, continuous integration, and rigorous QA bring the
-              design to life. You see progress in real time through demos, staging
-              environments, and transparent project boards.
+              You see the design and give feedback before a single line of code is
+              written, so there are no surprises once the build starts.
             </p>
           </div>
         </div>
@@ -267,12 +520,10 @@
             <span>4</span>
           </div>
           <div class="timeline__content">
-            <h3>Deploy</h3>
+            <h3>Build and review</h3>
             <p>
-              Zero-downtime launches, automated infrastructure provisioning, and
-              thorough smoke testing ensure your systems go live seamlessly.
-              We handle DNS, SSL, CDN, monitoring -- every detail that separates
-              a launch from a catastrophe.
+              We build the site and test it on real phones, tablets, and browsers,
+              then walk through it together before anything goes live.
             </p>
           </div>
         </div>
@@ -282,12 +533,10 @@
             <span>5</span>
           </div>
           <div class="timeline__content">
-            <h3>Support</h3>
+            <h3>Launch, training and handover</h3>
             <p>
-              Launching is just the beginning. Ongoing monitoring, performance
-              optimization, security patching, and feature iteration keep your
-              systems healthy and evolving. We are not a vendor -- we are a
-              long-term technology partner.
+              Your site goes live, you get a walkthrough of how to run it yourself, and
+              every account is handed over in your name.
             </p>
           </div>
         </div>
@@ -300,18 +549,16 @@
   <section class="section cta-section">
     <div class="container" style="text-align: center;">
       <span class="label mb-6 reveal reveal--up">Let's Build Together</span>
-      <h2 class="display-lg reveal reveal--up stagger-1">Have a project in mind?</h2>
+      <h2 class="display-lg reveal reveal--up stagger-1">Ready for a website that works as hard as you do?</h2>
       <p class="text-lg reveal reveal--up stagger-2" style="margin: var(--space-6) auto 0; max-width: 50ch;">
-        Whether you need a full digital transformation or a single critical system,
-        we would love to hear about it. Let's figure out the right approach together.
+        Whether you need a brand-new site, an online store, or a rescue for one that
+        is holding you back, let's talk about what it would take.
       </p>
-      <div class="reveal reveal--up stagger-3" style="margin-top: var(--space-10); display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+      <div class="reveal reveal--up stagger-3" style="margin-top: var(--space-10); display: flex; flex-direction: column; align-items: center; gap: var(--space-5);">
         <div class="magnetic-wrap">
-          <a href="contact.html" class="btn btn--primary btn--lg">Start a Project</a>
+          <a href="contact.html" class="btn btn--primary btn--lg">Get a Free Quote</a>
         </div>
-        <div class="magnetic-wrap">
-          <a href="work.html" class="btn btn--outline btn--lg">View Our Work</a>
-        </div>
+        <a href="pricing.html" class="link">Or see what projects cost first</a>
       </div>
     </div>
   </section>
@@ -322,40 +569,40 @@
       <div class="footer__top">
         <div class="footer__brand">
           <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
-          <p>Digital infrastructure and technology services built for businesses that refuse to stand still.</p>
+          <p>We design and build fast, modern websites for businesses in every industry &mdash; then keep them running.</p>
+          <a href="contact.html" class="btn btn--outline btn--sm" style="margin-top: var(--space-5);">Start your project</a>
         </div>
         <div>
           <h4 class="footer__heading">Navigate</h4>
           <a href="index.html" class="footer__link">Home</a>
           <a href="services.html" class="footer__link">Services</a>
-          <a href="about.html" class="footer__link">About</a>
           <a href="work.html" class="footer__link">Work</a>
+          <a href="pricing.html" class="footer__link">Pricing</a>
+          <a href="about.html" class="footer__link">About</a>
+          <a href="faq.html" class="footer__link">FAQ</a>
           <a href="contact.html" class="footer__link">Contact</a>
         </div>
         <div>
-          <h4 class="footer__heading">Services</h4>
-          <a href="services.html" class="footer__link">Infrastructure</a>
-          <a href="services.html" class="footer__link">Web & Apps</a>
-          <a href="services.html" class="footer__link">Cloud</a>
-          <a href="services.html" class="footer__link">Data</a>
-          <a href="services.html" class="footer__link">Security</a>
+          <h4 class="footer__heading">Industries</h4>
+          <a href="industries.html" class="footer__link">Restaurants &amp; Hospitality</a>
+          <a href="industries.html" class="footer__link">Dental &amp; Medical</a>
+          <a href="industries.html" class="footer__link">Legal &amp; Professional</a>
+          <a href="industries.html" class="footer__link">Home Services &amp; Trades</a>
+          <a href="industries.html" class="footer__link">Fitness &amp; Wellness</a>
+          <a href="industries.html" class="footer__link">Retail &amp; E-commerce</a>
+          <a href="industries.html" class="footer__link">SaaS &amp; Technology</a>
+          <a href="industries.html" class="footer__link">Real Estate &amp; Property</a>
         </div>
         <div>
           <h4 class="footer__heading">Connect</h4>
-          <!-- TEMPLATE: Replace with real contact info -->
           <a href="mailto:greysonbmiller@protonmail.com" class="footer__link">greysonbmiller@protonmail.com</a>
-          <a href="tel:+12084108122" class="footer__link">+1 (208) 410-8122</a>
+          <a href="tel:+16266220261" class="footer__link">+1 (626) 622-0261</a>
+          <span class="footer__link" style="cursor: default;">Los Angeles, California &mdash; working remotely with clients across the US</span>
         </div>
       </div>
 
       <div class="footer__bottom">
         <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
-        <div class="footer__socials">
-          <a href="https://github.com/greysonbmiller" class="footer__social" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-          </a>
-
-        </div>
       </div>
     </div>
   </footer>
@@ -363,5 +610,11 @@
   <script src="js/animations.js"></script>
   <script src="js/interactions.js"></script>
   <script src="js/main.js"></script>
+  <!-- MOBILECTA:START -->
+  <div class="mobile-cta">
+    <a href="tel:+16266220261" class="btn btn--outline btn--sm">Call</a>
+    <a href="contact.html" class="btn btn--primary btn--sm">Get a Free Quote</a>
+  </div>
+  <!-- MOBILECTA:END -->
 </body>
 </html>

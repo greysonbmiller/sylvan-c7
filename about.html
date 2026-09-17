@@ -3,9 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="About Sylvan C7 — Where the organic meets the digital. We build resilient, adaptive technology infrastructure rooted in natural growth patterns.">
-  <title>About — Sylvan C7</title>
+  <meta name="description" content="Meet Sylvan C7 — a web design and development studio in Los Angeles, California, working remotely with clients across the US and building sites with engineering discipline.">
 
+  <!-- SEO:START -->
+  <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/about.html">
+  <meta name="theme-color" content="#0a100d">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sylvan C7">
+  <meta property="og:title" content="About Sylvan C7 — Web Design &amp; Development Studio in Los Angeles">
+  <meta property="og:description" content="Meet Sylvan C7 — a web design and development studio in Los Angeles, California, working remotely with clients across the US and building sites with engineering discipline.">
+  <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/about.html">
+  <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sylvan C7 — websites that turn visitors into customers.">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="About Sylvan C7 — Web Design &amp; Development Studio in Los Angeles">
+  <meta name="twitter:description" content="Meet Sylvan C7 — a web design and development studio in Los Angeles, California, working remotely with clients across the US and building sites with engineering discipline.">
+  <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+<!-- SEO:END -->
+
+  
+  
+  
+    <title>About Sylvan C7 — Web Design &amp; Development Studio in Los Angeles</title>
+
+  <!-- FONTS:START -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap">
+  <!-- FONTS:END -->
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -303,96 +334,130 @@
       line-height: var(--leading-loose);
     }
 
-    /* Stats Section */
-    .stats-grid {
+    /* Founder Section */
+    .founder-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-10);
+      align-items: start;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-10) var(--space-12);
+    }
+
+    .founder-card__photo {
+      display: block;
+      width: 192px;
+      height: 192px;
+      border-radius: var(--radius-full);
+      object-fit: cover;
+      object-position: center top;
+      border: 2px solid var(--accent-dim);
+      box-shadow: 0 0 0 6px var(--accent-glow);
+      background: var(--bg-surface);
+      flex-shrink: 0;
+    }
+
+    .founder-card__name {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      font-weight: 600;
+      margin-bottom: var(--space-1);
+    }
+
+    .founder-card__role {
+      font-size: var(--text-sm);
+      color: var(--accent);
+      margin-bottom: var(--space-6);
+    }
+
+    .founder-card__text p {
+      color: var(--text-secondary);
+      line-height: var(--leading-loose);
+      max-width: 65ch;
+    }
+
+    .founder-card__text p + p {
+      margin-top: var(--space-4);
+    }
+
+    /* Why New Section */
+    .advantage-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-8);
-      padding: var(--space-12) 0;
-      border-top: 1px solid var(--border-subtle);
-      border-bottom: 1px solid var(--border-subtle);
+      gap: var(--space-6);
     }
 
-    .stat__suffix {
-      font-size: 0.6em;
-      opacity: 0.7;
-    }
-
-    /* Team Section */
-    .team-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-8);
-    }
-
-    .team-card {
+    .advantage-card {
       background: var(--bg-elevated);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
       padding: var(--space-8);
-      text-align: center;
       transition: all var(--duration-normal) var(--ease-out);
     }
 
-    .team-card:hover {
+    .advantage-card:hover {
       border-color: var(--border-medium);
       transform: translateY(-4px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
 
-    .team-card__photo {
-      width: 96px;
-      height: 96px;
-      border-radius: var(--radius-full);
-      background: linear-gradient(135deg, var(--bg-surface), var(--border-subtle));
-      margin: 0 auto var(--space-6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .team-card__photo::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      border: 2px solid var(--border-subtle);
-      transition: border-color var(--duration-normal) var(--ease-out);
-    }
-
-    .team-card:hover .team-card__photo::after {
-      border-color: var(--accent);
-    }
-
-    .team-card__photo-placeholder {
-      font-family: var(--font-heading);
-      font-size: var(--text-xs);
-      color: var(--text-tertiary);
-      letter-spacing: var(--tracking-wide);
-    }
-
-    .team-card__name {
+    .advantage-card__title {
       font-family: var(--font-heading);
       font-size: var(--text-lg);
       font-weight: 600;
-      margin-bottom: var(--space-1);
+      margin-bottom: var(--space-3);
     }
 
-    .team-card__role {
-      font-family: var(--font-heading);
-      font-size: var(--text-sm);
-      color: var(--accent);
-      margin-bottom: var(--space-4);
-    }
-
-    .team-card__bio {
-      font-size: var(--text-sm);
+    .advantage-card__text {
       color: var(--text-secondary);
+      font-size: var(--text-sm);
       line-height: var(--leading-loose);
-      max-width: 30ch;
-      margin: 0 auto;
+    }
+
+    /* How We Work Section */
+    .process-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
+    }
+
+    .process-list .process-item:last-child {
+      grid-column: 1 / -1;
+    }
+
+    .process-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-5);
+      align-items: start;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6) var(--space-7);
+    }
+
+    .process-item__number {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 800;
+      color: var(--accent);
+      opacity: 0.4;
+      line-height: 1;
+    }
+
+    .process-item__title {
+      font-family: var(--font-heading);
+      font-size: var(--text-base);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .process-item__text {
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      line-height: var(--leading-loose);
     }
 
     /* ---- Responsive ---- */
@@ -402,11 +467,7 @@
         gap: var(--space-10);
       }
 
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .team-grid {
+      .advantage-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -448,18 +509,42 @@
         right: var(--space-4);
       }
 
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-6);
+      .advantage-grid {
+        grid-template-columns: 1fr;
       }
 
-      .team-grid {
+      .process-list {
         grid-template-columns: 1fr;
-        max-width: 400px;
+      }
+
+      .founder-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: var(--space-8);
+      }
+
+      .founder-card__photo {
+        width: 132px;
+        height: 132px;
         margin: 0 auto;
       }
     }
   </style>
+  <!-- NOSCRIPT:START -->
+  <noscript>
+    <style>
+      /* Scroll-reveal animations start hidden and are released by JS. If JS is
+         blocked or fails to load, show everything rather than a blank page. */
+      .reveal,
+      .hero-line,
+      .accent-line { opacity: 1 !important; transform: none !important; }
+      .hero-line__inner { transform: none !important; }
+      .timeline__step { opacity: 1 !important; }
+      .timeline__step::before { height: 100% !important; }
+      .scroll-progress { display: none !important; }
+    </style>
+  </noscript>
+  <!-- NOSCRIPT:END -->
 </head>
 <body>
 
@@ -470,33 +555,43 @@
   <nav class="nav" id="nav">
     <div class="container nav__inner">
       <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+
       <div class="nav__links">
         <a href="index.html" class="nav__link">Home</a>
         <a href="services.html" class="nav__link">Services</a>
-        <a href="about.html" class="nav__link active">About</a>
         <a href="work.html" class="nav__link">Work</a>
+        <a href="industries.html" class="nav__link">Industries</a>
+        <a href="pricing.html" class="nav__link">Pricing</a>
+        <a href="about.html" class="nav__link active">About</a>
         <a href="contact.html" class="nav__link">Contact</a>
-        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Start a Project</a>
+        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Get a Free Quote</a>
       </div>
-      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMobile">
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
     </div>
   </nav>
+
+  <!-- Mobile Menu -->
   <div class="nav__mobile-overlay" id="navOverlay"></div>
   <div class="nav__mobile" id="navMobile">
     <a href="index.html" class="nav__mobile-link">Home</a>
     <a href="services.html" class="nav__mobile-link">Services</a>
-    <a href="about.html" class="nav__mobile-link active">About</a>
     <a href="work.html" class="nav__mobile-link">Work</a>
+    <a href="industries.html" class="nav__mobile-link">Industries</a>
+    <a href="pricing.html" class="nav__mobile-link">Pricing</a>
+    <a href="about.html" class="nav__mobile-link active">About</a>
     <a href="contact.html" class="nav__mobile-link">Contact</a>
-    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Start a Project</a>
+    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Get a Free Quote</a>
   </div>
 
   <!-- Page Header -->
   <header class="page-header">
     <div class="container">
-      <span class="label reveal reveal--up">Who We Are</span>
+      <span class="label reveal reveal--up">The studio behind the work</span>
       <h1 class="reveal reveal--up stagger-1" style="margin-top: var(--space-4);">About</h1>
     </div>
   </header>
@@ -506,7 +601,7 @@
     <div class="container">
       <div class="about-philosophy reveal reveal--up">
         <p class="display-lg">
-          Technology should work like <span class="accent">nature</span> — resilient, adaptive, and quietly powerful.
+          A website should work like <span class="accent">nature</span> — resilient, adaptive, and quietly powerful.
         </p>
       </div>
     </div>
@@ -517,16 +612,16 @@
     <div class="container">
       <div class="brand-story">
         <div class="brand-story__text">
-          <span class="label mb-6 reveal reveal--up">Our Story</span>
+          <span class="label mb-6 reveal reveal--up">The Name</span>
           <h2 class="reveal reveal--up stagger-1" style="margin-top: var(--space-4); margin-bottom: var(--space-8);">Where the forest<br>meets the code</h2>
           <p class="text-lg reveal reveal--up stagger-2">
-            Sylvan C7 is named for the intersection of the organic and the digital. <strong style="color: var(--text-primary);">Sylvan</strong> — of the forest, evoking resilience, interconnection, and natural growth patterns. <strong style="color: var(--text-primary);">C7</strong> — the precision of code, the seventh iteration, always refining.
+            Sylvan C7 is named for the intersection of the organic and the digital. <strong style="color: var(--text-primary);">Sylvan</strong> — of the forest, evoking resilience, interconnection, and natural growth patterns. <strong style="color: var(--text-primary);">C7</strong> — the precision of code: a short, technical counterweight to the organic half of the name.
           </p>
           <p class="reveal reveal--up stagger-3">
-            We were founded on a simple belief: the best technology mirrors nature. A forest doesn't fight its environment — it adapts, connects, and endures. Root systems share resources silently. Canopies optimize for light without a single line of code. Every layer serves a purpose.
+            The name is a starting belief: the best websites mirror nature. A forest doesn't fight its environment — it adapts, connects, and endures. Root systems share resources silently. Canopies optimize for light without a single line of code. Every layer serves a purpose.
           </p>
           <p class="reveal reveal--up stagger-4">
-            That's the kind of infrastructure we build. Resilient, adaptive, and quietly powerful. We create the digital backbone that lets businesses focus on what they do best — growing, serving, creating — while the systems beneath them hold steady through whatever comes next.
+            That's the kind of website we build. Resilient, adaptive, and quietly powerful. A site that lets your business focus on what it does best — growing, serving, creating — while the page underneath holds steady through whatever comes next.
           </p>
         </div>
 
@@ -605,10 +700,10 @@
   <section class="section section--alt" id="values">
     <div class="container">
       <div class="section-header section-header--center">
-        <span class="label section-header__label reveal reveal--up">What Drives Us</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">Our values</h2>
+        <span class="label section-header__label reveal reveal--up">What Drives the Work</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">The principles we build by</h2>
         <p class="section-header__subtitle reveal reveal--up stagger-2">
-          Four principles that shape every system we design, every line of code we write, and every relationship we build.
+          Four principles that shape the design decisions, the code underneath them, and the way we work with you.
         </p>
       </div>
 
@@ -617,8 +712,8 @@
         <div class="value-card value-card--wide reveal reveal--up stagger-1">
           <div class="value-card__number">01</div>
           <div class="value-card__content">
-            <h3 class="value-card__title">Resilient Systems</h3>
-            <p class="value-card__text">We design for failure so that nothing fails. Every system we build assumes the worst — network partitions, hardware faults, traffic spikes — and responds gracefully. Redundancy isn't an afterthought; it's the foundation. Because when your infrastructure holds steady at 3 AM on a holiday weekend, that's not luck. That's engineering.</p>
+            <h3 class="value-card__title">Built to Hold Up</h3>
+            <p class="value-card__text">Designing for failure is the starting point here, not a finishing touch. The assumption is that something will eventually go wrong — a traffic spike, a broken plugin, a host outage — so the goal is a site that degrades gracefully instead of going dark, and that we can diagnose quickly when it does. No one can promise a site will never have a bad day — the principle is to make the bad day survivable and fixable.</p>
           </div>
         </div>
 
@@ -628,7 +723,7 @@
           <div class="value-card__inner">
             <span class="value-card__number">02</span>
             <h3 class="value-card__title">Organic Growth</h3>
-            <p class="value-card__text">The strongest trees don't grow overnight. We build systems that scale naturally — expanding capacity when demand calls for it, consolidating when it doesn't. No over-provisioning, no panic scaling. Just architecture that breathes with your business, growing roots deeper as the canopy spreads wider.</p>
+            <p class="value-card__text">The strongest trees don't grow overnight. The aim is a site you can add to as the business changes — new pages, new features, more traffic — rather than one that has to be torn down and rebuilt. So we favour simple structure and standard tools over clever shortcuts, and leave the next change easier than the last one.</p>
           </div>
         </div>
 
@@ -638,7 +733,7 @@
           <div class="value-card__inner">
             <span class="value-card__number">03</span>
             <h3 class="value-card__title">Radical Clarity</h3>
-            <p class="value-card__text">We refuse to hide behind jargon or manufacture complexity for its own sake. Every decision, every architecture diagram, every status update — clear enough that anyone in the room can understand it. If we can't explain it simply, we haven't thought it through well enough.</p>
+            <p class="value-card__text">We refuse to hide behind jargon or manufacture complexity for its own sake. Every decision, every mockup, every status update — clear enough that you can understand it without a glossary. If it can't be explained simply, it hasn't been thought through well enough.</p>
           </div>
         </div>
 
@@ -648,120 +743,130 @@
           <div class="value-card__content">
             <span class="value-card__number">04</span>
             <h3 class="value-card__title">Long-term Thinking</h3>
-            <p class="value-card__text">We optimize for years, not quarters. The technology decisions you make today compound — for better or worse. We choose tools, patterns, and architectures that age well, resist vendor lock-in, and leave room for the future you haven't imagined yet. Short-term shortcuts create long-term debt. We'd rather build it right.</p>
+            <p class="value-card__text">We optimize for years, not quarters. The decisions made in your site today compound — for better or worse. We choose tools and patterns that age well, resist vendor lock-in, and leave room for the future you haven't imagined yet. Short-term shortcuts create long-term debt. We'd rather build it right.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Stats -->
-  <section class="section" id="stats">
+  <!-- Founder -->
+  <section class="section" id="founder">
     <div class="container">
       <div class="section-header section-header--center">
-        <span class="label section-header__label reveal reveal--up">By the Numbers</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">Built to last</h2>
-      </div>
-
-      <div class="stats-grid reveal reveal--up stagger-2">
-        <div class="stat">
-          <div class="stat__number count-up" data-target="150">0</div>
-          <div class="stat__label">Projects Delivered</div>
-        </div>
-        <div class="stat">
-          <div class="stat__number count-up" data-target="99.9">0</div>
-          <div class="stat__label">Uptime Guarantee</div>
-        </div>
-        <div class="stat">
-          <div class="stat__number count-up" data-target="47">0</div>
-          <div class="stat__label">Team Members</div>
-        </div>
-        <div class="stat">
-          <div class="stat__number count-up" data-target="8">0</div>
-          <div class="stat__label">Years Building</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Team -->
-  <section class="section section--alt" id="team">
-    <div class="container">
-      <div class="section-header section-header--center">
-        <span class="label section-header__label reveal reveal--up">The People</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">Meet the team</h2>
+        <span class="label section-header__label reveal reveal--up">The Person Behind the Work</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">Who you're actually working with</h2>
         <p class="section-header__subtitle reveal reveal--up stagger-2">
-          Engineers, strategists, and builders who believe great infrastructure is invisible — and the people behind it shouldn't be.
+          No account managers. No offshore handoff. No junior swapped in after the pitch.
         </p>
       </div>
 
-      <!-- TEMPLATE: Replace with real team members -->
-      <div class="team-grid">
-        <div class="team-card reveal reveal--up stagger-1">
-          <div class="team-card__photo">
-            <span class="team-card__photo-placeholder">Photo</span>
-          </div>
-          <h3 class="team-card__name">Team Member Name</h3>
-          <p class="team-card__role">Founder & CEO</p>
-          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
-        </div>
-
-        <div class="team-card reveal reveal--up stagger-2">
-          <div class="team-card__photo">
-            <span class="team-card__photo-placeholder">Photo</span>
-          </div>
-          <h3 class="team-card__name">Team Member Name</h3>
-          <p class="team-card__role">CTO</p>
-          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
-        </div>
-
-        <div class="team-card reveal reveal--up stagger-3">
-          <div class="team-card__photo">
-            <span class="team-card__photo-placeholder">Photo</span>
-          </div>
-          <h3 class="team-card__name">Team Member Name</h3>
-          <p class="team-card__role">Head of Engineering</p>
-          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
-        </div>
-
-        <div class="team-card reveal reveal--up stagger-4">
-          <div class="team-card__photo">
-            <span class="team-card__photo-placeholder">Photo</span>
-          </div>
-          <h3 class="team-card__name">Team Member Name</h3>
-          <p class="team-card__role">Lead Architect</p>
-          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
-        </div>
-
-        <div class="team-card reveal reveal--up stagger-5">
-          <div class="team-card__photo">
-            <span class="team-card__photo-placeholder">Photo</span>
-          </div>
-          <h3 class="team-card__name">Team Member Name</h3>
-          <p class="team-card__role">Director of Strategy</p>
-          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
-        </div>
-
-        <div class="team-card reveal reveal--up stagger-6">
-          <div class="team-card__photo">
-            <span class="team-card__photo-placeholder">Photo</span>
-          </div>
-          <h3 class="team-card__name">Team Member Name</h3>
-          <p class="team-card__role">Head of Operations</p>
-          <p class="team-card__bio">Brief bio about this person's background, expertise, and what drives their work at Sylvan C7.</p>
+      <div class="founder-card reveal reveal--up stagger-2">
+        <img class="founder-card__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" alt="Greyson Miller, founder of Sylvan C7" width="192" height="192" loading="lazy" decoding="async">
+        <div class="founder-card__text">
+          <h3 class="founder-card__name">Greyson Miller</h3>
+          <p class="founder-card__role">Founder, Designer &amp; Developer</p>
+          <p>
+            When you hire this studio, the person who answers your email writes your code — the same person who designs the layout, wires up the forms, and is the one you call if something ever needs to change.
+          </p>
+          <p>
+            Our background is in engineering rather than page layout: production software that has to keep running unattended, hardware-control systems that talk to physical instruments, and data tooling where a wrong answer is worse than no answer. That's the discipline a site gets built with here — structured, tested, and made to hold up rather than assembled to look right on launch day.
+          </p>
         </div>
       </div>
-      <!-- END TEMPLATE -->
+    </div>
+  </section>
+
+  <!-- Why New Is An Advantage -->
+  <section class="section section--alt" id="why-new">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="label section-header__label reveal reveal--up">Let's Be Direct About It</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">Why a new studio is an advantage</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          Sylvan C7 is young. Here's the honest case for why that works in your favor, not against it.
+        </p>
+      </div>
+
+      <div class="advantage-grid">
+        <div class="advantage-card reveal reveal--up stagger-1">
+          <h3 class="advantage-card__title">Real attention, not a small account</h3>
+          <p class="advantage-card__text">At a busy shop, a smaller project gets whatever time is left over. Here, work is only taken on when it can be given real attention — scoped, scheduled, and built to the same standard whatever its size.</p>
+        </div>
+        <div class="advantage-card reveal reveal--up stagger-2">
+          <h3 class="advantage-card__title">Honest pricing</h3>
+          <p class="advantage-card__text">There's no agency overhead, no account-management layer, no office lease baked into the quote. You're paying for the work, not the structure around it.</p>
+        </div>
+        <div class="advantage-card reveal reveal--up stagger-3">
+          <h3 class="advantage-card__title">Direct access to the builder</h3>
+          <p class="advantage-card__text">Questions and decisions go straight to the person doing the work. There's nobody to route a request through and nothing to translate, so most things get settled in the same conversation they came up in.</p>
+        </div>
+        <div class="advantage-card reveal reveal--up stagger-4">
+          <h3 class="advantage-card__title">Every incentive to overdeliver</h3>
+          <p class="advantage-card__text">Early projects are how a new studio builds its reputation. That means your project gets treated like it matters — because it does, directly, to what comes next.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How We Work -->
+  <section class="section" id="how-we-work">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="label section-header__label reveal reveal--up">The Process</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">How we work with you</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          A handful of commitments designed to keep the risk on our side, not yours.
+        </p>
+      </div>
+
+      <div class="process-list">
+        <div class="process-item reveal reveal--up stagger-1">
+          <span class="process-item__number">01</span>
+          <div>
+            <h3 class="process-item__title">A fixed quote before anything starts</h3>
+            <p class="process-item__text">You'll know the full price before any work begins. No hourly surprises, no scope creep billed after the fact.</p>
+          </div>
+        </div>
+        <div class="process-item reveal reveal--up stagger-2">
+          <span class="process-item__number">02</span>
+          <div>
+            <h3 class="process-item__title">You own everything</h3>
+            <p class="process-item__text">The code, the domain, the hosting accounts, the content — all of it is yours. Nothing is held hostage to keep you as a client.</p>
+          </div>
+        </div>
+        <div class="process-item reveal reveal--up stagger-3">
+          <span class="process-item__number">03</span>
+          <div>
+            <h3 class="process-item__title">No lock-in contracts</h3>
+            <p class="process-item__text">You stay because the work is good, not because you're bound to a term. There's no auto-renewing agreement designed to trap you.</p>
+          </div>
+        </div>
+        <div class="process-item reveal reveal--up stagger-4">
+          <span class="process-item__number">04</span>
+          <div>
+            <h3 class="process-item__title">Plain language, never jargon</h3>
+            <p class="process-item__text">Every explanation is one you can actually use to make a decision — no buzzwords standing in for a real answer.</p>
+          </div>
+        </div>
+        <div class="process-item reveal reveal--up stagger-5">
+          <span class="process-item__number">05</span>
+          <div>
+            <h3 class="process-item__title">You get trained to run it yourself</h3>
+            <p class="process-item__text">Before launch, you'll know how to update your own site's content — so you're never stuck waiting on someone else for a simple change.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- CTA Section -->
   <section class="section cta-section">
     <div class="container" style="text-align: center;">
-      <span class="label mb-6 reveal reveal--up">Join Us</span>
+      <span class="label mb-6 reveal reveal--up">Let's Talk</span>
       <h2 class="display-lg reveal reveal--up stagger-1">Ready to build<br>something <span class="accent">resilient?</span></h2>
       <p class="text-lg reveal reveal--up stagger-2" style="margin: var(--space-6) auto 0; max-width: 45ch;">
-        Every great system starts with a conversation.
+        Every great website starts with a conversation.
         Let's talk about what you're building.
       </p>
       <div class="reveal reveal--up stagger-3" style="margin-top: var(--space-10);">
@@ -778,41 +883,40 @@
       <div class="footer__top">
         <div class="footer__brand">
           <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
-          <p>Digital infrastructure and technology services built for businesses that refuse to stand still.</p>
+          <p>We design and build fast, modern websites for businesses in every industry &mdash; then keep them running.</p>
+          <a href="contact.html" class="btn btn--outline btn--sm" style="margin-top: var(--space-5);">Start your project</a>
         </div>
         <div>
           <h4 class="footer__heading">Navigate</h4>
           <a href="index.html" class="footer__link">Home</a>
           <a href="services.html" class="footer__link">Services</a>
-          <a href="about.html" class="footer__link">About</a>
           <a href="work.html" class="footer__link">Work</a>
+          <a href="pricing.html" class="footer__link">Pricing</a>
+          <a href="about.html" class="footer__link">About</a>
+          <a href="faq.html" class="footer__link">FAQ</a>
           <a href="contact.html" class="footer__link">Contact</a>
         </div>
         <div>
-          <h4 class="footer__heading">Services</h4>
-          <a href="services.html" class="footer__link">Infrastructure</a>
-          <a href="services.html" class="footer__link">Web & Apps</a>
-          <a href="services.html" class="footer__link">Cloud</a>
-          <a href="services.html" class="footer__link">Data</a>
-          <a href="services.html" class="footer__link">Security</a>
+          <h4 class="footer__heading">Industries</h4>
+          <a href="industries.html" class="footer__link">Restaurants &amp; Hospitality</a>
+          <a href="industries.html" class="footer__link">Dental &amp; Medical</a>
+          <a href="industries.html" class="footer__link">Legal &amp; Professional</a>
+          <a href="industries.html" class="footer__link">Home Services &amp; Trades</a>
+          <a href="industries.html" class="footer__link">Fitness &amp; Wellness</a>
+          <a href="industries.html" class="footer__link">Retail &amp; E-commerce</a>
+          <a href="industries.html" class="footer__link">SaaS &amp; Technology</a>
+          <a href="industries.html" class="footer__link">Real Estate &amp; Property</a>
         </div>
         <div>
           <h4 class="footer__heading">Connect</h4>
-          <!-- TEMPLATE: Replace with real contact info -->
           <a href="mailto:greysonbmiller@protonmail.com" class="footer__link">greysonbmiller@protonmail.com</a>
-          <a href="tel:+12084108122" class="footer__link">+1 (208) 410-8122</a>
+          <a href="tel:+16266220261" class="footer__link">+1 (626) 622-0261</a>
+          <span class="footer__link" style="cursor: default;">Los Angeles, California &mdash; working remotely with clients across the US</span>
         </div>
       </div>
 
       <div class="footer__bottom">
         <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
-        <div class="footer__socials">
-
-          <a href="https://github.com/greysonbmiller" target="_blank" rel="noopener noreferrer" class="footer__social" aria-label="GitHub">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-          </a>
-
-        </div>
       </div>
     </div>
   </footer>
@@ -820,5 +924,11 @@
   <script src="js/animations.js"></script>
   <script src="js/interactions.js"></script>
   <script src="js/main.js"></script>
+  <!-- MOBILECTA:START -->
+  <div class="mobile-cta">
+    <a href="tel:+16266220261" class="btn btn--outline btn--sm">Call</a>
+    <a href="contact.html" class="btn btn--primary btn--sm">Get a Free Quote</a>
+  </div>
+  <!-- MOBILECTA:END -->
 </body>
 </html>

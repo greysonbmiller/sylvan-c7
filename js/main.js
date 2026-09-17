@@ -42,6 +42,7 @@
     if (!toggle || !mobile || !overlay) return;
 
     function openMenu() {
+      toggle.setAttribute('aria-expanded', 'true');
       toggle.classList.add('open');
       mobile.classList.add('open');
       overlay.classList.add('open');
@@ -49,6 +50,7 @@
     }
 
     function closeMenu() {
+      toggle.setAttribute('aria-expanded', 'false');
       toggle.classList.remove('open');
       mobile.classList.remove('open');
       overlay.classList.remove('open');

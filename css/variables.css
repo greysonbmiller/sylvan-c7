@@ -2,7 +2,8 @@
    Sylvan C7 — Design Tokens & Reset
    ========================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap');
+/* Fonts are loaded via <link> in each page's <head> so the request starts
+   immediately rather than waiting for this stylesheet to parse. */
 
 :root {
   /* ---- Color Palette ---- */
@@ -14,8 +15,12 @@
   --border-medium: #2f3d35;
 
   --text-primary:   #e4e0d8;
-  --text-secondary: #7d8a7f;
-  --text-tertiary:  #4a5650;
+  /* Both clear WCAG AA (4.5:1) on every background token below.
+     The former values (#7d8a7f / #4a5650) measured 4.33 and 2.04 on
+     --bg-surface, failing for body text. */
+  --text-secondary: #96a39a;
+  --text-tertiary:  #8a9689;
+  --text-faint:     #4a5650; /* decorative only — never for text */
 
   --accent:        #00d97e;
   --accent-dim:    #00b368;

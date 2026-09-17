@@ -14,6 +14,29 @@
     document.querySelectorAll('.reveal, .hero-line, .accent-line').forEach(el => {
       el.classList.add('visible');
     });
+
+    // The timeline's finished state is carried by .active. Without this the
+    // whole process section stays greyed out for reduced-motion visitors.
+    document.querySelectorAll('.timeline__step').forEach(step => {
+      step.classList.add('active');
+    });
+
+    // Count-up numbers animate to their target; jump straight to it instead.
+    document.querySelectorAll('[data-target]').forEach(el => {
+      el.textContent = el.getAttribute('data-target');
+    });
+
+    // The scroll-progress bar is not motion for its own sake — it is a
+    // position indicator, so keep it working.
+    const bar = document.getElementById('scrollProgress');
+    if (bar) {
+      const update = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+      };
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    }
     return;
   }
 

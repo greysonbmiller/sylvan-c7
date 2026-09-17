@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://greysonbmiller.github.io/sylvan-c7/sitemap.xml

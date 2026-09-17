@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sylvan C7 pricing — website packages from $2,500, optional care plans from $99/mo, and a fixed quote for every project before work starts.">
+
+  <!-- SEO:START -->
+  <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/pricing.html">
+  <meta name="theme-color" content="#0a100d">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sylvan C7">
+  <meta property="og:title" content="Pricing — Website Design &amp; Development | Sylvan C7">
+  <meta property="og:description" content="Sylvan C7 pricing — website packages from $2,500, optional care plans from $99/mo, and a fixed quote for every project before work starts.">
+  <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/pricing.html">
+  <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sylvan C7 — websites that turn visitors into customers.">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pricing — Website Design &amp; Development | Sylvan C7">
+  <meta name="twitter:description" content="Sylvan C7 pricing — website packages from $2,500, optional care plans from $99/mo, and a fixed quote for every project before work starts.">
+  <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+<!-- SEO:END -->
+
+  
+  
+  
+    <title>Pricing — Website Design & Development | Sylvan C7</title>
+
+  <!-- FONTS:START -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap">
+  <!-- FONTS:END -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/pages.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
+
+  <style>
+    /* ---- Pricing page (page-scoped) ---- */
+    .pricing-note {
+      color: var(--text-tertiary);
+      font-size: var(--text-sm);
+      margin-top: var(--space-6);
+    }
+
+    .price-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+    }
+
+    .price-card--popular {
+      border-color: var(--accent);
+      box-shadow: 0 0 40px var(--accent-glow), 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .price-card__badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--bg-deep);
+      font-family: var(--font-heading);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: var(--tracking-wide);
+      padding: var(--space-1) var(--space-4);
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    .price-card__amount {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: var(--space-5) 0 var(--space-2);
+      line-height: 1;
+    }
+
+    .price-card__amount span {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: var(--text-xs);
+      font-weight: 500;
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-top: var(--space-2);
+    }
+
+    .price-card__for {
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+      padding-bottom: var(--space-6);
+      margin-bottom: var(--space-6);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .price-card__features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin-bottom: var(--space-8);
+      flex: 1;
+    }
+
+    .price-card__features li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-normal);
+    }
+
+    .price-card__features li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .price-card .btn {
+      align-self: flex-start;
+      margin-top: auto;
+    }
+
+    /* Included band */
+    .included-grid {
+      gap: var(--space-8) var(--space-6);
+    }
+
+    .included-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+    }
+
+    .included-item__mark {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-medium);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+
+    .included-item__text {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-normal);
+      padding-top: var(--space-1);
+    }
+
+    /* What affects price */
+    .factor-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .factor-item {
+      display: flex;
+      gap: var(--space-6);
+      align-items: flex-start;
+      padding: var(--space-6) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .factor-item:first-child {
+      padding-top: 0;
+    }
+
+    .factor-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .factor-item__num {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 800;
+      color: var(--accent);
+      opacity: 0.3;
+      line-height: 1;
+      min-width: 2ch;
+      flex-shrink: 0;
+    }
+
+    .factor-item__title {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .factor-item__text {
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+    }
+
+    /* FAQ teaser */
+    .faq-teaser-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+      margin-bottom: var(--space-10);
+    }
+
+    .faq-teaser-item {
+      padding-bottom: var(--space-6);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .faq-teaser-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .faq-teaser-item__q {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .faq-teaser-item__a {
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      line-height: var(--leading-loose);
+    }
+
+    @media (max-width: 480px) {
+      .price-card__badge {
+        font-size: 0.65rem;
+      }
+    }
+  </style>
+  <!-- NOSCRIPT:START -->
+  <noscript>
+    <style>
+      /* Scroll-reveal animations start hidden and are released by JS. If JS is
+         blocked or fails to load, show everything rather than a blank page. */
+      .reveal,
+      .hero-line,
+      .accent-line { opacity: 1 !important; transform: none !important; }
+      .hero-line__inner { transform: none !important; }
+      .timeline__step { opacity: 1 !important; }
+      .timeline__step::before { height: 100% !important; }
+      .scroll-progress { display: none !important; }
+    </style>
+  </noscript>
+  <!-- NOSCRIPT:END -->
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+
+      <div class="nav__links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="services.html" class="nav__link">Services</a>
+        <a href="work.html" class="nav__link">Work</a>
+        <a href="industries.html" class="nav__link">Industries</a>
+        <a href="pricing.html" class="nav__link active">Pricing</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Get a Free Quote</a>
+      </div>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMobile">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="nav__mobile-overlay" id="navOverlay"></div>
+  <div class="nav__mobile" id="navMobile">
+    <a href="index.html" class="nav__mobile-link">Home</a>
+    <a href="services.html" class="nav__mobile-link">Services</a>
+    <a href="work.html" class="nav__mobile-link">Work</a>
+    <a href="industries.html" class="nav__mobile-link">Industries</a>
+    <a href="pricing.html" class="nav__mobile-link active">Pricing</a>
+    <a href="about.html" class="nav__mobile-link">About</a>
+    <a href="contact.html" class="nav__mobile-link">Contact</a>
+    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Get a Free Quote</a>
+  </div>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <span class="label reveal reveal--up">Pricing</span>
+      <h1 class="display-xl reveal reveal--up stagger-1">Transparent pricing, no guessing games</h1>
+      <p class="text-lg reveal reveal--up stagger-2" style="max-width: 55ch; margin-top: var(--space-6);">
+        Every project gets a fixed quote before any work starts. The packages
+        below show what things typically cost and what's included, so you can
+        walk into a call already knowing the ballpark.
+      </p>
+    </div>
+  </section>
+
+  <!-- Packages -->
+  <section class="section" id="packages">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">Website Packages</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">Pick a starting point</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          Three project shapes to start the conversation.
+        </p>
+      </div>
+
+      <div class="grid grid--3">
+
+        <!-- Launch -->
+        <div class="card price-card reveal reveal--up stagger-1">
+          <span class="label">Launch</span>
+          <div class="price-card__amount">
+            from $2,500
+            <span>one-time</span>
+          </div>
+          <p class="price-card__for">For a business that needs a credible site fast.</p>
+          <ul class="price-card__features">
+            <li>Up to 5 pages</li>
+            <li>Mobile-first, responsive design</li>
+            <li>Contact form</li>
+            <li>On-page SEO basics</li>
+            <li>Google Business Profile setup</li>
+            <li>CMS available as a paid add-on</li>
+            <li>1 round of revisions</li>
+            <li>Typical timeline: 2&ndash;3 weeks</li>
+          </ul>
+          <a href="contact.html" class="btn btn--outline">Start a project</a>
+        </div>
+
+        <!-- Growth (default scope) -->
+        <div class="card price-card price-card--popular reveal reveal--up stagger-2">
+          <span class="price-card__badge">Our default scope</span>
+          <span class="label">Growth</span>
+          <div class="price-card__amount">
+            from $5,500
+            <span>one-time</span>
+          </div>
+          <p class="price-card__for">For a business that needs the site to actively sell.</p>
+          <ul class="price-card__features">
+            <li>Up to 12 pages</li>
+            <li>CMS as standard &mdash; edit your own content</li>
+            <li>Copywriting support</li>
+            <li>Advanced SEO</li>
+            <li>Conversion tracking &mdash; goals for calls and form submissions</li>
+            <li>Booking / CRM integration</li>
+            <li>2 rounds of revisions</li>
+            <li>Typical timeline: 4&ndash;6 weeks</li>
+          </ul>
+          <a href="contact.html" class="btn btn--primary">Start a project</a>
+        </div>
+
+        <!-- Commerce & Custom -->
+        <div class="card price-card reveal reveal--up stagger-3">
+          <span class="label">Commerce &amp; Custom</span>
+          <div class="price-card__amount">
+            from $10,000
+            <span>project-based</span>
+          </div>
+          <p class="price-card__for">For online stores, booking platforms, and custom-built systems.</p>
+          <ul class="price-card__features">
+            <li>Online store or booking platform</li>
+            <li>Customer portals &amp; accounts</li>
+            <li>Custom functionality &amp; integrations</li>
+            <li>Migration from an existing platform</li>
+            <li>Revision rounds scoped per project</li>
+            <li>Timeline scoped per project &mdash; typically 8&ndash;12 weeks depending on scope</li>
+          </ul>
+          <a href="contact.html" class="btn btn--outline">Start a project</a>
+        </div>
+
+      </div>
+
+      <p class="pricing-note reveal reveal--up stagger-4">
+        Prices above are starting points, not final quotes. Every project is scoped and
+        priced individually after a free call.
+      </p>
+
+      <p class="pricing-note reveal reveal--up stagger-5">
+        Payment is simple: a deposit books your slot on the calendar, and the balance is
+        due at launch. Larger projects can be split into more milestones &mdash; the
+        schedule is agreed as part of your quote.
+      </p>
+    </div>
+  </section>
+
+  <!-- Care Plans -->
+  <section class="section section--alt" id="carePlans">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">Ongoing Care</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">Care plans, if you want them</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          Optional monthly plans that keep a finished site healthy. You can host the
+          site anywhere, with anyone, once it's yours.
+        </p>
+      </div>
+
+      <div class="grid grid--3">
+
+        <div class="card price-card reveal reveal--up stagger-1">
+          <span class="label">Essential</span>
+          <div class="price-card__amount">
+            $99<span>per month</span>
+          </div>
+          <ul class="price-card__features">
+            <li>Hosting</li>
+            <li>SSL certificate</li>
+            <li>Automated backups</li>
+            <li>Uptime monitoring</li>
+            <li>Security updates</li>
+          </ul>
+        </div>
+
+        <div class="card price-card reveal reveal--up stagger-2">
+          <span class="label">Active</span>
+          <div class="price-card__amount">
+            $249<span>per month</span>
+          </div>
+          <ul class="price-card__features">
+            <li>Everything in Essential</li>
+            <li>Monthly content edits</li>
+            <li>Performance tuning</li>
+            <li>Monthly report</li>
+          </ul>
+        </div>
+
+        <div class="card price-card reveal reveal--up stagger-3">
+          <span class="label">Partner</span>
+          <div class="price-card__amount">
+            $499<span>per month</span>
+          </div>
+          <ul class="price-card__features">
+            <li>Everything in Active</li>
+            <li>Ongoing SEO work</li>
+            <li>New landing pages</li>
+            <li>Priority turnaround</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Included -->
+  <section class="section" id="included">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">Every Package</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">What's included, no matter the tier</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          These aren't upsells. They're the baseline for every project we build.
+        </p>
+      </div>
+
+      <div class="grid grid--4 included-grid">
+        <div class="included-item reveal reveal--up stagger-1">
+          <span class="included-item__mark">✓</span>
+          <span class="included-item__text">Responsive on every device</span>
+        </div>
+        <div class="included-item reveal reveal--up stagger-2">
+          <span class="included-item__mark">✓</span>
+          <span class="included-item__text">Accessibility considered from the start</span>
+        </div>
+        <div class="included-item reveal reveal--up stagger-3">
+          <span class="included-item__mark">✓</span>
+          <span class="included-item__text">Fast load times</span>
+        </div>
+        <div class="included-item reveal reveal--up stagger-4">
+          <span class="included-item__mark">✓</span>
+          <span class="included-item__text">SEO fundamentals built in</span>
+        </div>
+        <div class="included-item reveal reveal--up stagger-1">
+          <span class="included-item__mark">✓</span>
+          <span class="included-item__text">Basic analytics setup so you can see your traffic</span>
+        </div>
+        <div class="included-item reveal reveal--up stagger-1">
+          <span class="included-item__mark">✓</span>
+          <span class="included-item__text">SSL &amp; security hardening</span>
+        </div>
+        <div class="included-item reveal reveal--up stagger-2">
+          <span class="included-item__mark">✓</span>
+          <span class="included-item__text">You own everything &mdash; code, domain, content, accounts</span>
+        </div>
+        <div class="included-item reveal reveal--up stagger-3">
+          <span class="included-item__mark">✓</span>
+          <span class="included-item__text">Training so you can run it yourself</span>
+        </div>
+        <div class="included-item reveal reveal--up stagger-4">
+          <span class="included-item__mark">✓</span>
+          <span class="included-item__text">No lock-in contracts</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What Affects the Price -->
+  <section class="section section--alt" id="priceFactors">
+    <div class="container">
+      <div class="grid grid--split">
+        <div>
+          <span class="label reveal reveal--up">Estimate It Yourself</span>
+          <h2 class="reveal reveal--up stagger-1" style="margin-top: var(--space-4); margin-bottom: var(--space-6);">What affects the price</h2>
+          <p class="text-lg reveal reveal--up stagger-2">
+            Two sites in the same package can still cost differently. Here's what
+            actually moves the number, so you can gauge where your project lands
+            before we ever talk numbers.
+          </p>
+        </div>
+
+        <div class="factor-list">
+          <div class="factor-item reveal reveal--up stagger-1">
+            <span class="factor-item__num">01</span>
+            <div>
+              <div class="factor-item__title">Page count</div>
+              <p class="factor-item__text">More pages mean more content to structure, write, and design.</p>
+            </div>
+          </div>
+          <div class="factor-item reveal reveal--up stagger-2">
+            <span class="factor-item__num">02</span>
+            <div>
+              <div class="factor-item__title">Custom design vs. adapted layout</div>
+              <p class="factor-item__text">A fully custom look takes more design time than adapting a proven layout to your brand.</p>
+            </div>
+          </div>
+          <div class="factor-item reveal reveal--up stagger-3">
+            <span class="factor-item__num">03</span>
+            <div>
+              <div class="factor-item__title">E-commerce / booking complexity</div>
+              <p class="factor-item__text">A simple product catalog is quicker than variable inventory, custom checkout flows, or multi-step booking.</p>
+            </div>
+          </div>
+          <div class="factor-item reveal reveal--up stagger-4">
+            <span class="factor-item__num">04</span>
+            <div>
+              <div class="factor-item__title">Content &amp; photography readiness</div>
+              <p class="factor-item__text">Ready-to-use copy and photos move faster than starting from a blank page.</p>
+            </div>
+          </div>
+          <div class="factor-item reveal reveal--up stagger-5">
+            <span class="factor-item__num">05</span>
+            <div>
+              <div class="factor-item__title">Integrations</div>
+              <p class="factor-item__text">Connecting a CRM, payment processor, scheduling tool, or other system adds setup and testing time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Teaser -->
+  <section class="section" id="faqTeaser">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="label section-header__label reveal reveal--up">Quick Answers</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">Before you ask</h2>
+      </div>
+
+      <div class="faq-teaser-list" style="max-width: 720px; margin: 0 auto;">
+        <div class="faq-teaser-item reveal reveal--up stagger-1">
+          <div class="faq-teaser-item__q">Is the price really fixed?</div>
+          <p class="faq-teaser-item__a">Yes. Once we scope your project on a free call, you get a fixed quote before any work starts &mdash; no hourly billing, no surprise invoices.</p>
+        </div>
+        <div class="faq-teaser-item reveal reveal--up stagger-2">
+          <div class="faq-teaser-item__q">What if the project changes scope halfway through?</div>
+          <p class="faq-teaser-item__a">We quote the change separately before doing the work, so you always know the cost up front.</p>
+        </div>
+        <div class="faq-teaser-item reveal reveal--up stagger-3">
+          <div class="faq-teaser-item__q">Is a care plan required?</div>
+          <p class="faq-teaser-item__a">No. Care plans are entirely optional.</p>
+        </div>
+      </div>
+
+      <div class="reveal reveal--up stagger-4" style="text-align: center; margin-top: var(--space-10);">
+        <a href="faq.html" class="btn btn--outline">Read the full FAQ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section section--alt cta-section">
+    <div class="container" style="text-align: center;">
+      <span class="label mb-6 reveal reveal--up">Let's Talk Numbers</span>
+      <h2 class="display-lg reveal reveal--up stagger-1">Ready for your quote?</h2>
+      <p class="text-lg reveal reveal--up stagger-2" style="margin: var(--space-6) auto 0; max-width: 45ch;">
+        Tell us about your business on a free call, and walk away with a fixed
+        price and a clear timeline. Messages get a reply usually the same day,
+        always within two business days.
+      </p>
+      <div class="reveal reveal--up stagger-3" style="margin-top: var(--space-10);">
+        <div class="magnetic-wrap">
+          <a href="contact.html" class="btn btn--primary btn--lg">Start a Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+          <p>We design and build fast, modern websites for businesses in every industry &mdash; then keep them running.</p>
+          <a href="contact.html" class="btn btn--outline btn--sm" style="margin-top: var(--space-5);">Start your project</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Navigate</h4>
+          <a href="index.html" class="footer__link">Home</a>
+          <a href="services.html" class="footer__link">Services</a>
+          <a href="work.html" class="footer__link">Work</a>
+          <a href="pricing.html" class="footer__link">Pricing</a>
+          <a href="about.html" class="footer__link">About</a>
+          <a href="faq.html" class="footer__link">FAQ</a>
+          <a href="contact.html" class="footer__link">Contact</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <a href="industries.html" class="footer__link">Restaurants &amp; Hospitality</a>
+          <a href="industries.html" class="footer__link">Dental &amp; Medical</a>
+          <a href="industries.html" class="footer__link">Legal &amp; Professional</a>
+          <a href="industries.html" class="footer__link">Home Services &amp; Trades</a>
+          <a href="industries.html" class="footer__link">Fitness &amp; Wellness</a>
+          <a href="industries.html" class="footer__link">Retail &amp; E-commerce</a>
+          <a href="industries.html" class="footer__link">SaaS &amp; Technology</a>
+          <a href="industries.html" class="footer__link">Real Estate &amp; Property</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Connect</h4>
+          <a href="mailto:greysonbmiller@protonmail.com" class="footer__link">greysonbmiller@protonmail.com</a>
+          <a href="tel:+16266220261" class="footer__link">+1 (626) 622-0261</a>
+          <span class="footer__link" style="cursor: default;">Los Angeles, California &mdash; working remotely with clients across the US</span>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/animations.js"></script>
+  <script src="js/interactions.js"></script>
+  <script src="js/main.js"></script>
+  <!-- MOBILECTA:START -->
+  <div class="mobile-cta">
+    <a href="tel:+16266220261" class="btn btn--outline btn--sm">Call</a>
+    <a href="contact.html" class="btn btn--primary btn--sm">Get a Free Quote</a>
+  </div>
+  <!-- MOBILECTA:END -->
+</body>
+</html>

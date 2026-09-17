@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This page doesn't exist. Find your way back to Sylvan C7's home, services, work, pricing, or contact page.">
+  <title>Page Not Found — Sylvan C7</title>
+
+  <!-- FONTS:START -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap">
+  <!-- FONTS:END -->
+  <link rel="stylesheet" href="/sylvan-c7/css/variables.css">
+  <link rel="stylesheet" href="/sylvan-c7/css/base.css">
+  <link rel="stylesheet" href="/sylvan-c7/css/layout.css">
+  <link rel="stylesheet" href="/sylvan-c7/css/components.css">
+  <link rel="stylesheet" href="/sylvan-c7/css/animations.css">
+  <link rel="stylesheet" href="/sylvan-c7/css/pages.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
+
+  <style>
+    .not-found {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .not-found__code {
+      font-family: var(--font-display);
+      font-size: var(--text-7xl);
+      font-weight: 800;
+      color: var(--accent);
+      opacity: 0.25;
+      line-height: 1;
+      margin-bottom: var(--space-4);
+    }
+
+    .not-found__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      margin-top: var(--space-10);
+    }
+  </style>
+  <!-- NOSCRIPT:START -->
+  <noscript>
+    <style>
+      /* Scroll-reveal animations start hidden and are released by JS. If JS is
+         blocked or fails to load, show everything rather than a blank page. */
+      .reveal,
+      .hero-line,
+      .accent-line { opacity: 1 !important; transform: none !important; }
+      .hero-line__inner { transform: none !important; }
+      .timeline__step { opacity: 1 !important; }
+      .timeline__step::before { height: 100% !important; }
+      .scroll-progress { display: none !important; }
+    </style>
+  </noscript>
+  <!-- NOSCRIPT:END -->
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="/sylvan-c7/index.html" class="nav__logo">Sylvan <span>C7</span></a>
+
+      <div class="nav__links">
+        <a href="/sylvan-c7/index.html" class="nav__link">Home</a>
+        <a href="/sylvan-c7/services.html" class="nav__link">Services</a>
+        <a href="/sylvan-c7/work.html" class="nav__link">Work</a>
+        <a href="/sylvan-c7/industries.html" class="nav__link">Industries</a>
+        <a href="/sylvan-c7/pricing.html" class="nav__link">Pricing</a>
+        <a href="/sylvan-c7/about.html" class="nav__link">About</a>
+        <a href="/sylvan-c7/contact.html" class="nav__link">Contact</a>
+        <a href="/sylvan-c7/contact.html" class="btn btn--primary btn--sm nav__cta">Get a Free Quote</a>
+      </div>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMobile">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="nav__mobile-overlay" id="navOverlay"></div>
+  <div class="nav__mobile" id="navMobile">
+    <a href="/sylvan-c7/index.html" class="nav__mobile-link">Home</a>
+    <a href="/sylvan-c7/services.html" class="nav__mobile-link">Services</a>
+    <a href="/sylvan-c7/work.html" class="nav__mobile-link">Work</a>
+    <a href="/sylvan-c7/industries.html" class="nav__mobile-link">Industries</a>
+    <a href="/sylvan-c7/pricing.html" class="nav__mobile-link">Pricing</a>
+    <a href="/sylvan-c7/about.html" class="nav__mobile-link">About</a>
+    <a href="/sylvan-c7/contact.html" class="nav__mobile-link">Contact</a>
+    <a href="/sylvan-c7/contact.html" class="btn btn--primary" style="margin-top: auto;">Get a Free Quote</a>
+  </div>
+
+  <!-- 404 Content -->
+  <section class="page-header not-found">
+    <div class="container">
+      <span class="not-found__code">404</span>
+      <h1 class="display-xl">This page grew somewhere else.</h1>
+      <p class="text-lg" style="max-width: 55ch; margin-top: var(--space-6);">
+        We couldn't find the page you were looking for. It may have moved, been renamed,
+        or never existed at this address.
+      </p>
+
+      <div class="not-found__links">
+        <a href="/sylvan-c7/index.html" class="btn btn--primary btn--lg">Home</a>
+        <a href="/sylvan-c7/services.html" class="btn btn--outline btn--lg">Services</a>
+        <a href="/sylvan-c7/work.html" class="btn btn--outline btn--lg">Work</a>
+        <a href="/sylvan-c7/pricing.html" class="btn btn--outline btn--lg">Pricing</a>
+        <a href="/sylvan-c7/contact.html" class="btn btn--outline btn--lg">Contact</a>
+      </div>
+
+      <p class="text-sm" style="margin-top: var(--space-10); color: var(--text-tertiary);">
+        Looking for something specific? <a href="/sylvan-c7/contact.html" class="link">Get in touch</a>
+        and we'll point you the right way.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="/sylvan-c7/index.html" class="nav__logo">Sylvan <span>C7</span></a>
+          <p>We design and build fast, modern websites for businesses in every industry &mdash; then keep them running.</p>
+          <a href="/sylvan-c7/contact.html" class="btn btn--outline btn--sm" style="margin-top: var(--space-5);">Start your project</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Navigate</h4>
+          <a href="/sylvan-c7/index.html" class="footer__link">Home</a>
+          <a href="/sylvan-c7/services.html" class="footer__link">Services</a>
+          <a href="/sylvan-c7/work.html" class="footer__link">Work</a>
+          <a href="/sylvan-c7/pricing.html" class="footer__link">Pricing</a>
+          <a href="/sylvan-c7/about.html" class="footer__link">About</a>
+          <a href="/sylvan-c7/faq.html" class="footer__link">FAQ</a>
+          <a href="/sylvan-c7/contact.html" class="footer__link">Contact</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <a href="/sylvan-c7/industries.html" class="footer__link">Restaurants &amp; Hospitality</a>
+          <a href="/sylvan-c7/industries.html" class="footer__link">Dental &amp; Medical</a>
+          <a href="/sylvan-c7/industries.html" class="footer__link">Legal &amp; Professional</a>
+          <a href="/sylvan-c7/industries.html" class="footer__link">Home Services &amp; Trades</a>
+          <a href="/sylvan-c7/industries.html" class="footer__link">Fitness &amp; Wellness</a>
+          <a href="/sylvan-c7/industries.html" class="footer__link">Retail &amp; E-commerce</a>
+          <a href="/sylvan-c7/industries.html" class="footer__link">SaaS &amp; Technology</a>
+          <a href="/sylvan-c7/industries.html" class="footer__link">Real Estate &amp; Property</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Connect</h4>
+          <a href="mailto:greysonbmiller@protonmail.com" class="footer__link">greysonbmiller@protonmail.com</a>
+          <a href="tel:+16266220261" class="footer__link">+1 (626) 622-0261</a>
+          <span class="footer__link" style="cursor: default;">Los Angeles, California &mdash; working remotely with clients across the US</span>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/sylvan-c7/js/animations.js"></script>
+  <script src="/sylvan-c7/js/interactions.js"></script>
+  <script src="/sylvan-c7/js/main.js"></script>
+  <!-- MOBILECTA:START -->
+  <div class="mobile-cta">
+    <a href="tel:+16266220261" class="btn btn--outline btn--sm">Call</a>
+    <a href="/sylvan-c7/contact.html" class="btn btn--primary btn--sm">Get a Free Quote</a>
+  </div>
+  <!-- MOBILECTA:END -->
+</body>
+</html>

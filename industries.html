@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="How Sylvan C7 builds websites differently for every industry — restaurants, dental, legal, home services, fitness, retail, SaaS, and real estate. Web design and development for small and mid-sized businesses.">
+
+  <!-- SEO:START -->
+  <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/industries.html">
+  <meta name="theme-color" content="#0a100d">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sylvan C7">
+  <meta property="og:title" content="Website Design by Industry — Every Vertical | Sylvan C7">
+  <meta property="og:description" content="How Sylvan C7 builds websites differently for every industry — restaurants, dental, legal, home services, fitness, retail, SaaS, and real estate. Web design and development for small and mid-sized businesses.">
+  <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/industries.html">
+  <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sylvan C7 — websites that turn visitors into customers.">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Website Design by Industry — Every Vertical | Sylvan C7">
+  <meta name="twitter:description" content="How Sylvan C7 builds websites differently for every industry — restaurants, dental, legal, home services, fitness, retail, SaaS, and real estate. Web design and development for small and mid-sized businesses.">
+  <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+<!-- SEO:END -->
+
+  
+  
+  
+    <title>Website Design by Industry — Every Vertical | Sylvan C7</title>
+
+  <!-- FONTS:START -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap">
+  <!-- FONTS:END -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/pages.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
+
+  <style>
+    /* ---- Industries page: card grid ---- */
+    .industry-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-8);
+    }
+
+    .industry-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .industry-card__eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-4);
+    }
+
+    .industry-card__text {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-loose);
+      margin-bottom: var(--space-5);
+    }
+
+    .industry-card__features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .industry-card__features li {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      padding-left: var(--space-5);
+      position: relative;
+      letter-spacing: var(--tracking-normal);
+      text-transform: none;
+      font-family: var(--font-body);
+    }
+
+    .industry-card__features li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 8px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .industry-card__footer {
+      margin-top: auto;
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--space-4);
+    }
+
+    .industry-card__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--font-heading);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--accent);
+      transition: gap var(--duration-normal) var(--ease-out);
+    }
+
+    .industry-card__cta:hover {
+      gap: var(--space-3);
+    }
+
+    /* ---- Universals band ---- */
+    .universals-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-6);
+    }
+
+    .universal-item {
+      text-align: center;
+      padding: var(--space-6) var(--space-4);
+    }
+
+    .universal-item__icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto var(--space-4);
+      color: var(--accent);
+    }
+
+    .universal-item__icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .universal-item__title {
+      font-family: var(--font-heading);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 1024px) {
+      .universals-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .industry-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .universals-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .universals-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <!-- NOSCRIPT:START -->
+  <noscript>
+    <style>
+      /* Scroll-reveal animations start hidden and are released by JS. If JS is
+         blocked or fails to load, show everything rather than a blank page. */
+      .reveal,
+      .hero-line,
+      .accent-line { opacity: 1 !important; transform: none !important; }
+      .hero-line__inner { transform: none !important; }
+      .timeline__step { opacity: 1 !important; }
+      .timeline__step::before { height: 100% !important; }
+      .scroll-progress { display: none !important; }
+    </style>
+  </noscript>
+  <!-- NOSCRIPT:END -->
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+
+      <div class="nav__links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="services.html" class="nav__link">Services</a>
+        <a href="work.html" class="nav__link">Work</a>
+        <a href="industries.html" class="nav__link active">Industries</a>
+        <a href="pricing.html" class="nav__link">Pricing</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Get a Free Quote</a>
+      </div>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMobile">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="nav__mobile-overlay" id="navOverlay"></div>
+  <div class="nav__mobile" id="navMobile">
+    <a href="index.html" class="nav__mobile-link">Home</a>
+    <a href="services.html" class="nav__mobile-link">Services</a>
+    <a href="work.html" class="nav__mobile-link">Work</a>
+    <a href="industries.html" class="nav__mobile-link active">Industries</a>
+    <a href="pricing.html" class="nav__mobile-link">Pricing</a>
+    <a href="about.html" class="nav__mobile-link">About</a>
+    <a href="contact.html" class="nav__mobile-link">Contact</a>
+    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Get a Free Quote</a>
+  </div>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <span class="label reveal reveal--up">Industries</span>
+      <h1 class="display-xl reveal reveal--up stagger-1">
+        Every industry sells <span class="accent">differently.</span><br>
+        Every site should be built differently too.
+      </h1>
+      <p class="text-lg reveal reveal--up stagger-2" style="max-width: 60ch; margin-top: var(--space-6);">
+        A restaurant and a law firm are not competing for the same click, and they shouldn't get the
+        same website. Below is how we think about eight different worlds — what each one's
+        customers are actually trying to do, and what the site has to accomplish to win them.
+      </p>
+    </div>
+  </section>
+
+  <!-- Industry Grid -->
+  <section class="section">
+    <div class="container">
+      <div class="industry-grid">
+
+        <div class="card industry-card reveal reveal--up stagger-1">
+          <div class="industry-card__eyebrow">
+            <h3 class="card__title" style="margin-bottom: 0;">Restaurants &amp; Hospitality</h3>
+          </div>
+          <p class="industry-card__text">
+            A restaurant site's only jobs are to make people hungry and make it effortless to act on
+            it. That means a menu that's never out of date and a reservation flow that doesn't lose
+            a party of four on a Friday night.
+          </p>
+          <ul class="industry-card__features">
+            <li>Menu that owners can update themselves</li>
+            <li>Reservation or waitlist requests that land in one place</li>
+            <li>Hours, location, and specials visible in one glance</li>
+            <li>Photography that sells the food, not the template</li>
+          </ul>
+          <div class="industry-card__footer">
+            <a href="contact.html" class="industry-card__cta">
+              Discuss a restaurant site
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card industry-card reveal reveal--up stagger-2">
+          <div class="industry-card__eyebrow">
+            <h3 class="card__title" style="margin-bottom: 0;">Dental &amp; Medical Practices</h3>
+          </div>
+          <p class="industry-card__text">
+            Someone landing on a practice site is usually a little anxious and in a hurry. The site's
+            job is to get them to a new-patient appointment request fast, and answer the insurance
+            question before they have to call and ask.
+          </p>
+          <ul class="industry-card__features">
+            <li>New-patient appointment request front and center</li>
+            <li>Accepted insurance listed plainly, no guessing</li>
+            <li>Provider bios that build trust before the first visit</li>
+            <li>Mobile-first — most of this traffic is one thumb, one hand</li>
+          </ul>
+          <div class="industry-card__footer">
+            <a href="contact.html" class="industry-card__cta">
+              Discuss a dental site
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card industry-card reveal reveal--up stagger-3">
+          <div class="industry-card__eyebrow">
+            <h3 class="card__title" style="margin-bottom: 0;">Legal &amp; Professional Services</h3>
+          </div>
+          <p class="industry-card__text">
+            Nobody hires a firm off vibes alone. The site has to establish credibility fast, make
+            practice areas easy to scan, and give a nervous prospective client a low-pressure way to
+            reach out about their specific situation.
+          </p>
+          <ul class="industry-card__features">
+            <li>Practice areas organized the way clients think, not the way lawyers file</li>
+            <li>Attorney credentials and case-type focus, clearly stated</li>
+            <li>Confidential-feeling consultation request form</li>
+            <li>Fast load and clean typography — it reads as competence</li>
+          </ul>
+          <div class="industry-card__footer">
+            <a href="contact.html" class="industry-card__cta">
+              Discuss a law firm site
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card industry-card reveal reveal--up stagger-4">
+          <div class="industry-card__eyebrow">
+            <h3 class="card__title" style="margin-bottom: 0;">Home Services &amp; Trades</h3>
+          </div>
+          <p class="industry-card__text">
+            Most of these visitors are standing in a driveway or on a job site, comparing three
+            companies on their phone. The site that wins is the one where getting a quote takes
+            under a minute, not the one with the nicest logo.
+          </p>
+          <ul class="industry-card__features">
+            <li>Quote request form built for a thumb, not a mouse</li>
+            <li>Service area and service list stated up front</li>
+            <li>Click-to-call that actually works on mobile</li>
+            <li>Before/after project photos as proof of work</li>
+          </ul>
+          <div class="industry-card__footer">
+            <a href="contact.html" class="industry-card__cta">
+              Discuss a home services site
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card industry-card reveal reveal--up stagger-1">
+          <div class="industry-card__eyebrow">
+            <h3 class="card__title" style="margin-bottom: 0;">Fitness &amp; Wellness</h3>
+          </div>
+          <p class="industry-card__text">
+            A gym or studio site has one real conversion moment: getting a stranger to try the first
+            class. Everything else — schedules, coach bios, membership tiers — exists to remove the
+            reasons not to walk in.
+          </p>
+          <ul class="industry-card__features">
+            <li>Class schedule that's always current</li>
+            <li>Free trial or intro offer with a one-step signup</li>
+            <li>Membership tiers explained without jargon</li>
+            <li>Energy in the photography and motion, not stock gym shots</li>
+          </ul>
+          <div class="industry-card__footer">
+            <a href="contact.html" class="industry-card__cta">
+              Discuss a fitness site
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card industry-card reveal reveal--up stagger-2">
+          <div class="industry-card__eyebrow">
+            <h3 class="card__title" style="margin-bottom: 0;">Retail &amp; E-commerce</h3>
+          </div>
+          <p class="industry-card__text">
+            Retail sites live or die on how fast someone can find a product and how little friction
+            stands between "interested" and "checked out." Every extra click or slow-loading page is
+            a customer handed to a competitor.
+          </p>
+          <ul class="industry-card__features">
+            <li>Clear product categories and fast search</li>
+            <li>Checkout that doesn't demand an account to buy</li>
+            <li>Inventory and pricing that stay accurate</li>
+            <li>Fast page loads — retail visitors bounce quickest</li>
+          </ul>
+          <div class="industry-card__footer">
+            <a href="contact.html" class="industry-card__cta">
+              Discuss an e-commerce site
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card industry-card reveal reveal--up stagger-3">
+          <div class="industry-card__eyebrow">
+            <h3 class="card__title" style="margin-bottom: 0;">SaaS &amp; Technology</h3>
+          </div>
+          <p class="industry-card__text">
+            A SaaS site has seconds to explain what the product actually does before a skeptical
+            visitor leaves. Clarity beats cleverness — the copy has to say what problem this solves,
+            for whom, and what happens when they click the button.
+          </p>
+          <ul class="industry-card__features">
+            <li>A homepage that explains the product in one screen</li>
+            <li>Pricing that's transparent, not "contact sales" for everything</li>
+            <li>Free trial or demo request with minimal friction</li>
+            <li>Integrations and use cases scannable, not buried</li>
+          </ul>
+          <div class="industry-card__footer">
+            <a href="contact.html" class="industry-card__cta">
+              Discuss a SaaS site
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card industry-card reveal reveal--up stagger-4">
+          <div class="industry-card__eyebrow">
+            <h3 class="card__title" style="margin-bottom: 0;">Real Estate &amp; Property</h3>
+          </div>
+          <p class="industry-card__text">
+            Buyers and renters browse listings emotionally, at odd hours, on their phones. The site
+            needs to make properties easy to search and beautiful to look at, then turn interest into
+            a scheduled showing before they move on to the next tab.
+          </p>
+          <ul class="industry-card__features">
+            <li>Searchable, filterable listings</li>
+            <li>Large, fast-loading property photography</li>
+            <li>Schedule-a-showing request built into every listing</li>
+            <li>Agent or team bios that build local trust</li>
+          </ul>
+          <div class="industry-card__footer">
+            <a href="contact.html" class="industry-card__cta">
+              Discuss a real estate site
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Don't See Your Industry -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="grid grid--split" style="align-items: center;">
+        <div class="reveal reveal--up">
+          <span class="label mb-6">Don't See Your Industry?</span>
+          <h2 style="margin-top: var(--space-3);">These eight are a sample of range, not a limit.</h2>
+        </div>
+        <div class="reveal reveal--up stagger-1">
+          <p class="text-lg">
+            Every project starts the same way regardless of industry: we learn how your specific
+            business actually gets customers, then build a site around that.
+          </p>
+          <p class="text-lg" style="margin-top: var(--space-4);">
+            Run a nonprofit, a trade school, a landscaping crew, a boutique, a med spa, an art
+            gallery, or something we haven't heard of yet? Tell us about it.
+          </p>
+          <div class="magnetic-wrap" style="display: inline-block; margin-top: var(--space-8);">
+            <a href="contact.html" class="btn btn--primary btn--lg">Tell Us About Your Business</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Universals -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="label section-header__label reveal reveal--up">Common Ground</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1">What every industry needs, regardless</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2" style="margin-left: auto; margin-right: auto;">
+          The specifics change by vertical. These don't.
+        </p>
+      </div>
+
+      <div class="universals-grid">
+        <div class="universal-item reveal reveal--up stagger-1">
+          <div class="universal-item__icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <rect x="14" y="4" width="20" height="40" rx="3"/>
+              <path d="M22 38h4"/>
+            </svg>
+          </div>
+          <h4 class="universal-item__title">Works on phones</h4>
+        </div>
+        <div class="universal-item reveal reveal--up stagger-2">
+          <div class="universal-item__icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M24 6v6M24 36v6M6 24h6M36 24h6"/>
+              <path d="M18 24l4 4 8-10"/>
+              <circle cx="24" cy="24" r="16"/>
+            </svg>
+          </div>
+          <h4 class="universal-item__title">Loads fast</h4>
+        </div>
+        <div class="universal-item reveal reveal--up stagger-3">
+          <div class="universal-item__icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="21" cy="21" r="13"/>
+              <path d="M30 30l10 10"/>
+            </svg>
+          </div>
+          <h4 class="universal-item__title">Findable on Google</h4>
+        </div>
+        <div class="universal-item reveal reveal--up stagger-4">
+          <div class="universal-item__icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M8 24h24M24 12l12 12-12 12"/>
+            </svg>
+          </div>
+          <h4 class="universal-item__title">An obvious next step</h4>
+        </div>
+        <div class="universal-item reveal reveal--up stagger-1">
+          <div class="universal-item__icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M30 8l10 10-22 22H8V30z"/>
+            </svg>
+          </div>
+          <h4 class="universal-item__title">Easy to update</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section section--alt cta-section">
+    <div class="container" style="text-align: center;">
+      <span class="label mb-6 reveal reveal--up">Let's Talk</span>
+      <h2 class="display-lg reveal reveal--up stagger-1">Ready to build for your industry?</h2>
+      <p class="text-lg reveal reveal--up stagger-2" style="margin: var(--space-6) auto 0; max-width: 45ch;">
+        Whatever business you run, it starts with a conversation about how your
+        customers actually find and choose you.
+      </p>
+      <div class="reveal reveal--up stagger-3" style="margin-top: var(--space-10);">
+        <div class="magnetic-wrap">
+          <a href="contact.html" class="btn btn--primary btn--lg">Start a Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
+          <p>We design and build fast, modern websites for businesses in every industry &mdash; then keep them running.</p>
+          <a href="contact.html" class="btn btn--outline btn--sm" style="margin-top: var(--space-5);">Start your project</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Navigate</h4>
+          <a href="index.html" class="footer__link">Home</a>
+          <a href="services.html" class="footer__link">Services</a>
+          <a href="work.html" class="footer__link">Work</a>
+          <a href="pricing.html" class="footer__link">Pricing</a>
+          <a href="about.html" class="footer__link">About</a>
+          <a href="faq.html" class="footer__link">FAQ</a>
+          <a href="contact.html" class="footer__link">Contact</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <a href="industries.html" class="footer__link">Restaurants &amp; Hospitality</a>
+          <a href="industries.html" class="footer__link">Dental &amp; Medical</a>
+          <a href="industries.html" class="footer__link">Legal &amp; Professional</a>
+          <a href="industries.html" class="footer__link">Home Services &amp; Trades</a>
+          <a href="industries.html" class="footer__link">Fitness &amp; Wellness</a>
+          <a href="industries.html" class="footer__link">Retail &amp; E-commerce</a>
+          <a href="industries.html" class="footer__link">SaaS &amp; Technology</a>
+          <a href="industries.html" class="footer__link">Real Estate &amp; Property</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Connect</h4>
+          <a href="mailto:greysonbmiller@protonmail.com" class="footer__link">greysonbmiller@protonmail.com</a>
+          <a href="tel:+16266220261" class="footer__link">+1 (626) 622-0261</a>
+          <span class="footer__link" style="cursor: default;">Los Angeles, California &mdash; working remotely with clients across the US</span>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/animations.js"></script>
+  <script src="js/interactions.js"></script>
+  <script src="js/main.js"></script>
+  <!-- MOBILECTA:START -->
+  <div class="mobile-cta">
+    <a href="tel:+16266220261" class="btn btn--outline btn--sm">Call</a>
+    <a href="contact.html" class="btn btn--primary btn--sm">Get a Free Quote</a>
+  </div>
+  <!-- MOBILECTA:END -->
+</body>
+</html>

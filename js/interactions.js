@@ -99,69 +99,172 @@
     });
   }
 
-  /* ---- Form Validation ---- */
+  /* ---- Form Validation & Submission ---- */
+
+  // Formspree endpoint. Until this is replaced with a real form ID, the handler
+  // falls back to opening a pre-filled email so an enquiry is never lost silently.
+  var FORM_PLACEHOLDER = 'YOUR_FORM_ID';
 
   function initFormValidation() {
     const form = document.getElementById('contactForm');
     if (!form) return;
 
-    const submitBtn = form.querySelector('.btn[type="submit"], .btn--primary');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const status = document.getElementById('formStatus');
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      let isValid = true;
+    // Clear a field's error as soon as the visitor engages with it.
+    form.querySelectorAll('.form-group__select').forEach(sel => {
+      sel.addEventListener('change', () => {
+        const group = sel.closest('.form-group');
+        if (group) group.classList.remove('error');
+      });
+    });
 
-      // Validate required fields
-      const requiredFields = form.querySelectorAll('[required]');
-      requiredFields.forEach(field => {
+    function setStatus(kind, html) {
+      if (!status) return;
+      status.className = 'form-status is-visible is-' + kind;
+      status.innerHTML = html;
+    }
+
+    function clearStatus() {
+      if (!status) return;
+      status.className = 'form-status';
+      status.innerHTML = '';
+    }
+
+    // Links a field to its error text so a screen reader hears the specific
+    // reason, not just the generic summary at the bottom of the form.
+    function describeError(field, group) {
+      const msg = group.querySelector('.form-group__error');
+      if (!msg) return;
+      if (!msg.id) msg.id = (field.id || 'field') + '-error';
+      field.setAttribute('aria-describedby', msg.id);
+    }
+
+    function flagInvalid(field, group) {
+      if (!group) return;
+      group.classList.add('error');
+      field.setAttribute('aria-invalid', 'true');
+      describeError(field, group);
+      if (!prefersReducedMotion) {
+        group.style.animation = 'none';
+        group.offsetHeight; // force reflow so the animation can replay
+        group.style.animation = 'shake 0.4s ease';
+      }
+    }
+
+    function validate() {
+      let firstInvalid = null;
+
+      form.querySelectorAll('[required]').forEach(field => {
         const group = field.closest('.form-group');
         if (!group) return;
 
-        if (!field.value.trim()) {
-          group.classList.add('error');
-          isValid = false;
-          // Shake animation
-          if (!prefersReducedMotion) {
-            group.style.animation = 'none';
-            group.offsetHeight; // trigger reflow
-            group.style.animation = 'shake 0.4s ease';
-          }
-        } else {
-          group.classList.remove('error');
+        let bad = !field.value.trim();
+
+        if (!bad && field.type === 'email') {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          bad = !emailRegex.test(field.value.trim());
         }
 
-        // Email validation
-        if (field.type === 'email' && field.value.trim()) {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(field.value)) {
-            group.classList.add('error');
-            const errorSpan = group.querySelector('.form-group__error');
-            if (errorSpan) errorSpan.textContent = 'Please enter a valid email';
-            isValid = false;
-          }
+        if (bad) {
+          flagInvalid(field, group);
+          if (!firstInvalid) firstInvalid = field;
+        } else {
+          group.classList.remove('error');
+          field.setAttribute('aria-invalid', 'false');
         }
       });
 
-      if (isValid) {
-        // Show success state
-        const btnText = submitBtn.textContent;
+      return firstInvalid;
+    }
+
+    // Builds a mailto: URL carrying every answer, used when no endpoint is configured.
+    function mailtoFallback() {
+      const data = new FormData(form);
+      const lines = [];
+      data.forEach((value, key) => {
+        if (key.charAt(0) === '_' || !String(value).trim()) return;
+        const label = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        lines.push(label + ': ' + value);
+      });
+      const subject = 'Project enquiry from ' + (data.get('business') || data.get('name') || 'a visitor');
+      return 'mailto:greysonbmiller@protonmail.com'
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(lines.join('\n'));
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      clearStatus();
+
+      const firstInvalid = validate();
+      if (firstInvalid) {
+        setStatus('error', 'Please complete the highlighted fields and try again.');
+        firstInvalid.focus();
+        return;
+      }
+
+      // Honeypot: a bot filled the hidden field. Accept quietly, send nothing.
+      if ((form.querySelector('[name="_gotcha"]') || {}).value) {
+        setStatus('success', 'Thanks &mdash; your message has been received.');
+        form.reset();
+        return;
+      }
+
+      const endpoint = form.getAttribute('action') || '';
+
+      // No endpoint wired up yet: hand the visitor a pre-filled email instead of
+      // pretending the message was sent.
+      if (endpoint.indexOf(FORM_PLACEHOLDER) !== -1) {
+        window.location.href = mailtoFallback();
+        // Deliberately NOT a success state: nothing has been sent yet, and on a
+        // device with no mail app configured nothing will open at all.
+        setStatus(
+          'notice',
+          '<strong>Almost there &mdash; your message has not been sent yet.</strong><br>'
+          + 'Your email app should open with these details filled in; you still need to press send. '
+          + 'If nothing opened, email <a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a> '
+          + 'or call <a href="tel:+12084108122">(208) 410-8122</a>.'
+        );
+        return;
+      }
+
+      const btnHTML = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner"></span>';
+      }
 
-        // Simulate submission (replace with real endpoint)
-        setTimeout(() => {
-          submitBtn.innerHTML = 'Message Sent!';
-          submitBtn.style.background = 'var(--accent)';
+      fetch(endpoint, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' }
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Request failed with status ' + res.status);
+          setStatus(
+            'success',
+            '<strong>Thanks &mdash; that came through.</strong><br>'
+            + 'You\'ll get a reply usually the same day, and always within two business days.'
+          );
           form.reset();
           form.querySelectorAll('.has-value').forEach(el => el.classList.remove('has-value'));
-
-          setTimeout(() => {
-            submitBtn.textContent = btnText;
+        })
+        .catch(() => {
+          setStatus(
+            'error',
+            'Something went wrong sending that. Please email '
+            + '<a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a> '
+            + 'or call <a href="tel:+12084108122">(208) 410-8122</a> &mdash; your message did not go through.'
+          );
+        })
+        .then(() => {
+          if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.style.background = '';
-          }, 3000);
-        }, 1500);
-      }
+            submitBtn.innerHTML = btnHTML;
+          }
+        });
     });
   }
 
