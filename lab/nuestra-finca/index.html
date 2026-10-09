@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Walk or fly through a 3D model of a small farm in the hills — kitchen, a house raised on stilts and the covered bridge between them — rebuilt by Sylvan C7 from 17 phone photos and a few tape-measure numbers. It runs in your browser, even on an ordinary laptop.">
+
+  <!-- SEO:START -->
+  <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/">
+  <meta name="theme-color" content="#0a100d">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sylvan C7">
+  <meta property="og:title" content="Nuestra Finca — Lab | Sylvan C7">
+  <meta property="og:description" content="Walk or fly through a 3D model of a small farm in the hills — kitchen, a house raised on stilts and the covered bridge between them — rebuilt by Sylvan C7 from 17 phone photos and a few tape-measure numbers. It runs in your browser, even on an ordinary laptop.">
+  <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/">
+  <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="900">
+  <meta property="og:image:alt" content="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside.">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nuestra Finca — Lab | Sylvan C7">
+  <meta name="twitter:description" content="Walk or fly through a 3D model of a small farm in the hills — kitchen, a house raised on stilts and the covered bridge between them — rebuilt by Sylvan C7 from 17 phone photos and a few tape-measure numbers. It runs in your browser, even on an ordinary laptop.">
+  <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg">
+<!-- SEO:END -->
+
+  <title>Nuestra Finca — Lab | Sylvan C7</title>
+
+  <!-- FONTS:START -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap">
+  <!-- FONTS:END -->
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/pages.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
+
+  <style>
+    /* Page-scoped: the walkthrough stage, the controls list and the build notes. Existing tokens only. */
+    .finca-stage {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      background: var(--bg-deep);
+      box-shadow: 0 0 0 1px var(--accent-glow), 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .finca-stage iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    /* Poster: the ~7 MB walkthrough only loads when someone asks for it. */
+    .finca-poster {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+      padding: var(--space-6);
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      border: 0;
+      border-radius: inherit;
+      color: inherit;
+      font: inherit;
+      background:
+        linear-gradient(180deg, rgba(6, 10, 8, 0.2) 0%, rgba(6, 10, 8, 0.6) 45%, rgba(6, 10, 8, 0.8) 100%),
+        url("../../img/lab-nuestra-finca.jpg") center / cover no-repeat;
+    }
+
+    .finca-poster:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -4px;
+    }
+
+    .finca-poster:hover .btn--primary {
+      box-shadow: 0 0 24px var(--accent-glow-strong);
+    }
+
+    .finca-poster__hint {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      text-shadow: 0 1px 8px rgba(6, 10, 8, 0.9);
+    }
+
+    .finca-stage__bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-top: var(--space-5);
+    }
+
+    .finca-stage__bar p {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      max-width: 60ch;
+    }
+
+    .finca-keys {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+      gap: var(--space-3) var(--space-8);
+    }
+
+    .finca-keys li {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+      color: var(--text-secondary);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .finca-keys kbd {
+      flex: none;
+      min-width: 4.5rem;
+      font-family: var(--font-heading);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: var(--tracking-wide);
+    }
+
+    .finca-credits {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-width: 70ch;
+    }
+
+    .finca-credits li {
+      padding: var(--space-6) 0;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .finca-credits li:first-child {
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .finca-credits strong {
+      display: block;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .finca-note {
+      max-width: 70ch;
+      margin-top: var(--space-8);
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+    }
+
+    @media (max-width: 640px) {
+      .finca-stage { aspect-ratio: 3 / 4; }
+    }
+  </style>
+  <!-- NOSCRIPT:START -->
+  <noscript>
+    <style>
+      /* Scroll-reveal animations start hidden and are released by JS. If JS is
+         blocked or fails to load, show everything rather than a blank page. */
+      .reveal,
+      .hero-line,
+      .accent-line { opacity: 1 !important; transform: none !important; }
+      .hero-line__inner { transform: none !important; }
+      .timeline__step { opacity: 1 !important; }
+      .timeline__step::before { height: 100% !important; }
+      .scroll-progress { display: none !important; }
+          .finca-poster { display: none; }
+    </style>
+  </noscript>
+  <!-- NOSCRIPT:END -->
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="../../index.html" class="nav__logo">Sylvan <span>C7</span></a>
+
+      <div class="nav__links">
+        <a href="../../index.html" class="nav__link">Home</a>
+        <a href="../../services.html" class="nav__link">Services</a>
+        <a href="../../work.html" class="nav__link active">Work</a>
+        <a href="../../industries.html" class="nav__link">Industries</a>
+        <a href="../../pricing.html" class="nav__link">Pricing</a>
+        <a href="../../about.html" class="nav__link">About</a>
+        <a href="../../contact.html" class="nav__link">Contact</a>
+        <a href="../../contact.html" class="btn btn--primary btn--sm nav__cta">Get a Free Quote</a>
+      </div>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMobile">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="nav__mobile-overlay" id="navOverlay"></div>
+  <div class="nav__mobile" id="navMobile">
+    <a href="../../index.html" class="nav__mobile-link">Home</a>
+    <a href="../../services.html" class="nav__mobile-link">Services</a>
+    <a href="../../work.html" class="nav__mobile-link active">Work</a>
+    <a href="../../industries.html" class="nav__mobile-link">Industries</a>
+    <a href="../../pricing.html" class="nav__mobile-link">Pricing</a>
+    <a href="../../about.html" class="nav__mobile-link">About</a>
+    <a href="../../contact.html" class="nav__mobile-link">Contact</a>
+    <a href="../../contact.html" class="btn btn--primary" style="margin-top: auto;">Get a Free Quote</a>
+  </div>
+
+  <!-- Page Header -->
+  <section class="section page-header">
+    <div class="container">
+      <span class="label reveal reveal--up">From the Lab</span>
+      <h1 class="display-lg reveal reveal--up stagger-1">Nuestra Finca</h1>
+      <p class="text-lg reveal reveal--up stagger-2" style="max-width: 62ch; margin-top: var(--space-6);">
+        A small hillside farm &mdash; a kitchen, a wooden house raised on posts, and the covered
+        bridge between them &mdash; rebuilt in 3D from 17 phone photos and a handful of
+        tape-measure numbers. Walk it like a game, or <span class="accent">fly over the roofs</span>.
+      </p>
+    </div>
+  </section>
+
+  <!-- The Walkthrough -->
+  <section class="section section--alt" aria-labelledby="walk-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">Try It</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1" id="walk-title">Walk it yourself</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          Start the walkthrough, then click inside it (or tap, on a phone) to look around.
+          With a keyboard, <span class="accent">Esc</span> opens the menu at any time.
+        </p>
+      </div>
+
+      <div class="finca-stage reveal reveal--up" id="fincaStage">
+        <button type="button" class="finca-poster" id="fincaStart" aria-label="Start the 3D walkthrough (loads about 7 MB)">
+          <span class="btn btn--primary btn--lg">Start the walkthrough</span>
+          <span class="finca-poster__hint">Loads about 7 MB &middot; works with mouse and keyboard, or touch</span>
+        </button>
+      </div>
+      <noscript>
+        <p class="card__text" style="margin-top: var(--space-5);">The walkthrough draws the model in your browser, so it needs JavaScript turned on.</p>
+      </noscript>
+
+      <div class="finca-stage__bar">
+        <p>Prefer more room? Open it on its own page, or use the full-screen button in the walkthrough&rsquo;s menu.</p>
+        <a href="app/" class="btn btn--outline btn--sm" target="_blank" rel="noopener">Open on its own page &#8599;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <section class="section" aria-labelledby="controls-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">Controls</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1" id="controls-title">Getting around</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          The same list is always one key away inside the walkthrough: press <span class="accent">H</span>.
+          On a phone or tablet, drag to look and use the on-screen buttons.
+        </p>
+      </div>
+      <ul class="finca-keys reveal reveal--up">
+        <li><kbd>W A S D</kbd> Walk</li>
+        <li><kbd>Mouse</kbd> Look around</li>
+        <li><kbd>Shift</kbd> Run (or fly faster)</li>
+        <li><kbd>Space</kbd> Jump (or rise, when flying)</li>
+        <li><kbd>F</kbd> Switch between walking and flying</li>
+        <li><kbd>C</kbd> Sink down, when flying</li>
+        <li><kbd>1 &ndash; 8</kbd> Jump to a place: kitchen, bridge, house, patio&hellip;</li>
+        <li><kbd>L</kbd> Lamps on or off</li>
+        <li><kbd>H</kbd> Show or hide the controls</li>
+        <li><kbd>Esc</kbd> Menu: places, settings, full screen</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- How it was made -->
+  <section class="section section--alt" aria-labelledby="how-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">The Build</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1" id="how-title">How we made it</h2>
+      </div>
+      <div class="grid grid--2">
+        <div class="card reveal reveal--up stagger-1">
+          <h3 class="card__title">From photos to a plan</h3>
+          <p class="card__text">There were no drawings, just 17 photos and a handful of measurements. We worked out where each photo was taken from, then adjusted the model until it lined up with the pictures: most corners, posts and window edges sit within about 30&nbsp;cm of where the photos put them.</p>
+        </div>
+        <div class="card reveal reveal--up stagger-2">
+          <h3 class="card__title">Built from one table of numbers</h3>
+          <p class="card__text">The whole site, from posts and braces to roofs, stairs and furniture, is generated by a script from a single list of dimensions. When we learned the house room is actually 4 by 4 metres, the fix was one number and a one-minute rebuild.</p>
+        </div>
+        <div class="card reveal reveal--up stagger-3">
+          <h3 class="card__title">Light worked out in advance</h3>
+          <p class="card__text">Sunlight, the ceiling lamps and the soft shadows are calculated once in Blender and painted onto the surfaces. Your browser just draws them, which is why it runs at around 50&ndash;60 frames per second even on basic laptop graphics.</p>
+        </div>
+        <div class="card reveal reveal--up stagger-4">
+          <h3 class="card__title">Made to be played</h3>
+          <p class="card__text">Walls, railings and roofs stop you, the stairs and bridge can be climbed, and the picture sharpens or softens itself to keep the motion smooth on whatever device you&rsquo;re using.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Credits -->
+  <section class="section" aria-labelledby="credits-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">Credits</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1" id="credits-title">What it&rsquo;s built on</h2>
+      </div>
+
+      <ul class="finca-credits reveal reveal--up">
+        <li>
+          <strong>Blender</strong>
+          The model is built and its lighting calculated in
+          <a href="https://www.blender.org/" class="link" target="_blank" rel="noopener noreferrer">Blender</a>,
+          driven entirely by script.
+        </li>
+        <li>
+          <strong>three.js and three-mesh-bvh</strong>
+          The walkthrough draws the model with
+          <a href="https://threejs.org/" class="link" target="_blank" rel="noopener noreferrer">three.js</a>
+          and handles collisions with
+          <a href="https://github.com/gkjohnson/three-mesh-bvh" class="link" target="_blank" rel="noopener noreferrer">three-mesh-bvh</a>,
+          both under the MIT licence.
+        </li>
+      </ul>
+
+      <p class="finca-note reveal reveal--up">
+        This is an experiment of our own, not client work. The model is approximate: sizes come from
+        photos and a few measurements, and the furniture is placed by eye.
+        <a href="../../work.html#lab" class="link">Back to the lab</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="../../index.html" class="nav__logo">Sylvan <span>C7</span></a>
+          <p>We design and build fast, modern websites for businesses in every industry &mdash; then keep them running.</p>
+          <a href="../../contact.html" class="btn btn--outline btn--sm" style="margin-top: var(--space-5);">Start your project</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Navigate</h4>
+          <a href="../../index.html" class="footer__link">Home</a>
+          <a href="../../services.html" class="footer__link">Services</a>
+          <a href="../../work.html" class="footer__link">Work</a>
+          <a href="../../pricing.html" class="footer__link">Pricing</a>
+          <a href="../../about.html" class="footer__link">About</a>
+          <a href="../../faq.html" class="footer__link">FAQ</a>
+          <a href="../../contact.html" class="footer__link">Contact</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <a href="../../industries.html" class="footer__link">Restaurants &amp; Hospitality</a>
+          <a href="../../industries.html" class="footer__link">Dental &amp; Medical</a>
+          <a href="../../industries.html" class="footer__link">Legal &amp; Professional</a>
+          <a href="../../industries.html" class="footer__link">Home Services &amp; Trades</a>
+          <a href="../../industries.html" class="footer__link">Fitness &amp; Wellness</a>
+          <a href="../../industries.html" class="footer__link">Retail &amp; E-commerce</a>
+          <a href="../../industries.html" class="footer__link">SaaS &amp; Technology</a>
+          <a href="../../industries.html" class="footer__link">Real Estate &amp; Property</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Connect</h4>
+          <a href="mailto:greysonbmiller@protonmail.com" class="footer__link">greysonbmiller@protonmail.com</a>
+          <a href="tel:+16266220261" class="footer__link">+1 (626) 622-0261</a>
+          <span class="footer__link" style="cursor: default;">Los Angeles, California &mdash; working remotely with clients across the US</span>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/animations.js"></script>
+  <script src="../../js/interactions.js"></script>
+  <script src="../../js/main.js"></script>
+  <script>
+    // Load the walkthrough only when asked (it is ~6 MB), then hand it keyboard focus.
+    (function () {
+      var stage = document.getElementById('fincaStage');
+      var start = document.getElementById('fincaStart');
+      if (!stage || !start) return;
+      start.addEventListener('click', function () {
+        var frame = document.createElement('iframe');
+        frame.src = 'app/?embed=1';
+        frame.title = 'Nuestra Finca 3D walkthrough';
+        frame.setAttribute('allow', 'fullscreen');
+        frame.addEventListener('load', function () { try { frame.focus(); } catch (e) {} });
+        start.replaceWith(frame);
+      });
+    })();
+  </script>
+
+  <!-- MOBILECTA:START -->
+  <div class="mobile-cta">
+    <a href="tel:+16266220261" class="btn btn--outline btn--sm">Call</a>
+    <a href="../../contact.html" class="btn btn--primary btn--sm">Get a Free Quote</a>
+  </div>
+  <!-- MOBILECTA:END -->
+</body>
+</html>
