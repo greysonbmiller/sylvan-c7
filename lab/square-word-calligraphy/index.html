@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Type any English word and get a square block that looks like a Chinese character but reads as English. A free in-browser tool built by Sylvan C7, after Xu Bing's 1994 Square Word Calligraphy and David Kelley's 2012 alphabet.">
+
+  <!-- SEO:START -->
+  <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/">
+  <meta name="theme-color" content="#0a100d">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sylvan C7">
+  <meta property="og:title" content="Square Word Calligraphy — Lab | Sylvan C7">
+  <meta property="og:description" content="Type any English word and get a square block that looks like a Chinese character but reads as English. A free in-browser tool built by Sylvan C7, after Xu Bing's 1994 Square Word Calligraphy and David Kelley's 2012 alphabet.">
+  <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/">
+  <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-square-word-calligraphy.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="900">
+  <meta property="og:image:alt" content="The words Square Word Calligraphy written as three square blocks that look like Chinese characters.">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Square Word Calligraphy — Lab | Sylvan C7">
+  <meta name="twitter:description" content="Type any English word and get a square block that looks like a Chinese character but reads as English. A free in-browser tool built by Sylvan C7, after Xu Bing's 1994 Square Word Calligraphy and David Kelley's 2012 alphabet.">
+  <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-square-word-calligraphy.png">
+<!-- SEO:END -->
+
+  <title>Square Word Calligraphy — Lab | Sylvan C7</title>
+
+  <!-- FONTS:START -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap">
+  <!-- FONTS:END -->
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="../../css/pages.css">
+  <!-- The tool's own styles; generated into app/ by the square-word-calligraphy export. -->
+  <link rel="stylesheet" href="app/src/app.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
+
+  <style>
+    /* Page-scoped: the "how to read" examples and the credits list. Existing tokens only. */
+    .swc-tool {
+      min-height: 24rem; /* reserve room so the page doesn't jump while the fonts load */
+    }
+
+    .swc-example {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-5);
+      margin: 0;
+      text-align: center;
+    }
+
+    .swc-example__block {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 8rem;
+      max-width: 100%;
+    }
+
+    .swc-example__block svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+    }
+
+    .swc-example figcaption {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      max-width: 32ch;
+    }
+
+    .swc-example__word {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .swc-credits {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-width: 70ch;
+    }
+
+    .swc-credits li {
+      padding: var(--space-6) 0;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .swc-credits li:first-child {
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .swc-credits strong {
+      display: block;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .swc-note {
+      max-width: 70ch;
+      margin-top: var(--space-8);
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+    }
+  </style>
+  <!-- NOSCRIPT:START -->
+  <noscript>
+    <style>
+      /* Scroll-reveal animations start hidden and are released by JS. If JS is
+         blocked or fails to load, show everything rather than a blank page. */
+      .reveal,
+      .hero-line,
+      .accent-line { opacity: 1 !important; transform: none !important; }
+      .hero-line__inner { transform: none !important; }
+      .timeline__step { opacity: 1 !important; }
+      .timeline__step::before { height: 100% !important; }
+      .scroll-progress { display: none !important; }
+    </style>
+  </noscript>
+  <!-- NOSCRIPT:END -->
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="../../index.html" class="nav__logo">Sylvan <span>C7</span></a>
+
+      <div class="nav__links">
+        <a href="../../index.html" class="nav__link">Home</a>
+        <a href="../../services.html" class="nav__link">Services</a>
+        <a href="../../work.html" class="nav__link active">Work</a>
+        <a href="../../industries.html" class="nav__link">Industries</a>
+        <a href="../../pricing.html" class="nav__link">Pricing</a>
+        <a href="../../about.html" class="nav__link">About</a>
+        <a href="../../contact.html" class="nav__link">Contact</a>
+        <a href="../../contact.html" class="btn btn--primary btn--sm nav__cta">Get a Free Quote</a>
+      </div>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMobile">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="nav__mobile-overlay" id="navOverlay"></div>
+  <div class="nav__mobile" id="navMobile">
+    <a href="../../index.html" class="nav__mobile-link">Home</a>
+    <a href="../../services.html" class="nav__mobile-link">Services</a>
+    <a href="../../work.html" class="nav__mobile-link active">Work</a>
+    <a href="../../industries.html" class="nav__mobile-link">Industries</a>
+    <a href="../../pricing.html" class="nav__mobile-link">Pricing</a>
+    <a href="../../about.html" class="nav__mobile-link">About</a>
+    <a href="../../contact.html" class="nav__mobile-link">Contact</a>
+    <a href="../../contact.html" class="btn btn--primary" style="margin-top: auto;">Get a Free Quote</a>
+  </div>
+
+  <!-- Page Header -->
+  <section class="section page-header">
+    <div class="container">
+      <span class="label reveal reveal--up">From the Lab</span>
+      <h1 class="display-lg reveal reveal--up stagger-1">Square Word Calligraphy</h1>
+      <p class="text-lg reveal reveal--up stagger-2" style="max-width: 62ch; margin-top: var(--space-6);">
+        In 1994 the artist Xu Bing invented a way of writing English so that each word becomes
+        one square block that looks like a Chinese character &mdash; yet anyone who reads English
+        can read it once they've seen the alphabet. Type below and your words come out the same way.
+      </p>
+      <p class="text-lg reveal reveal--up stagger-3" style="max-width: 62ch; margin-top: var(--space-5);">
+        This tool builds each block from David Kelley's 2012 version of the alphabet, which swaps
+        each letter for a Chinese component that resembles it. Read every block
+        <span class="accent">left&nbsp;&rarr;&nbsp;right, top&nbsp;&rarr;&nbsp;bottom,
+        outside&nbsp;&rarr;&nbsp;inside</span>. It was built in-house by Sylvan C7, and it runs
+        entirely in your browser: nothing you type is sent anywhere.
+      </p>
+    </div>
+  </section>
+
+  <!-- The Tool -->
+  <section class="section section--alt" aria-labelledby="tool-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">Try It</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1" id="tool-title">Write your own</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          Type a sentence, pick a style, and download the result as a crisp SVG or a
+          high-resolution PNG.
+        </p>
+      </div>
+
+      <div class="swc-tool">
+        <div id="swc-app"></div>
+        <noscript>
+          <p class="card__text">The tool draws every block in your browser, so it needs JavaScript turned on.</p>
+        </noscript>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Read a Square Word -->
+  <section class="section" aria-labelledby="read-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">The Rules</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1" id="read-title">How to read a square word</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          Every letter of the word is there &mdash; it's just packed into a square instead of a
+          line. Start at the outside or the top-left and work your way in.
+        </p>
+      </div>
+
+      <div class="grid grid--4">
+        <figure class="card swc-example reveal reveal--up stagger-1" data-word="of">
+          <div class="swc-example__block" role="img" aria-label="The word “of” as a square word"></div>
+          <figcaption><span class="swc-example__word">of</span>O becomes a frame (囗), and F (下) sits inside it: outside first, then inside.</figcaption>
+        </figure>
+
+        <figure class="card swc-example reveal reveal--up stagger-2" data-word="and">
+          <div class="swc-example__block" role="img" aria-label="The word “and” as a square word"></div>
+          <figcaption><span class="swc-example__word">and</span>A (人) spreads over the block like a roof; N (冂) opens beneath it and holds D (刀).</figcaption>
+        </figure>
+
+        <figure class="card swc-example reveal reveal--up stagger-3" data-word="people">
+          <div class="swc-example__block" role="img" aria-label="The word “people” as a square word"></div>
+          <figcaption><span class="swc-example__word">people</span>P (卩) stands on the left and e&#8209;o&#8209;p&#8209;l&#8209;e fill the right. This is Xu Bing's own example.</figcaption>
+        </figure>
+
+        <figure class="card swc-example reveal reveal--up stagger-4" data-word="word">
+          <div class="swc-example__block" role="img" aria-label="The word “word” as a square word"></div>
+          <figcaption><span class="swc-example__word">word</span>W (山) sits on top; below it, the O frame (囗) holds R (尺) and D (刀).</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Credits -->
+  <section class="section section--alt" aria-labelledby="credits-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="label section-header__label reveal reveal--up">Credits</span>
+        <h2 class="section-header__title reveal reveal--up stagger-1" id="credits-title">Whose idea this is</h2>
+        <p class="section-header__subtitle reveal reveal--up stagger-2">
+          We wrote the software. The idea, the alphabet, and the type all belong to other people.
+        </p>
+      </div>
+
+      <ul class="swc-credits reveal reveal--up">
+        <li>
+          <strong>Xu Bing</strong>
+          Invented Square Word Calligraphy (英文方块字) in 1994 and taught it through his
+          <em>Square Word Calligraphy Classroom</em>.
+          <a href="https://www.xubing.com/en/database/writing/306" class="link" target="_blank" rel="noopener noreferrer">Read his own account</a>.
+        </li>
+        <li>
+          <strong>David B. Kelley</strong>
+          Revised the alphabet in 2012, replacing eleven letters with more Chinese-looking forms.
+          His version, documented on
+          <a href="https://www.omniglot.com/conscripts/swc.htm" class="link" target="_blank" rel="noopener noreferrer">Omniglot</a>,
+          is the one this tool draws.
+        </li>
+        <li>
+          <strong>Fonts: LXGW WenKai and Noto Serif SC</strong>
+          The brush style uses
+          <a href="https://github.com/lxgw/LxgwWenKai" class="link" target="_blank" rel="noopener noreferrer">LXGW WenKai</a>
+          and the print styles use
+          <a href="https://github.com/notofonts/noto-cjk" class="link" target="_blank" rel="noopener noreferrer">Noto Serif SC</a>,
+          both cut down to the few characters the alphabet needs and used under the SIL Open Font
+          License: <a href="app/fonts/LXGWWenKai-OFL.txt" class="link">LXGW WenKai licence</a>,
+          <a href="app/fonts/NotoSerifSC-OFL.txt" class="link">Noto Serif SC licence</a>.
+        </li>
+      </ul>
+
+      <p class="swc-note reveal reveal--up">
+        This is an experiment of our own, made because we like the idea. It is not client work, and
+        it is not affiliated with or endorsed by Xu Bing or David Kelley.
+        <a href="../../work.html" class="link">Back to how we work</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="../../index.html" class="nav__logo">Sylvan <span>C7</span></a>
+          <p>We design and build fast, modern websites for businesses in every industry &mdash; then keep them running.</p>
+          <a href="../../contact.html" class="btn btn--outline btn--sm" style="margin-top: var(--space-5);">Start your project</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Navigate</h4>
+          <a href="../../index.html" class="footer__link">Home</a>
+          <a href="../../services.html" class="footer__link">Services</a>
+          <a href="../../work.html" class="footer__link">Work</a>
+          <a href="../../pricing.html" class="footer__link">Pricing</a>
+          <a href="../../about.html" class="footer__link">About</a>
+          <a href="../../faq.html" class="footer__link">FAQ</a>
+          <a href="../../contact.html" class="footer__link">Contact</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <a href="../../industries.html" class="footer__link">Restaurants &amp; Hospitality</a>
+          <a href="../../industries.html" class="footer__link">Dental &amp; Medical</a>
+          <a href="../../industries.html" class="footer__link">Legal &amp; Professional</a>
+          <a href="../../industries.html" class="footer__link">Home Services &amp; Trades</a>
+          <a href="../../industries.html" class="footer__link">Fitness &amp; Wellness</a>
+          <a href="../../industries.html" class="footer__link">Retail &amp; E-commerce</a>
+          <a href="../../industries.html" class="footer__link">SaaS &amp; Technology</a>
+          <a href="../../industries.html" class="footer__link">Real Estate &amp; Property</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Connect</h4>
+          <a href="mailto:greysonbmiller@protonmail.com" class="footer__link">greysonbmiller@protonmail.com</a>
+          <a href="tel:+16266220261" class="footer__link">+1 (626) 622-0261</a>
+          <span class="footer__link" style="cursor: default;">Los Angeles, California &mdash; working remotely with clients across the US</span>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/animations.js"></script>
+  <script src="../../js/interactions.js"></script>
+  <script src="../../js/main.js"></script>
+  <script type="module">
+    import { mountSwc, renderStatic } from './app/src/app.js';
+
+    const app = document.getElementById('swc-app');
+    try {
+      await mountSwc(app, { assetsBase: './app/' });
+      for (const fig of document.querySelectorAll('.swc-example')) {
+        renderStatic(fig.querySelector('.swc-example__block'), fig.dataset.word, { style: 'brush', blockSize: 96 });
+      }
+    } catch (err) {
+      app.innerHTML = '<p class="card__text">Sorry &mdash; the tool failed to load. Please try reloading the page.</p>';
+      console.error(err);
+    }
+  </script>
+
+  <!-- MOBILECTA:START -->
+  <div class="mobile-cta">
+    <a href="tel:+16266220261" class="btn btn--outline btn--sm">Call</a>
+    <a href="../../contact.html" class="btn btn--primary btn--sm">Get a Free Quote</a>
+  </div>
+  <!-- MOBILECTA:END -->
+</body>
+</html>

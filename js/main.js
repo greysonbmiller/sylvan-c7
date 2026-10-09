@@ -107,8 +107,13 @@
 
   function setActiveNavLink() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const links = document.querySelectorAll('.nav__link, .nav__mobile-link');
 
-    document.querySelectorAll('.nav__link, .nav__mobile-link').forEach(link => {
+    // Pages in subfolders (e.g. lab/square-word-calligraphy/) match no top-level href; keep the
+    // active link their markup already declares instead of clearing every link.
+    if (![...links].some(link => link.getAttribute('href') === currentPage)) return;
+
+    links.forEach(link => {
       const href = link.getAttribute('href');
       if (href === currentPage) {
         link.classList.add('active');
