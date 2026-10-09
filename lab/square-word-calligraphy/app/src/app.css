@@ -143,6 +143,8 @@
   height: auto;
   border-radius: var(--swc-r-md);
 }
+/* Pending autoplay: glyphs stay un-inked until the output is scrolled fully into view. */
+.swc #out.swc-await-reveal svg text { clip-path: inset(0 100% 0 0); }
 .swc #out svg { cursor: crosshair; box-shadow: 0 1px 0 var(--swc-border-strong), 0 10px 30px rgba(0, 0, 0, .35); }
 .swc-static { display: block; max-width: 100%; overflow-x: auto; }
 

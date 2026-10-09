@@ -189,7 +189,7 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
   // error = font error (sticky) or the latest render error; a later good render must not hide a font failure.
   const state = {
     last: null, renders: 0, fonts: [], ready: false, error: null, fontError: null,
-    scene: null, svg: null, revealDone: Promise.resolve(true), revealing: false, revealPlan: null,
+    scene: null, svg: null, revealDone: Promise.resolve(true), revealing: false, revealPlan: null, revealPending: false,
     game: { word: null, streak: 0, hints: 0, revealed: false },
   };
   window.__swc = state;
@@ -281,6 +281,52 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
     return state.revealDone;
   }
 
+  // ---- autoplay: wait until the output is actually seen ----
+  // The first reveal starts only once #out is FULLY in view (or, if it is taller than the screen,
+  // fills the viewport). Until then its glyphs stay un-inked. Any redraw (typing, options) before
+  // that cancels the pending reveal and shows everything, so the output can never stay invisible.
+  let armed = null; // { io, onScroll, resolve }
+  function outIsSeen() {
+    const r = out.getBoundingClientRect(), vh = window.innerHeight;
+    if (r.height <= 0) return false;
+    const visible = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+    return (r.top >= 0 && r.bottom <= vh) || visible >= vh * 0.95;
+  }
+  function disarmAutoplay() {
+    if (!armed) return null;
+    const { io, onScroll, resolve } = armed;
+    armed = null;
+    io.disconnect();
+    window.removeEventListener('scroll', onScroll);
+    window.removeEventListener('resize', onScroll);
+    out.classList.remove('swc-await-reveal');
+    state.revealPending = false;
+    return resolve;
+  }
+  function armAutoplay() {
+    if (reduceMotion.matches || typeof IntersectionObserver !== 'function') return;
+    let resolve;
+    state.revealDone = new Promise((r) => { resolve = r; });
+    let queued = false;
+    const check = () => {
+      queued = false;
+      if (!armed || !outIsSeen()) return;
+      const done = disarmAutoplay();
+      playReveal().then(done);
+    };
+    // IntersectionObserver catches most scrolls; the rAF-throttled scroll check covers tall outputs
+    // whose ratio never crosses a threshold exactly.
+    const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+    const io = new IntersectionObserver(onScroll, { threshold: Array.from({ length: 21 }, (_, i) => i / 20) });
+    armed = { io, onScroll, resolve };
+    out.classList.add('swc-await-reveal');
+    state.revealPending = true;
+    io.observe(out);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
   // ---- decode overlay (main output) ----
   let pinned = -1, hovered = -1;
   const mainSvg = () => out.querySelector('svg');
@@ -319,6 +365,7 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
   function draw() {
     try {
       cancelReveal();
+      const pendingDone = disarmAutoplay();
       const scene = buildScene($('text').value, options());
       paintScene(canvas, scene, 1);
       state.scene = scene;
@@ -328,6 +375,7 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
       state.last = summarize(scene);
       state.renders++;
       state.revealDone = Promise.resolve(true);
+      pendingDone?.(true); // anyone awaiting the cancelled autoplay is released, not left hanging
       pinned = hovered = -1;
       mainLayer.replaceChildren();
       const n = state.last.blocks.length;
@@ -456,7 +504,7 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
   await cssLoaded;
   draw();
   try { nextWord(); } catch (e) { console.error(e); }
-  if (autoplay) playReveal();
+  if (autoplay) armAutoplay();
   state.ready = true;
   return state;
 }
