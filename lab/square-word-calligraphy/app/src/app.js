@@ -12,8 +12,9 @@ import { buildScene, paintScene, summarize, sceneToSvg, embeddedFontCss, loadFon
 
 const STYLE_LABELS = { brush: 'Brush (楷)', print: 'Print (宋)', seal: 'Red seal (印)', jade: 'Jade (玉)' };
 const DEFAULT_TEXT = 'All human beings are born free and equal in dignity and rights.';
-const OPTION_IDS = ['text', 'style', 'direction', 'blockSize', 'perLine', 'digraphs', 'grid'];
-const HASH_KEYS = { t: 'text', style: 'style', direction: 'direction', blockSize: 'blockSize', perLine: 'perLine', digraphs: 'digraphs', grid: 'grid' };
+const OPTION_IDS = ['text', 'style', 'direction', 'blockSize', 'perLine', 'digraphs', 'grid', 'speed'];
+const HASH_KEYS = { t: 'text', style: 'style', direction: 'direction', blockSize: 'blockSize', perLine: 'perLine', digraphs: 'digraphs', grid: 'grid', speed: 'speed' };
+const SPEEDS = ['0.25', '0.5', '1', '2', '4']; // brush-reveal playback rates
 
 // Curated challenge words: common, lengths 1..10.
 export const GAME_WORDS = Object.freeze([
@@ -55,10 +56,12 @@ function template() {
       <label class="swc-field"><span class="swc-label">Block</span><input id="blockSize" class="swc-num" type="number" min="48" max="400" step="8" value="120"><span class="swc-unit">px</span></label>
       <label class="swc-field"><span class="swc-label">Per line</span><input id="perLine" class="swc-num" type="number" min="1" max="40" value="8"></label>
       <label class="swc-toggle"><input id="digraphs" type="checkbox" checked><span>TH as one sign</span></label>
-      <label class="swc-toggle"><input id="grid" type="checkbox" checked><span>Practice grid</span></label>
+      <label class="swc-toggle"><input id="grid" type="checkbox"><span>Practice grid</span></label>
     </div>
     <div class="swc-actions">
       <button id="play" type="button" class="swc-btn swc-btn-primary">Play</button>
+      <label class="swc-field"><span class="swc-label">Speed</span><select id="speed" class="swc-select" aria-label="Brush reveal speed">
+        ${SPEEDS.map((v) => `<option value="${v}"${v === '1' ? ' selected' : ''}>${v.replace(/^0./, '.')}×</option>`).join('')}</select></label>
       <button id="copyLink" type="button" class="swc-btn">Copy link</button>
       <button id="copySvg" type="button" class="swc-btn">Copy SVG</button>
       <button id="downloadSvg" type="button" class="swc-btn">Download SVG</button>
@@ -171,6 +174,7 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
       if (id === 'digraphs' || id === 'grid') $(id).checked = v !== '0' && v !== 'false';
       else if (id === 'style') { if (Object.hasOwn(STYLES, v)) $(id).value = v; }
       else if (id === 'direction') { if (v === 'rows' || v === 'columns') $(id).value = v; }
+      else if (id === 'speed') { if (SPEEDS.includes(String(Number(v)))) $(id).value = String(Number(v)); }
       else $(id).value = v;
     }
   };
@@ -185,7 +189,7 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
   // error = font error (sticky) or the latest render error; a later good render must not hide a font failure.
   const state = {
     last: null, renders: 0, fonts: [], ready: false, error: null, fontError: null,
-    scene: null, svg: null, revealDone: Promise.resolve(true), revealing: false,
+    scene: null, svg: null, revealDone: Promise.resolve(true), revealing: false, revealPlan: null,
     game: { word: null, streak: 0, hints: 0, revealed: false },
   };
   window.__swc = state;
@@ -206,7 +210,7 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
   function hashString() {
     const o = options();
     return `#t=${encodeURIComponent($('text').value)}&style=${o.style}&direction=${o.direction}&blockSize=${o.blockSize}` +
-      `&perLine=${o.perLine}&digraphs=${o.digraphs ? 1 : 0}&grid=${o.grid ? 1 : 0}`;
+      `&perLine=${o.perLine}&digraphs=${o.digraphs ? 1 : 0}&grid=${o.grid ? 1 : 0}&speed=${$('speed').value}`;
   }
   function syncHash() {
     const h = hashString();
@@ -258,8 +262,11 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
       return state.revealDone;
     }
     const n = texts.length;
-    const step = Math.min(110, 2600 / n); // long texts still finish in under ~3s
-    const duration = Math.max(180, Math.min(440, step * 4));
+    const speed = Number($('speed').value) || 1;
+    const base = Math.min(110, 2600 / n); // at 1x, long texts still finish in under ~3s
+    const step = base / speed;
+    const duration = Math.max(180, Math.min(440, base * 4)) / speed;
+    state.revealPlan = { speed, step, duration, total: (n - 1) * step + duration };
     anims = texts.map((t, i) => {
       // Left radicals are inked top -> bottom; tops, roofs, cells and frames left -> right.
       const from = t.dataset.role === 'left' ? 'inset(0 0 100% 0)' : 'inset(0 100% 0 0)';
@@ -427,6 +434,7 @@ export async function mountSwc(root, { assetsBase = './' } = {}) {
 
   for (const id of OPTION_IDS)
     $(id).addEventListener('input', () => {
+      if (id === 'speed') { syncHash(); return; } // playback rate only: nothing to redraw
       draw();
       syncHash();
       if (id === 'style' || id === 'digraphs') renderGame();
