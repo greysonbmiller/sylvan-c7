@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add('js')</script>
+  <title>Nuestra Finca: a 3D farm walkthrough in your browser | Sylvan C7</title>
+  <meta name="description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, even on an ordinary laptop.">
+  <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/">
+  <meta name="theme-color" content="#060a08">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sylvan C7">
+  <meta property="og:title" content="Nuestra Finca: walk a 3D farm in your browser | Sylvan C7">
+  <meta property="og:description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, even on an ordinary laptop.">
+  <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/">
+  <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="900">
+  <meta property="og:image:alt" content="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nuestra Finca: walk a 3D farm in your browser | Sylvan C7">
+  <meta name="twitter:description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, even on an ordinary laptop.">
+  <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+
+  <link rel="preload" href="../../fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../img/lab-nuestra-finca.jpg" as="image" fetchpriority="high">
+  <link rel="stylesheet" href="../../css/site.css">
+  <link rel="stylesheet" href="../../css/page-finca.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main">
+      <a class="nav__brand" href="../../index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
+      <ul class="nav__links" role="list">
+        <li><a class="nav__link" href="../../index.html">Home</a></li>
+        <li><a class="nav__link" href="../../services.html">Services</a></li>
+        <li><a class="nav__link" href="../../work.html">Work</a></li>
+        <li><a class="nav__link" href="../../about.html">About</a></li>
+        <li><a class="nav__link" href="../../contact.html">Contact</a></li>
+      </ul>
+      <a class="btn btn--primary btn--sm nav__cta" href="../../contact.html">Start a project</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="navDrawer">
+        <span class="visually-hidden">Open menu</span>
+        <span class="nav__toggle-box" aria-hidden="true"><span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span></span>
+      </button>
+    </nav>
+  </header>
+  <div class="nav-drawer" id="navDrawer" inert>
+    <nav aria-label="Mobile">
+      <ul class="nav-drawer__list" role="list">
+        <li><a class="nav-drawer__link" href="../../index.html">Home</a></li>
+        <li><a class="nav-drawer__link" href="../../services.html">Services</a></li>
+        <li><a class="nav-drawer__link" href="../../work.html">Work</a></li>
+        <li><a class="nav-drawer__link" href="../../about.html">About</a></li>
+        <li><a class="nav-drawer__link" href="../../contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--primary btn--block" href="../../contact.html">Start a project</a>
+    <div class="nav-drawer__contact">
+      <a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a>
+      <a href="tel:+16266220261">(626) 622-0261</a>
+    </div>
+  </div>
+  <div class="nav-overlay" aria-hidden="true"></div>
+
+  <main id="main">
+    <!-- The walkthrough first. This is Greyson's own experiment, NOT client work. -->
+    <section class="section finca-top" aria-labelledby="finca-title">
+      <div class="container">
+        <header class="finca-intro">
+          <div class="eyebrow">From the lab</div>
+          <h1 class="hero__title hero__title--page" id="finca-title">Nuestra Finca</h1>
+          <p class="lead">A small hillside farm, rebuilt in 3D from 17 phone photos and a few tape-measure numbers. There's a kitchen, a wooden house on posts and the covered bridge between them. Walk it, or fly over the roofs.</p>
+        </header>
+
+        <!-- The ~7 MB walkthrough loads only when someone clicks the poster. -->
+        <div class="finca-stage" id="fincaStage">
+          <button type="button" class="finca-poster" id="fincaStart" aria-label="Start the 3D walkthrough (loads about 7 MB)">
+            <span class="btn btn--primary finca-poster__btn">Start the walkthrough</span>
+          </button>
+          <noscript>
+            <p class="finca-stage__noscript">The walkthrough draws the model in your browser, so it needs JavaScript turned on.</p>
+          </noscript>
+        </div>
+
+        <div class="finca-bar">
+          <p>Loads about 7&nbsp;MB. Click inside to look around; <kbd>Esc</kbd> opens the menu and full screen.</p>
+          <a class="btn btn--outline btn--sm" href="app/" target="_blank" rel="noopener">Open on its own page &#8599;</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="controls-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <h2 class="section-title" id="controls-title">Getting around</h2>
+          <p class="lead">Press <kbd>H</kbd> inside for this list. On a phone or tablet, drag to look and use the on-screen buttons.</p>
+        </header>
+        <ul class="finca-keys" role="list">
+          <li><kbd>W A S D</kbd><span>Walk</span></li>
+          <li><kbd>Mouse</kbd><span>Look around</span></li>
+          <li><kbd>Shift</kbd><span>Run (or fly faster)</span></li>
+          <li><kbd>Space</kbd><span>Jump (or rise, when flying)</span></li>
+          <li><kbd>F</kbd><span>Switch walking and flying</span></li>
+          <li><kbd>C</kbd><span>Sink down, when flying</span></li>
+          <li><kbd>1&ndash;8</kbd><span>Jump to a place: kitchen, bridge, house, patio&hellip;</span></li>
+          <li><kbd>L</kbd><span>Lamps on or off</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="how-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <h2 class="section-title" id="how-title">How I built it</h2>
+        </header>
+        <ul class="finca-notes" role="list">
+          <li>
+            <h3 class="finca-notes__title">From photos to a plan</h3>
+            <p>No drawings, just photos and measurements. I worked out where each photo was taken from. Then I adjusted the model until most corners and posts sit within about 30&nbsp;cm of where the photos put them.</p>
+          </li>
+          <li>
+            <h3 class="finca-notes__title">One table of numbers</h3>
+            <p>A script generates everything from a single list of dimensions. When the house room turned out to be 4 by 4 meters, the fix was one number and a one-minute rebuild.</p>
+          </li>
+          <li>
+            <h3 class="finca-notes__title">Light worked out in advance</h3>
+            <p>Sunlight, lamps and soft shadows are calculated once in Blender and painted onto the surfaces. It runs at around 50&ndash;60 frames per second, even on basic laptop graphics.</p>
+          </li>
+          <li>
+            <h3 class="finca-notes__title">Made to be played</h3>
+            <p>Walls and railings stop you, stairs and the bridge can be climbed, and the picture adjusts its sharpness to keep motion smooth.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="credits-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <h2 class="section-title" id="credits-title">Credits</h2>
+        </header>
+        <ul class="finca-credits" role="list">
+          <li>
+            <h3 class="finca-credits__name">Blender</h3>
+            <p>The model is built and its lighting calculated in <a href="https://www.blender.org/" target="_blank" rel="noopener noreferrer">Blender</a>, driven entirely by script.</p>
+          </li>
+          <li>
+            <h3 class="finca-credits__name">three.js and three-mesh-bvh</h3>
+            <p>The walkthrough draws the model with <a href="https://threejs.org/" target="_blank" rel="noopener noreferrer">three.js</a> and handles collisions with <a href="https://github.com/gkjohnson/three-mesh-bvh" target="_blank" rel="noopener noreferrer">three-mesh-bvh</a>, both under the MIT license.</p>
+          </li>
+        </ul>
+        <p class="finca-note">This is my own experiment, not client work. The model is approximate: sizes come from photos and a few measurements, and the furniture is placed by eye.</p>
+      </div>
+    </section>
+
+    <section class="cta-band" aria-labelledby="cta-title">
+      <div class="container cta-band__inner reveal">
+        <h2 class="cta-band__title" id="cta-title">Need something like this built?</h2>
+        <div class="btn-row"><a class="btn btn--primary" href="../../contact.html">Start a project</a><a class="btn btn--outline" href="../../work.html">See my work</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div>
+        <a class="nav__brand" href="../../index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
+        <p class="site-footer__tagline">Software that keeps working. Websites, web apps, integrations and instrument-control software.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Pages</p>
+        <ul class="site-footer__links" role="list">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../services.html">Services</a></li>
+          <li><a href="../../work.html">Work</a></li>
+          <li><a href="../../about.html">About</a></li>
+          <li><a href="../../contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Contact</p>
+        <ul class="site-footer__contact" role="list">
+          <li><a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a></li>
+          <li><a href="tel:+16266220261">(626) 622-0261</a></li>
+          <li>Los Angeles, California</li>
+        </ul>
+      </div>
+    </div>
+    <div class="container site-footer__bottom">
+      <p>&copy; 2026 Sylvan C7</p>
+      <p>Based in Los Angeles; I work remotely with clients anywhere in the US.</p>
+    </div>
+  </footer>
+  <div class="sticky-cta" role="region" aria-label="Quick contact" data-sticky-trigger=".finca-intro">
+    <a class="btn btn--outline" href="tel:+16266220261">Call</a>
+    <a class="btn btn--primary" href="../../contact.html">Start a project</a>
+  </div>
+
+  <script src="../../js/main.js" defer></script>
+  <script src="../../js/animations.js" defer></script>
+  <script src="../../js/components.js" defer></script>
+  <script>
+    // Load the walkthrough (~7 MB) only when asked, then hand it keyboard focus.
+    (function () {
+      var start = document.getElementById('fincaStart');
+      if (!start) return;
+      start.addEventListener('click', function () {
+        var frame = document.createElement('iframe');
+        frame.src = 'app/?embed=1';
+        frame.title = 'Nuestra Finca 3D walkthrough';
+        frame.setAttribute('allow', 'fullscreen');
+        frame.addEventListener('load', function () { try { frame.focus(); } catch (e) {} });
+        start.replaceWith(frame);
+      });
+    })();
+  </script>
+</body>
+</html>

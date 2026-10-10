@@ -1,0 +1,12 @@
+{
+ "_scale": 4.0833,
+ "terrain": "lightmaps/terrain.jpg",
+ "kitchen": "lightmaps/kitchen.jpg",
+ "house": "lightmaps/house.jpg",
+ "house_roof": "lightmaps/house_roof.jpg",
+ "kitchen_roof": "lightmaps/kitchen_roof.jpg",
+ "bridge": "lightmaps/bridge.jpg",
+ "stair": "lightmaps/stair.jpg",
+ "kitchen_interior": "lightmaps/kitchen_interior.jpg",
+ "house_interior": "lightmaps/house_interior.jpg"
+}

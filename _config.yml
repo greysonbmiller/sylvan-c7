@@ -1,0 +1,12 @@
+# GitHub Pages (legacy Jekyll build). The site is plain static HTML; this only keeps
+# test tooling and generated-app READMEs from being published.
+exclude:
+  - package.json
+  - package-lock.json
+  - node_modules
+  - tests
+  - playwright.config.mjs
+  - test-results
+  - playwright-report
+  - lab/square-word-calligraphy/app/README.md
+  - lab/nuestra-finca/app/README.md

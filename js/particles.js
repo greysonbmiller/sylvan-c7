@@ -1,256 +1,187 @@
 /* =========================================
-   Sylvan C7 — Particle Network (Hero Canvas)
-
-   Creates an organic, living network of nodes
-   connected by lines — evoking both circuit
-   boards and tree branch patterns.
+   Sylvan C7 — Hero particle network
+   Canvas: canvas[data-particles] (or #heroCanvas), sized to its parent.
+   - sparse: few nodes, short links, capped links per node
+   - mouse attraction on fine pointers only; no touch lines
+   - paused while offscreen or the tab is hidden
+   - prefers-reduced-motion: one static frame
    ========================================= */
 
 (function () {
-  const canvas = document.getElementById('heroCanvas');
-  if (!canvas) return;
+  'use strict';
 
-  const ctx = canvas.getContext('2d');
-  const hero = document.getElementById('hero');
+  var canvas = document.querySelector('canvas[data-particles]') || document.getElementById('heroCanvas');
+  if (!canvas || !canvas.getContext) return;
+  var host = canvas.parentElement;
+  var ctx = canvas.getContext('2d');
 
-  // Respect reduced motion preference
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var fineQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
 
-  // Config
-  const CONFIG = {
-    particleCount: 80,
-    connectionDistance: 150,
-    mouseRadius: 200,
-    mouseForce: 0.02,
-    baseSpeed: 0.3,
-    particleMinSize: 1.5,
-    particleMaxSize: 3,
+  var CFG = {
+    maxCount: 56,
+    areaPerParticle: 22000,  // px² per node
+    linkDistance: 120,
+    maxLinksPerNode: 3,
+    mouseRadius: 160,
+    mouseForce: 0.012,
+    speed: 0.22,
     lineWidth: 0.6,
-    color: { r: 0, g: 217, b: 126 },      // --accent
-    dimColor: { r: 0, g: 179, b: 104 },    // --accent-dim
-    bgDotColor: { r: 36, g: 48, b: 41 },   // subtle background dots
+    color: '0, 217, 126',
+    lineColor: '0, 179, 104'
   };
 
-  let width, height;
-  let particles = [];
-  let mouse = { x: -1000, y: -1000 };
-  let animationId;
+  var W = 0, H = 0, dpr = 1;
+  var particles = [];
+  var mouse = { x: -9999, y: -9999, active: false };
+  var raf = 0, inView = true;
 
-  class Particle {
-    constructor() {
-      this.reset();
-    }
+  function rand(a, b) { return a + Math.random() * (b - a); }
 
-    reset() {
-      this.x = Math.random() * width;
-      this.y = Math.random() * height;
-      this.vx = (Math.random() - 0.5) * CONFIG.baseSpeed;
-      this.vy = (Math.random() - 0.5) * CONFIG.baseSpeed;
-      this.size = CONFIG.particleMinSize + Math.random() * (CONFIG.particleMaxSize - CONFIG.particleMinSize);
-      this.opacity = 0.3 + Math.random() * 0.5;
-      this.pulseOffset = Math.random() * Math.PI * 2;
-      this.pulseSpeed = 0.005 + Math.random() * 0.01;
-    }
-
-    update(time) {
-      // Mouse interaction — attract gently toward cursor
-      const dx = mouse.x - this.x;
-      const dy = mouse.y - this.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist < CONFIG.mouseRadius && dist > 0) {
-        const force = (1 - dist / CONFIG.mouseRadius) * CONFIG.mouseForce;
-        this.vx += (dx / dist) * force;
-        this.vy += (dy / dist) * force;
-      }
-
-      // Dampen velocity
-      this.vx *= 0.99;
-      this.vy *= 0.99;
-
-      // Ensure minimum movement
-      const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-      if (speed < CONFIG.baseSpeed * 0.1) {
-        this.vx += (Math.random() - 0.5) * 0.05;
-        this.vy += (Math.random() - 0.5) * 0.05;
-      }
-
-      this.x += this.vx;
-      this.y += this.vy;
-
-      // Wrap around edges with padding
-      const pad = 50;
-      if (this.x < -pad) this.x = width + pad;
-      if (this.x > width + pad) this.x = -pad;
-      if (this.y < -pad) this.y = height + pad;
-      if (this.y > height + pad) this.y = -pad;
-
-      // Pulse opacity
-      this.currentOpacity = this.opacity + Math.sin(time * this.pulseSpeed + this.pulseOffset) * 0.15;
-    }
-
-    draw() {
-      const { r, g, b } = CONFIG.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.currentOpacity})`;
-      ctx.fill();
-
-      // Glow effect for larger particles
-      if (this.size > 2.2) {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.currentOpacity * 0.08})`;
-        ctx.fill();
-      }
-    }
+  function makeParticle() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: rand(-1, 1) * CFG.speed,
+      vy: rand(-1, 1) * CFG.speed,
+      r: rand(1.1, 2.4),
+      a: rand(0.35, 0.8),
+      phase: Math.random() * Math.PI * 2,
+      pulse: rand(0.0006, 0.0014)
+    };
   }
 
   function resize() {
-    const rect = hero.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    width = rect.width;
-    height = rect.height;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
-    ctx.scale(dpr, dpr);
-
-    // Adjust particle count based on screen size
-    const targetCount = Math.floor((width * height) / 12000);
-    const count = Math.min(Math.max(targetCount, 30), CONFIG.particleCount);
-
-    while (particles.length < count) {
-      particles.push(new Particle());
-    }
-    while (particles.length > count) {
-      particles.pop();
-    }
+    var rect = host.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.max(1, rect.width);
+    H = Math.max(1, rect.height);
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var count = Math.min(CFG.maxCount, Math.max(18, Math.floor((W * H) / CFG.areaPerParticle)));
+    while (particles.length < count) particles.push(makeParticle());
+    particles.length = count;
   }
 
-  function drawConnections() {
-    const { r, g, b } = CONFIG.dimColor;
+  function update(p) {
+    if (mouse.active) {
+      var dx = mouse.x - p.x, dy = mouse.y - p.y;
+      var d = Math.sqrt(dx * dx + dy * dy);
+      if (d > 0 && d < CFG.mouseRadius) {
+        var f = (1 - d / CFG.mouseRadius) * CFG.mouseForce;
+        p.vx += (dx / d) * f;
+        p.vy += (dy / d) * f;
+      }
+    }
+    p.vx *= 0.995;
+    p.vy *= 0.995;
+    var s = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+    if (s < CFG.speed * 0.3) { p.vx += rand(-0.02, 0.02); p.vy += rand(-0.02, 0.02); }
+    if (s > CFG.speed * 3) { p.vx *= 0.9; p.vy *= 0.9; }
+    p.x += p.vx;
+    p.y += p.vy;
+    var pad = 20;
+    if (p.x < -pad) p.x = W + pad; else if (p.x > W + pad) p.x = -pad;
+    if (p.y < -pad) p.y = H + pad; else if (p.y > H + pad) p.y = -pad;
+  }
 
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < CONFIG.connectionDistance) {
-          const opacity = (1 - dist / CONFIG.connectionDistance) * 0.25;
+  function draw(time) {
+    ctx.clearRect(0, 0, W, H);
+    var n = particles.length, maxD = CFG.linkDistance, maxD2 = maxD * maxD;
+    ctx.lineWidth = CFG.lineWidth;
+    for (var i = 0; i < n; i++) {
+      var a = particles[i], links = 0;
+      for (var j = i + 1; j < n && links < CFG.maxLinksPerNode; j++) {
+        var b = particles[j];
+        var dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
+        if (d2 < maxD2) {
+          links++;
+          ctx.strokeStyle = 'rgba(' + CFG.lineColor + ',' + ((1 - Math.sqrt(d2) / maxD) * 0.22).toFixed(3) + ')';
           ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-          ctx.lineWidth = CONFIG.lineWidth;
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
           ctx.stroke();
         }
       }
     }
-
-    // Mouse connections
-    if (mouse.x > 0 && mouse.y > 0) {
-      const { r: mr, g: mg, b: mb } = CONFIG.color;
-      for (let i = 0; i < particles.length; i++) {
-        const dx = mouse.x - particles[i].x;
-        const dy = mouse.y - particles[i].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < CONFIG.mouseRadius) {
-          const opacity = (1 - dist / CONFIG.mouseRadius) * 0.3;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = `rgba(${mr}, ${mg}, ${mb}, ${opacity})`;
-          ctx.lineWidth = CONFIG.lineWidth * 0.8;
-          ctx.stroke();
-        }
-      }
+    for (var k = 0; k < n; k++) {
+      var p = particles[k];
+      var alpha = p.a + Math.sin(time * p.pulse + p.phase) * 0.15;
+      ctx.fillStyle = 'rgba(' + CFG.color + ',' + Math.max(0.1, alpha).toFixed(3) + ')';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
 
-  function animate(time) {
-    ctx.clearRect(0, 0, width, height);
+  function frame(t) {
+    raf = 0;
+    for (var i = 0; i < particles.length; i++) update(particles[i]);
+    draw(t);
+    schedule();
+  }
 
-    for (const p of particles) {
-      p.update(time);
-    }
+  function schedule() {
+    if (raf || !inView || document.hidden || reducedQuery.matches) return;
+    raf = requestAnimationFrame(frame);
+  }
 
-    drawConnections();
+  function stop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+  }
 
-    for (const p of particles) {
-      p.draw();
-    }
-
-    animationId = requestAnimationFrame(animate);
+  function staticFrame() {
+    stop();
+    draw(0);
   }
 
   function init() {
     resize();
+    if (reducedQuery.matches) { staticFrame(); }
+    else schedule();
 
-    if (prefersReducedMotion) {
-      // Draw a single static frame
-      for (const p of particles) {
-        p.currentOpacity = p.opacity;
-      }
-      drawConnections();
-      for (const p of particles) {
-        p.draw();
-      }
-      return;
-    }
-
-    // Mouse tracking
-    hero.addEventListener('mousemove', (e) => {
-      const rect = hero.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    });
-
-    hero.addEventListener('mouseleave', () => {
-      mouse.x = -1000;
-      mouse.y = -1000;
-    });
-
-    // Touch support
-    hero.addEventListener('touchmove', (e) => {
-      const rect = hero.getBoundingClientRect();
-      mouse.x = e.touches[0].clientX - rect.left;
-      mouse.y = e.touches[0].clientY - rect.top;
+    // Mouse only — touch never draws or attracts.
+    host.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse' || !fineQuery.matches) return;
+      var r = host.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+      mouse.active = true;
     }, { passive: true });
+    host.addEventListener('pointerleave', function () { mouse.active = false; });
 
-    hero.addEventListener('touchend', () => {
-      mouse.x = -1000;
-      mouse.y = -1000;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        inView = entries[0].isIntersecting;
+        inView ? schedule() : stop();
+      }).observe(host);
+    }
+    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : schedule(); });
+
+    var onReduced = function (e) { e.matches ? staticFrame() : schedule(); };
+    if (reducedQuery.addEventListener) reducedQuery.addEventListener('change', onReduced);
+    else reducedQuery.addListener(onReduced);
+
+    var t = 0, lastW = W;
+    window.addEventListener('resize', function () {
+      clearTimeout(t);
+      t = setTimeout(function () {
+        // Mobile URL-bar show/hide changes only height; skip needless reseeds.
+        resize();
+        if (reducedQuery.matches || W !== lastW) draw(0);
+        lastW = W;
+      }, 150);
     });
-
-    // Pause when not visible
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        if (!animationId) animationId = requestAnimationFrame(animate);
-      } else {
-        if (animationId) {
-          cancelAnimationFrame(animationId);
-          animationId = null;
-        }
-      }
-    }, { threshold: 0.1 });
-
-    observer.observe(hero);
-    animationId = requestAnimationFrame(animate);
   }
 
-  window.addEventListener('resize', () => {
-    clearTimeout(window._particleResizeTimer);
-    window._particleResizeTimer = setTimeout(resize, 200);
-  });
-
-  // Initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+  // Decoration only: start after the page has loaded and the main thread is idle, so seeding and
+  // the first frames can never be a long task in front of the hero's first paint / LCP.
+  function whenIdle() {
+    if ('requestIdleCallback' in window) window.requestIdleCallback(init, { timeout: 2000 });
+    else setTimeout(init, 200);
   }
+  if (document.readyState === 'complete') whenIdle();
+  else window.addEventListener('load', whenIdle, { once: true });
 })();

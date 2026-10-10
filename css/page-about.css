@@ -1,0 +1,75 @@
+/* =========================================
+   Sylvan C7 — About page (page-specific only)
+   ========================================= */
+
+/* Person-first hero: photo beside the name on wide screens, above it on phones */
+.about-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+.about-hero__photo {
+  width: 136px;
+  height: 136px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--border-medium);
+  box-shadow: 0 0 0 8px var(--accent-tint);
+}
+
+.about-hero__body {
+  display: grid;
+  gap: var(--space-5);
+  justify-items: start;
+  min-width: 0;
+}
+
+.about-hero__body > * { margin: 0; }
+
+.about-hero__body .hero__title { margin-top: calc(var(--space-2) * -1); }
+
+.about-hero__role {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--fs-small);
+  letter-spacing: var(--tracking-mono);
+  color: var(--accent);
+  margin-top: calc(var(--space-3) * -1);
+}
+
+@media (min-width: 768px) {
+  .about-hero__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+  .about-hero__photo { width: 192px; height: 192px; align-self: start; margin-top: var(--space-8); }
+}
+
+/* Background: reading column (p/li already capped at the 66ch measure) */
+.about-background {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.about-background > * { margin: 0; }
+
+/* The name */
+.about-name {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.about-name > * { margin: 0; }
+
+.about-name__word {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* 66ch of Inter averages ~86 characters per line; hold prose under the site's 75-character limit */
+.about-hero .hero__lead { max-width: 56ch; }
+.about-background p,
+.about-name p,
+.cta-band__text { max-width: 52ch; }

@@ -2,933 +2,175 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Meet Sylvan C7 — a web design and development studio in Los Angeles, California, working remotely with clients across the US and building sites with engineering discipline.">
-
-  <!-- SEO:START -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add('js')</script>
+  <title>About Greyson Miller | Sylvan C7</title>
+  <meta name="description" content="Sylvan C7 is Greyson Miller, a software engineer in Los Angeles. The person who answers your email writes your code: websites, web apps, integrations and instrument-control software.">
   <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/about.html">
-  <meta name="theme-color" content="#0a100d">
-  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#060a08">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Sylvan C7">
-  <meta property="og:title" content="About Sylvan C7 — Web Design &amp; Development Studio in Los Angeles">
-  <meta property="og:description" content="Meet Sylvan C7 — a web design and development studio in Los Angeles, California, working remotely with clients across the US and building sites with engineering discipline.">
+  <meta property="og:title" content="About Greyson Miller, founder of Sylvan C7">
+  <meta property="og:description" content="Sylvan C7 is Greyson Miller, a software engineer in Los Angeles. The person who answers your email writes your code: websites, web apps, integrations and instrument-control software.">
   <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/about.html">
   <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Sylvan C7 — websites that turn visitors into customers.">
-  <meta property="og:locale" content="en_US">
-
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="About Sylvan C7 — Web Design &amp; Development Studio in Los Angeles">
-  <meta name="twitter:description" content="Meet Sylvan C7 — a web design and development studio in Los Angeles, California, working remotely with clients across the US and building sites with engineering discipline.">
+  <meta name="twitter:title" content="About Greyson Miller, founder of Sylvan C7">
+  <meta name="twitter:description" content="Sylvan C7 is Greyson Miller, a software engineer in Los Angeles. The person who answers your email writes your code: websites, web apps, integrations and instrument-control software.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
-<!-- SEO:END -->
 
-  
-  
-  
-    <title>About Sylvan C7 — Web Design &amp; Development Studio in Los Angeles</title>
-
-  <!-- FONTS:START -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap">
-  <!-- FONTS:END -->
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/pages.css">
-
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
-
-  <style>
-    /* ---- About Page Specific Styles ---- */
-
-    .about-philosophy {
-      text-align: center;
-      max-width: 52ch;
-      margin: 0 auto;
-    }
-
-    /* Brand Story */
-    .brand-story {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: var(--space-16);
-      align-items: center;
-    }
-
-    .brand-story__text p {
-      max-width: 55ch;
-    }
-
-    .brand-story__text p + p {
-      margin-top: var(--space-6);
-    }
-
-    .brand-story__visual {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .brand-story__visual svg {
-      width: 100%;
-      max-width: 420px;
-      height: auto;
-    }
-
-    /* Constellation animation */
-    .constellation-node {
-      transition: r 0.4s var(--ease-out);
-    }
-
-    .brand-story__visual:hover .constellation-node {
-      r: 6;
-    }
-
-    .constellation-line {
-      stroke-dasharray: 4 4;
-      animation: constellationPulse 4s ease-in-out infinite;
-    }
-
-    .constellation-line:nth-child(odd) {
-      animation-delay: -2s;
-    }
-
-    @keyframes constellationPulse {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.7; }
-    }
-
-    .constellation-glow {
-      animation: float 6s ease-in-out infinite;
-    }
-
-    .constellation-glow:nth-child(2) {
-      animation-delay: -2s;
-    }
-
-    .constellation-glow:nth-child(3) {
-      animation-delay: -4s;
-    }
-
-    /* Values Section — Distinctive Layouts */
-    .values-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto auto;
-      gap: var(--space-8);
-    }
-
-    .value-card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      transition: all var(--duration-normal) var(--ease-out);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .value-card:hover {
-      border-color: var(--border-medium);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    .value-card::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      background: linear-gradient(135deg, var(--accent-glow), transparent, var(--accent-glow));
-      opacity: 0;
-      transition: opacity var(--duration-normal) var(--ease-out);
-      z-index: 0;
-    }
-
-    .value-card:hover::before {
-      opacity: 1;
-    }
-
-    /* Value 1 — Full width, horizontal layout */
-    .value-card--wide {
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: var(--space-10);
-      align-items: center;
-      padding: var(--space-10) var(--space-12);
-    }
-
-    .value-card--wide .value-card__number {
-      font-family: var(--font-display);
-      font-size: var(--text-7xl);
-      font-weight: 800;
-      color: var(--accent);
-      opacity: 0.15;
-      line-height: 1;
-      position: relative;
-      z-index: 1;
-    }
-
-    .value-card--wide .value-card__content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .value-card--wide .value-card__title {
-      font-family: var(--font-heading);
-      font-size: var(--text-2xl);
-      font-weight: 600;
-      margin-bottom: var(--space-3);
-    }
-
-    .value-card--wide .value-card__text {
-      color: var(--text-secondary);
-      font-size: var(--text-base);
-      line-height: var(--leading-loose);
-      max-width: 60ch;
-    }
-
-    /* Value 2 — Tall card, top accent bar */
-    .value-card--tall {
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .value-card--tall .value-card__accent-bar {
-      height: 4px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-blue));
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    }
-
-    .value-card--tall .value-card__inner {
-      padding: var(--space-8);
-      position: relative;
-      z-index: 1;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .value-card--tall .value-card__number {
-      font-family: var(--font-display);
-      font-size: var(--text-xs);
-      font-weight: 800;
-      color: var(--accent);
-      letter-spacing: var(--tracking-widest);
-      margin-bottom: var(--space-6);
-    }
-
-    .value-card--tall .value-card__title {
-      font-family: var(--font-heading);
-      font-size: var(--text-xl);
-      font-weight: 600;
-      margin-bottom: var(--space-4);
-    }
-
-    .value-card--tall .value-card__text {
-      color: var(--text-secondary);
-      font-size: var(--text-sm);
-      line-height: var(--leading-loose);
-    }
-
-    /* Value 3 — Compact with side stripe */
-    .value-card--stripe {
-      display: grid;
-      grid-template-columns: 4px 1fr;
-      gap: 0;
-      padding: 0;
-    }
-
-    .value-card--stripe .value-card__side-stripe {
-      background: var(--accent);
-      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-    }
-
-    .value-card--stripe .value-card__inner {
-      padding: var(--space-8);
-      position: relative;
-      z-index: 1;
-    }
-
-    .value-card--stripe .value-card__number {
-      font-family: var(--font-display);
-      font-size: var(--text-xs);
-      font-weight: 800;
-      color: var(--accent);
-      letter-spacing: var(--tracking-widest);
-      margin-bottom: var(--space-6);
-    }
-
-    .value-card--stripe .value-card__title {
-      font-family: var(--font-heading);
-      font-size: var(--text-xl);
-      font-weight: 600;
-      margin-bottom: var(--space-4);
-    }
-
-    .value-card--stripe .value-card__text {
-      color: var(--text-secondary);
-      font-size: var(--text-sm);
-      line-height: var(--leading-loose);
-    }
-
-    /* Value 4 — Bottom-aligned, large number background */
-    .value-card--bold {
-      grid-column: 1 / -1;
-      padding: var(--space-10) var(--space-12);
-      position: relative;
-      text-align: center;
-    }
-
-    .value-card--bold .value-card__bg-number {
-      font-family: var(--font-display);
-      font-size: 8rem;
-      font-weight: 800;
-      color: var(--accent);
-      opacity: 0.05;
-      position: absolute;
-      right: var(--space-12);
-      top: 50%;
-      transform: translateY(-50%);
-      line-height: 1;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .value-card--bold .value-card__content {
-      position: relative;
-      z-index: 1;
-      max-width: 50ch;
-      margin: 0 auto;
-    }
-
-    .value-card--bold .value-card__number {
-      font-family: var(--font-display);
-      font-size: var(--text-xs);
-      font-weight: 800;
-      color: var(--accent);
-      letter-spacing: var(--tracking-widest);
-      margin-bottom: var(--space-4);
-    }
-
-    .value-card--bold .value-card__title {
-      font-family: var(--font-heading);
-      font-size: var(--text-2xl);
-      font-weight: 600;
-      margin-bottom: var(--space-3);
-    }
-
-    .value-card--bold .value-card__text {
-      color: var(--text-secondary);
-      font-size: var(--text-base);
-      line-height: var(--leading-loose);
-    }
-
-    /* Founder Section */
-    .founder-card {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: var(--space-10);
-      align-items: start;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: var(--space-10) var(--space-12);
-    }
-
-    .founder-card__photo {
-      display: block;
-      width: 192px;
-      height: 192px;
-      border-radius: var(--radius-full);
-      object-fit: cover;
-      object-position: center top;
-      border: 2px solid var(--accent-dim);
-      box-shadow: 0 0 0 6px var(--accent-glow);
-      background: var(--bg-surface);
-      flex-shrink: 0;
-    }
-
-    .founder-card__name {
-      font-family: var(--font-heading);
-      font-size: var(--text-2xl);
-      font-weight: 600;
-      margin-bottom: var(--space-1);
-    }
-
-    .founder-card__role {
-      font-size: var(--text-sm);
-      color: var(--accent);
-      margin-bottom: var(--space-6);
-    }
-
-    .founder-card__text p {
-      color: var(--text-secondary);
-      line-height: var(--leading-loose);
-      max-width: 65ch;
-    }
-
-    .founder-card__text p + p {
-      margin-top: var(--space-4);
-    }
-
-    /* Why New Section */
-    .advantage-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-6);
-    }
-
-    .advantage-card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: var(--space-8);
-      transition: all var(--duration-normal) var(--ease-out);
-    }
-
-    .advantage-card:hover {
-      border-color: var(--border-medium);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    .advantage-card__title {
-      font-family: var(--font-heading);
-      font-size: var(--text-lg);
-      font-weight: 600;
-      margin-bottom: var(--space-3);
-    }
-
-    .advantage-card__text {
-      color: var(--text-secondary);
-      font-size: var(--text-sm);
-      line-height: var(--leading-loose);
-    }
-
-    /* How We Work Section */
-    .process-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-6);
-    }
-
-    .process-list .process-item:last-child {
-      grid-column: 1 / -1;
-    }
-
-    .process-item {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: var(--space-5);
-      align-items: start;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: var(--space-6) var(--space-7);
-    }
-
-    .process-item__number {
-      font-family: var(--font-display);
-      font-size: var(--text-2xl);
-      font-weight: 800;
-      color: var(--accent);
-      opacity: 0.4;
-      line-height: 1;
-    }
-
-    .process-item__title {
-      font-family: var(--font-heading);
-      font-size: var(--text-base);
-      font-weight: 600;
-      margin-bottom: var(--space-2);
-    }
-
-    .process-item__text {
-      color: var(--text-secondary);
-      font-size: var(--text-sm);
-      line-height: var(--leading-loose);
-    }
-
-    /* ---- Responsive ---- */
-
-    @media (max-width: 1024px) {
-      .brand-story {
-        gap: var(--space-10);
-      }
-
-      .advantage-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .value-card--bold .value-card__bg-number {
-        font-size: 6rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .brand-story {
-        grid-template-columns: 1fr;
-        gap: var(--space-8);
-      }
-
-      .brand-story__visual {
-        order: -1;
-      }
-
-      .brand-story__visual svg {
-        max-width: 300px;
-      }
-
-      .values-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .value-card--wide {
-        grid-template-columns: 1fr;
-        gap: var(--space-6);
-        padding: var(--space-8);
-      }
-
-      .value-card--bold {
-        padding: var(--space-8);
-      }
-
-      .value-card--bold .value-card__bg-number {
-        font-size: 4rem;
-        right: var(--space-4);
-      }
-
-      .advantage-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .process-list {
-        grid-template-columns: 1fr;
-      }
-
-      .founder-card {
-        grid-template-columns: 1fr;
-        text-align: center;
-        padding: var(--space-8);
-      }
-
-      .founder-card__photo {
-        width: 132px;
-        height: 132px;
-        margin: 0 auto;
-      }
-    }
-  </style>
-  <!-- NOSCRIPT:START -->
-  <noscript>
-    <style>
-      /* Scroll-reveal animations start hidden and are released by JS. If JS is
-         blocked or fails to load, show everything rather than a blank page. */
-      .reveal,
-      .hero-line,
-      .accent-line { opacity: 1 !important; transform: none !important; }
-      .hero-line__inner { transform: none !important; }
-      .timeline__step { opacity: 1 !important; }
-      .timeline__step::before { height: 100% !important; }
-      .scroll-progress { display: none !important; }
-    </style>
-  </noscript>
-  <!-- NOSCRIPT:END -->
+  <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/page-about.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
+  <div class="circuit-trace" aria-hidden="true"><span class="circuit-trace__track"></span><span class="circuit-trace__line"></span><span class="circuit-trace__head"></span></div>
 
-  <!-- Scroll Progress -->
-  <div class="scroll-progress" id="scrollProgress"></div>
-
-  <!-- Navigation -->
-  <nav class="nav" id="nav">
-    <div class="container nav__inner">
-      <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
-
-      <div class="nav__links">
-        <a href="index.html" class="nav__link">Home</a>
-        <a href="services.html" class="nav__link">Services</a>
-        <a href="work.html" class="nav__link">Work</a>
-        <a href="industries.html" class="nav__link">Industries</a>
-        <a href="pricing.html" class="nav__link">Pricing</a>
-        <a href="about.html" class="nav__link active">About</a>
-        <a href="contact.html" class="nav__link">Contact</a>
-        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Get a Free Quote</a>
-      </div>
-
-      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMobile">
-        <span></span>
-        <span></span>
-        <span></span>
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main">
+      <a class="nav__brand" href="index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
+      <ul class="nav__links" role="list">
+        <li><a class="nav__link" href="index.html">Home</a></li>
+        <li><a class="nav__link" href="services.html">Services</a></li>
+        <li><a class="nav__link" href="work.html">Work</a></li>
+        <li><a class="nav__link" href="about.html">About</a></li>
+        <li><a class="nav__link" href="contact.html">Contact</a></li>
+      </ul>
+      <a class="btn btn--primary btn--sm nav__cta" href="contact.html">Start a project</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="navDrawer">
+        <span class="visually-hidden">Open menu</span>
+        <span class="nav__toggle-box" aria-hidden="true"><span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span></span>
       </button>
-    </div>
-  </nav>
-
-  <!-- Mobile Menu -->
-  <div class="nav__mobile-overlay" id="navOverlay"></div>
-  <div class="nav__mobile" id="navMobile">
-    <a href="index.html" class="nav__mobile-link">Home</a>
-    <a href="services.html" class="nav__mobile-link">Services</a>
-    <a href="work.html" class="nav__mobile-link">Work</a>
-    <a href="industries.html" class="nav__mobile-link">Industries</a>
-    <a href="pricing.html" class="nav__mobile-link">Pricing</a>
-    <a href="about.html" class="nav__mobile-link active">About</a>
-    <a href="contact.html" class="nav__mobile-link">Contact</a>
-    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Get a Free Quote</a>
-  </div>
-
-  <!-- Page Header -->
-  <header class="page-header">
-    <div class="container">
-      <span class="label reveal reveal--up">The studio behind the work</span>
-      <h1 class="reveal reveal--up stagger-1" style="margin-top: var(--space-4);">About</h1>
-    </div>
+    </nav>
   </header>
+  <div class="nav-drawer" id="navDrawer" inert>
+    <nav aria-label="Mobile">
+      <ul class="nav-drawer__list" role="list">
+        <li><a class="nav-drawer__link" href="index.html">Home</a></li>
+        <li><a class="nav-drawer__link" href="services.html">Services</a></li>
+        <li><a class="nav-drawer__link" href="work.html">Work</a></li>
+        <li><a class="nav-drawer__link" href="about.html">About</a></li>
+        <li><a class="nav-drawer__link" href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--primary btn--block" href="contact.html">Start a project</a>
+    <div class="nav-drawer__contact">
+      <a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a>
+      <a href="tel:+16266220261">(626) 622-0261</a>
+    </div>
+  </div>
+  <div class="nav-overlay" aria-hidden="true"></div>
 
-  <!-- Philosophy Statement -->
-  <section class="section section--sm">
-    <div class="container">
-      <div class="about-philosophy reveal reveal--up">
-        <p class="display-lg">
-          A website should work like <span class="accent">nature</span> — resilient, adaptive, and quietly powerful.
-        </p>
+  <main id="main">
+    <section class="hero about-hero" aria-labelledby="hero-title">
+      <div class="container hero__inner about-hero__inner">
+        <img class="about-hero__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" width="192" height="192" alt="Greyson Miller" fetchpriority="high" decoding="async">
+        <div class="about-hero__body">
+          <div class="eyebrow">About</div>
+          <h1 class="hero__title hero__title--page" id="hero-title" data-mask>Greyson Miller</h1>
+          <div class="about-hero__role">Software engineer, founder of Sylvan C7</div>
+          <p class="lead hero__lead" data-hero-follow>Sylvan C7 is me. The person who answers your email is the one who writes your code. No account managers, no handoff, no junior swapped in after the first call.</p>
+          <div class="btn-row" data-hero-follow style="--follow-i:1">
+            <a class="btn btn--primary" href="contact.html">Start a project</a>
+            <a class="btn btn--outline" href="lab/square-word-calligraphy/">Try the lab</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="background-title">
+      <div class="container about-background reveal">
+        <h2 class="section-title" id="background-title">Engineering first</h2>
+        <p>My background is in engineering rather than page layout: production software that has to keep running unattended, hardware-control systems that talk to physical instruments, and data tooling where a wrong answer is worse than no answer.</p>
+        <p>I also build my own products. I built and run <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks</a>, which turns any text into a bilingual audiobook; I also run its blue/green deploys and monitored nightly backups. The <a href="lab/square-word-calligraphy/">Square Word Calligraphy lab</a> is a free in-browser tool with a layout engine and renderer I wrote. <a href="lab/nuestra-finca/">Nuestra Finca</a> is a 3D walkthrough of a hillside farm, rebuilt from phone photos. Every project gets the same discipline.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="principles-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <div class="eyebrow">How I work</div>
+          <h2 class="section-title" id="principles-title">Three principles</h2>
+        </header>
+        <ul class="card-grid" role="list" data-glow>
+          <li class="card">
+            <h3 class="card__title">Built to hold up</h3>
+            <p class="card__text">I assume something will eventually go wrong: a traffic spike, a failed update, an outage. Nobody can promise software never has a bad day. My job is to make the bad day survivable and fixable.</p>
+          </li>
+          <li class="card">
+            <h3 class="card__title">Radical clarity</h3>
+            <p class="card__text">Every decision, mockup and status update comes in plain language you can act on. If I can't explain it simply, I haven't thought it through.</p>
+          </li>
+          <li class="card">
+            <h3 class="card__title">Long-term thinking</h3>
+            <p class="card__text">I choose tools that age well and keep you free of lock-in, so each change is easier than the last. Shortcuts today become debt tomorrow.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--alt section--tight" aria-labelledby="name-title">
+      <div class="container about-name reveal">
+        <h2 class="section-title" id="name-title">The name</h2>
+        <p><span class="about-name__word">Sylvan</span> means of the forest: systems that adapt, stay connected and are still standing years later. <span class="about-name__word">C7</span> is the code half, short and precise.</p>
+      </div>
+    </section>
+
+    <section class="cta-band" aria-labelledby="cta-title">
+      <div class="container cta-band__inner reveal">
+        <h2 class="cta-band__title" id="cta-title">Talk to the person who will build it</h2>
+        <p class="cta-band__text">A free 30-minute call, then a fixed quote in writing. I reply within two business days.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="contact.html">Start a project</a>
+          <a class="btn btn--outline" href="services.html#pricing">See pricing</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div>
+        <a class="nav__brand" href="index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
+        <p class="site-footer__tagline">Software that keeps working. Websites, web apps, integrations and instrument-control software.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Pages</p>
+        <ul class="site-footer__links" role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Contact</p>
+        <ul class="site-footer__contact" role="list">
+          <li><a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a></li>
+          <li><a href="tel:+16266220261">(626) 622-0261</a></li>
+          <li>Los Angeles, California</li>
+        </ul>
       </div>
     </div>
-  </section>
-
-  <!-- Brand Story -->
-  <section class="section" id="brandStory">
-    <div class="container">
-      <div class="brand-story">
-        <div class="brand-story__text">
-          <span class="label mb-6 reveal reveal--up">The Name</span>
-          <h2 class="reveal reveal--up stagger-1" style="margin-top: var(--space-4); margin-bottom: var(--space-8);">Where the forest<br>meets the code</h2>
-          <p class="text-lg reveal reveal--up stagger-2">
-            Sylvan C7 is named for the intersection of the organic and the digital. <strong style="color: var(--text-primary);">Sylvan</strong> — of the forest, evoking resilience, interconnection, and natural growth patterns. <strong style="color: var(--text-primary);">C7</strong> — the precision of code: a short, technical counterweight to the organic half of the name.
-          </p>
-          <p class="reveal reveal--up stagger-3">
-            The name is a starting belief: the best websites mirror nature. A forest doesn't fight its environment — it adapts, connects, and endures. Root systems share resources silently. Canopies optimize for light without a single line of code. Every layer serves a purpose.
-          </p>
-          <p class="reveal reveal--up stagger-4">
-            That's the kind of website we build. Resilient, adaptive, and quietly powerful. A site that lets your business focus on what it does best — growing, serving, creating — while the page underneath holds steady through whatever comes next.
-          </p>
-        </div>
-
-        <div class="brand-story__visual reveal reveal--scale stagger-2">
-          <!-- Abstract constellation / network SVG -->
-          <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <!-- Glow definitions -->
-            <defs>
-              <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.4"/>
-                <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
-              </radialGradient>
-              <filter id="softGlow">
-                <feGaussianBlur stdDeviation="3" result="blur"/>
-                <feMerge>
-                  <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-
-            <!-- Connection lines -->
-            <line x1="80" y1="100" x2="200" y2="80" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
-            <line x1="200" y1="80" x2="310" y2="130" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
-            <line x1="200" y1="80" x2="160" y2="200" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
-            <line x1="80" y1="100" x2="60" y2="240" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
-            <line x1="80" y1="100" x2="160" y2="200" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
-            <line x1="160" y1="200" x2="60" y2="240" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
-            <line x1="160" y1="200" x2="280" y2="220" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
-            <line x1="310" y1="130" x2="280" y2="220" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
-            <line x1="310" y1="130" x2="350" y2="260" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
-            <line x1="280" y1="220" x2="350" y2="260" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
-            <line x1="280" y1="220" x2="200" y2="320" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
-            <line x1="60" y1="240" x2="120" y2="340" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
-            <line x1="160" y1="200" x2="200" y2="320" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
-            <line x1="200" y1="320" x2="120" y2="340" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.2" stroke-width="1"/>
-            <line x1="200" y1="320" x2="350" y2="260" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.15" stroke-width="1"/>
-            <line x1="60" y1="240" x2="160" y2="200" class="constellation-line" stroke="var(--accent)" stroke-opacity="0.1" stroke-width="1"/>
-
-            <!-- Background glow circles -->
-            <circle cx="200" cy="80" r="40" fill="url(#nodeGlow)" class="constellation-glow"/>
-            <circle cx="160" cy="200" r="50" fill="url(#nodeGlow)" class="constellation-glow"/>
-            <circle cx="280" cy="220" r="35" fill="url(#nodeGlow)" class="constellation-glow"/>
-
-            <!-- Primary nodes -->
-            <circle cx="200" cy="80" r="5" fill="var(--accent)" class="constellation-node" filter="url(#softGlow)"/>
-            <circle cx="160" cy="200" r="7" fill="var(--accent)" class="constellation-node" filter="url(#softGlow)"/>
-            <circle cx="280" cy="220" r="5" fill="var(--accent)" class="constellation-node" filter="url(#softGlow)"/>
-            <circle cx="200" cy="320" r="5" fill="var(--accent)" class="constellation-node" filter="url(#softGlow)"/>
-
-            <!-- Secondary nodes -->
-            <circle cx="80" cy="100" r="4" fill="var(--accent)" opacity="0.7" class="constellation-node"/>
-            <circle cx="310" cy="130" r="4" fill="var(--accent)" opacity="0.7" class="constellation-node"/>
-            <circle cx="60" cy="240" r="3.5" fill="var(--accent)" opacity="0.6" class="constellation-node"/>
-            <circle cx="350" cy="260" r="3.5" fill="var(--accent)" opacity="0.6" class="constellation-node"/>
-            <circle cx="120" cy="340" r="3" fill="var(--accent)" opacity="0.5" class="constellation-node"/>
-
-            <!-- Tiny accent nodes -->
-            <circle cx="140" cy="140" r="1.5" fill="var(--accent)" opacity="0.3"/>
-            <circle cx="240" cy="150" r="1.5" fill="var(--accent)" opacity="0.3"/>
-            <circle cx="100" cy="170" r="1.5" fill="var(--accent)" opacity="0.25"/>
-            <circle cx="220" cy="270" r="1.5" fill="var(--accent)" opacity="0.3"/>
-            <circle cx="320" cy="190" r="1.5" fill="var(--accent)" opacity="0.25"/>
-            <circle cx="170" cy="280" r="1.5" fill="var(--accent)" opacity="0.2"/>
-
-            <!-- Outer ring suggestion -->
-            <circle cx="200" cy="200" r="170" stroke="var(--accent)" stroke-opacity="0.06" stroke-width="1" fill="none" stroke-dasharray="6 10"/>
-            <circle cx="200" cy="200" r="120" stroke="var(--accent)" stroke-opacity="0.04" stroke-width="1" fill="none" stroke-dasharray="4 8"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Values -->
-  <section class="section section--alt" id="values">
-    <div class="container">
-      <div class="section-header section-header--center">
-        <span class="label section-header__label reveal reveal--up">What Drives the Work</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">The principles we build by</h2>
-        <p class="section-header__subtitle reveal reveal--up stagger-2">
-          Four principles that shape the design decisions, the code underneath them, and the way we work with you.
-        </p>
-      </div>
-
-      <div class="values-grid">
-        <!-- Value 1 — Full-width horizontal card -->
-        <div class="value-card value-card--wide reveal reveal--up stagger-1">
-          <div class="value-card__number">01</div>
-          <div class="value-card__content">
-            <h3 class="value-card__title">Built to Hold Up</h3>
-            <p class="value-card__text">Designing for failure is the starting point here, not a finishing touch. The assumption is that something will eventually go wrong — a traffic spike, a broken plugin, a host outage — so the goal is a site that degrades gracefully instead of going dark, and that we can diagnose quickly when it does. No one can promise a site will never have a bad day — the principle is to make the bad day survivable and fixable.</p>
-          </div>
-        </div>
-
-        <!-- Value 2 — Tall card with top accent bar -->
-        <div class="value-card value-card--tall reveal reveal--up stagger-2">
-          <div class="value-card__accent-bar"></div>
-          <div class="value-card__inner">
-            <span class="value-card__number">02</span>
-            <h3 class="value-card__title">Organic Growth</h3>
-            <p class="value-card__text">The strongest trees don't grow overnight. The aim is a site you can add to as the business changes — new pages, new features, more traffic — rather than one that has to be torn down and rebuilt. So we favour simple structure and standard tools over clever shortcuts, and leave the next change easier than the last one.</p>
-          </div>
-        </div>
-
-        <!-- Value 3 — Card with side stripe accent -->
-        <div class="value-card value-card--stripe reveal reveal--up stagger-3">
-          <div class="value-card__side-stripe"></div>
-          <div class="value-card__inner">
-            <span class="value-card__number">03</span>
-            <h3 class="value-card__title">Radical Clarity</h3>
-            <p class="value-card__text">We refuse to hide behind jargon or manufacture complexity for its own sake. Every decision, every mockup, every status update — clear enough that you can understand it without a glossary. If it can't be explained simply, it hasn't been thought through well enough.</p>
-          </div>
-        </div>
-
-        <!-- Value 4 — Full-width centered with large background number -->
-        <div class="value-card value-card--bold reveal reveal--up stagger-4">
-          <span class="value-card__bg-number">04</span>
-          <div class="value-card__content">
-            <span class="value-card__number">04</span>
-            <h3 class="value-card__title">Long-term Thinking</h3>
-            <p class="value-card__text">We optimize for years, not quarters. The decisions made in your site today compound — for better or worse. We choose tools and patterns that age well, resist vendor lock-in, and leave room for the future you haven't imagined yet. Short-term shortcuts create long-term debt. We'd rather build it right.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Founder -->
-  <section class="section" id="founder">
-    <div class="container">
-      <div class="section-header section-header--center">
-        <span class="label section-header__label reveal reveal--up">The Person Behind the Work</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">Who you're actually working with</h2>
-        <p class="section-header__subtitle reveal reveal--up stagger-2">
-          No account managers. No offshore handoff. No junior swapped in after the pitch.
-        </p>
-      </div>
-
-      <div class="founder-card reveal reveal--up stagger-2">
-        <img class="founder-card__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" alt="Greyson Miller, founder of Sylvan C7" width="192" height="192" loading="lazy" decoding="async">
-        <div class="founder-card__text">
-          <h3 class="founder-card__name">Greyson Miller</h3>
-          <p class="founder-card__role">Founder, Designer &amp; Developer</p>
-          <p>
-            When you hire this studio, the person who answers your email writes your code — the same person who designs the layout, wires up the forms, and is the one you call if something ever needs to change.
-          </p>
-          <p>
-            Our background is in engineering rather than page layout: production software that has to keep running unattended, hardware-control systems that talk to physical instruments, and data tooling where a wrong answer is worse than no answer. That's the discipline a site gets built with here — structured, tested, and made to hold up rather than assembled to look right on launch day.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Why New Is An Advantage -->
-  <section class="section section--alt" id="why-new">
-    <div class="container">
-      <div class="section-header section-header--center">
-        <span class="label section-header__label reveal reveal--up">Let's Be Direct About It</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">Why a new studio is an advantage</h2>
-        <p class="section-header__subtitle reveal reveal--up stagger-2">
-          Sylvan C7 is young. Here's the honest case for why that works in your favor, not against it.
-        </p>
-      </div>
-
-      <div class="advantage-grid">
-        <div class="advantage-card reveal reveal--up stagger-1">
-          <h3 class="advantage-card__title">Real attention, not a small account</h3>
-          <p class="advantage-card__text">At a busy shop, a smaller project gets whatever time is left over. Here, work is only taken on when it can be given real attention — scoped, scheduled, and built to the same standard whatever its size.</p>
-        </div>
-        <div class="advantage-card reveal reveal--up stagger-2">
-          <h3 class="advantage-card__title">Honest pricing</h3>
-          <p class="advantage-card__text">There's no agency overhead, no account-management layer, no office lease baked into the quote. You're paying for the work, not the structure around it.</p>
-        </div>
-        <div class="advantage-card reveal reveal--up stagger-3">
-          <h3 class="advantage-card__title">Direct access to the builder</h3>
-          <p class="advantage-card__text">Questions and decisions go straight to the person doing the work. There's nobody to route a request through and nothing to translate, so most things get settled in the same conversation they came up in.</p>
-        </div>
-        <div class="advantage-card reveal reveal--up stagger-4">
-          <h3 class="advantage-card__title">Every incentive to overdeliver</h3>
-          <p class="advantage-card__text">Early projects are how a new studio builds its reputation. That means your project gets treated like it matters — because it does, directly, to what comes next.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How We Work -->
-  <section class="section" id="how-we-work">
-    <div class="container">
-      <div class="section-header section-header--center">
-        <span class="label section-header__label reveal reveal--up">The Process</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">How we work with you</h2>
-        <p class="section-header__subtitle reveal reveal--up stagger-2">
-          A handful of commitments designed to keep the risk on our side, not yours.
-        </p>
-      </div>
-
-      <div class="process-list">
-        <div class="process-item reveal reveal--up stagger-1">
-          <span class="process-item__number">01</span>
-          <div>
-            <h3 class="process-item__title">A fixed quote before anything starts</h3>
-            <p class="process-item__text">You'll know the full price before any work begins. No hourly surprises, no scope creep billed after the fact.</p>
-          </div>
-        </div>
-        <div class="process-item reveal reveal--up stagger-2">
-          <span class="process-item__number">02</span>
-          <div>
-            <h3 class="process-item__title">You own everything</h3>
-            <p class="process-item__text">The code, the domain, the hosting accounts, the content — all of it is yours. Nothing is held hostage to keep you as a client.</p>
-          </div>
-        </div>
-        <div class="process-item reveal reveal--up stagger-3">
-          <span class="process-item__number">03</span>
-          <div>
-            <h3 class="process-item__title">No lock-in contracts</h3>
-            <p class="process-item__text">You stay because the work is good, not because you're bound to a term. There's no auto-renewing agreement designed to trap you.</p>
-          </div>
-        </div>
-        <div class="process-item reveal reveal--up stagger-4">
-          <span class="process-item__number">04</span>
-          <div>
-            <h3 class="process-item__title">Plain language, never jargon</h3>
-            <p class="process-item__text">Every explanation is one you can actually use to make a decision — no buzzwords standing in for a real answer.</p>
-          </div>
-        </div>
-        <div class="process-item reveal reveal--up stagger-5">
-          <span class="process-item__number">05</span>
-          <div>
-            <h3 class="process-item__title">You get trained to run it yourself</h3>
-            <p class="process-item__text">Before launch, you'll know how to update your own site's content — so you're never stuck waiting on someone else for a simple change.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="section cta-section">
-    <div class="container" style="text-align: center;">
-      <span class="label mb-6 reveal reveal--up">Let's Talk</span>
-      <h2 class="display-lg reveal reveal--up stagger-1">Ready to build<br>something <span class="accent">resilient?</span></h2>
-      <p class="text-lg reveal reveal--up stagger-2" style="margin: var(--space-6) auto 0; max-width: 45ch;">
-        Every great website starts with a conversation.
-        Let's talk about what you're building.
-      </p>
-      <div class="reveal reveal--up stagger-3" style="margin-top: var(--space-10);">
-        <div class="magnetic-wrap">
-          <a href="contact.html" class="btn btn--primary btn--lg">Start a Project</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__top">
-        <div class="footer__brand">
-          <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
-          <p>We design and build fast, modern websites for businesses in every industry &mdash; then keep them running.</p>
-          <a href="contact.html" class="btn btn--outline btn--sm" style="margin-top: var(--space-5);">Start your project</a>
-        </div>
-        <div>
-          <h4 class="footer__heading">Navigate</h4>
-          <a href="index.html" class="footer__link">Home</a>
-          <a href="services.html" class="footer__link">Services</a>
-          <a href="work.html" class="footer__link">Work</a>
-          <a href="pricing.html" class="footer__link">Pricing</a>
-          <a href="about.html" class="footer__link">About</a>
-          <a href="faq.html" class="footer__link">FAQ</a>
-          <a href="contact.html" class="footer__link">Contact</a>
-        </div>
-        <div>
-          <h4 class="footer__heading">Industries</h4>
-          <a href="industries.html" class="footer__link">Restaurants &amp; Hospitality</a>
-          <a href="industries.html" class="footer__link">Dental &amp; Medical</a>
-          <a href="industries.html" class="footer__link">Legal &amp; Professional</a>
-          <a href="industries.html" class="footer__link">Home Services &amp; Trades</a>
-          <a href="industries.html" class="footer__link">Fitness &amp; Wellness</a>
-          <a href="industries.html" class="footer__link">Retail &amp; E-commerce</a>
-          <a href="industries.html" class="footer__link">SaaS &amp; Technology</a>
-          <a href="industries.html" class="footer__link">Real Estate &amp; Property</a>
-        </div>
-        <div>
-          <h4 class="footer__heading">Connect</h4>
-          <a href="mailto:greysonbmiller@protonmail.com" class="footer__link">greysonbmiller@protonmail.com</a>
-          <a href="tel:+16266220261" class="footer__link">+1 (626) 622-0261</a>
-          <span class="footer__link" style="cursor: default;">Los Angeles, California &mdash; working remotely with clients across the US</span>
-        </div>
-      </div>
-
-      <div class="footer__bottom">
-        <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
-      </div>
+    <div class="container site-footer__bottom">
+      <p>&copy; 2026 Sylvan C7</p>
+      <p>Based in Los Angeles; I work remotely with clients anywhere in the US.</p>
     </div>
   </footer>
 
-  <script src="js/animations.js"></script>
-  <script src="js/interactions.js"></script>
-  <script src="js/main.js"></script>
-  <!-- MOBILECTA:START -->
-  <div class="mobile-cta">
-    <a href="tel:+16266220261" class="btn btn--outline btn--sm">Call</a>
-    <a href="contact.html" class="btn btn--primary btn--sm">Get a Free Quote</a>
+  <div class="sticky-cta" role="region" aria-label="Quick contact">
+    <a class="btn btn--outline" href="tel:+16266220261">Call</a>
+    <a class="btn btn--primary" href="contact.html">Start a project</a>
   </div>
-  <!-- MOBILECTA:END -->
+
+  <script src="js/main.js" defer></script>
+  <script src="js/animations.js" defer></script>
+  <script src="js/components.js" defer></script>
 </body>
 </html>

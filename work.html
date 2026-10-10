@@ -2,742 +2,285 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sylvan C7 is a new web design studio in Los Angeles, California taking on its first projects. No invented case studies — instead, exactly how a project runs, what you receive at every stage, and the standards you can verify yourself.">
-
-  <!-- SEO:START -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add('js')</script>
+  <title>Work: Bibooks, the lab and how I run a project | Sylvan C7</title>
+  <meta name="description" content="Sylvan C7 is a new one-person practice with no client work published yet. Here is a live product and two lab experiments I built and run solo, how a project runs, and standards you can check yourself.">
   <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/work.html">
-  <meta name="theme-color" content="#0a100d">
-  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#060a08">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Sylvan C7">
-  <meta property="og:title" content="How We Build Websites — Process &amp; Standards | Sylvan C7">
-  <meta property="og:description" content="Sylvan C7 is a new web design studio in Los Angeles, California taking on its first projects. No invented case studies — instead, exactly how a project runs, what you receive at every stage, and the standards you can verify yourself.">
+  <meta property="og:title" content="Work: a live product and two lab experiments, built solo | Sylvan C7">
+  <meta property="og:description" content="Sylvan C7 is a new one-person practice with no client work published yet. Here is a live product and two lab experiments I built and run solo, how a project runs, and standards you can check yourself.">
   <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/work.html">
   <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Sylvan C7 — websites that turn visitors into customers.">
-  <meta property="og:locale" content="en_US">
-
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="How We Build Websites — Process &amp; Standards | Sylvan C7">
-  <meta name="twitter:description" content="Sylvan C7 is a new web design studio in Los Angeles, California taking on its first projects. No invented case studies — instead, exactly how a project runs, what you receive at every stage, and the standards you can verify yourself.">
+  <meta name="twitter:title" content="Work: a live product and two lab experiments, built solo | Sylvan C7">
+  <meta name="twitter:description" content="Sylvan C7 is a new one-person practice with no client work published yet. Here is a live product and two lab experiments I built and run solo, how a project runs, and standards you can check yourself.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
-<!-- SEO:END -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-  
-  
-  
-    <title>How We Build Websites — Process &amp; Standards | Sylvan C7</title>
-
-  <!-- FONTS:START -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800&display=swap">
-  <!-- FONTS:END -->
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/pages.css">
-
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E">
-
-  <style>
-    /* Page-scoped: numbered process steps, deliverable callouts, verification lists. Existing tokens only. */
-    .wk-steps {
-      border-top: 1px solid var(--border-subtle);
-      margin-top: var(--space-12);
-    }
-
-    .wk-step {
-      display: grid;
-      grid-template-columns: 4rem 1fr;
-      gap: var(--space-6);
-      padding: var(--space-10) 0;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .wk-step__num {
-      font-family: var(--font-display);
-      font-size: var(--text-3xl);
-      font-weight: 800;
-      line-height: 1;
-      color: var(--accent);
-      opacity: 0.35;
-    }
-
-    .wk-step__title {
-      font-family: var(--font-heading);
-      font-size: var(--text-xl);
-      font-weight: 600;
-      margin-bottom: var(--space-3);
-    }
-
-    .wk-step__text {
-      color: var(--text-secondary);
-      max-width: 62ch;
-      margin-bottom: var(--space-5);
-    }
-
-    .wk-deliverable {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-left: 2px solid var(--accent);
-      border-radius: var(--radius-lg);
-      padding: var(--space-5) var(--space-6);
-      max-width: 62ch;
-    }
-
-    .wk-deliverable__label {
-      display: block;
-      font-family: var(--font-heading);
-      font-size: var(--text-xs);
-      letter-spacing: var(--tracking-widest);
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: var(--space-2);
-    }
-
-    .wk-deliverable p {
-      font-size: var(--text-sm);
-      color: var(--text-secondary);
-      margin: 0;
-    }
-
-    .wk-check {
-      list-style: none;
-      padding: 0;
-      margin: var(--space-5) 0 0;
-    }
-
-    .wk-check li {
-      position: relative;
-      padding-left: var(--space-6);
-      font-size: var(--text-sm);
-      color: var(--text-secondary);
-    }
-
-    .wk-check li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0.65em;
-      width: 10px;
-      height: 1px;
-      background: var(--accent);
-    }
-
-    .wk-note {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: var(--space-8);
-      margin-top: var(--space-12);
-      max-width: 70ch;
-    }
-
-    @media (max-width: 768px) {
-      .wk-step {
-        grid-template-columns: 1fr;
-        gap: var(--space-3);
-        padding: var(--space-8) 0;
-      }
-
-      .wk-step__num {
-        font-size: var(--text-2xl);
-      }
-
-      .wk-note {
-        padding: var(--space-6);
-      }
-    }
-  </style>
-  <!-- NOSCRIPT:START -->
-  <noscript>
-    <style>
-      /* Scroll-reveal animations start hidden and are released by JS. If JS is
-         blocked or fails to load, show everything rather than a blank page. */
-      .reveal,
-      .hero-line,
-      .accent-line { opacity: 1 !important; transform: none !important; }
-      .hero-line__inner { transform: none !important; }
-      .timeline__step { opacity: 1 !important; }
-      .timeline__step::before { height: 100% !important; }
-      .scroll-progress { display: none !important; }
-    </style>
-  </noscript>
-  <!-- NOSCRIPT:END -->
+  <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/page-work.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
+  <div class="circuit-trace" aria-hidden="true"><span class="circuit-trace__track"></span><span class="circuit-trace__line"></span><span class="circuit-trace__head"></span></div>
 
-  <!-- Scroll Progress -->
-  <div class="scroll-progress" id="scrollProgress"></div>
-
-  <!-- Navigation -->
-  <nav class="nav" id="nav">
-    <div class="container nav__inner">
-      <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
-
-      <div class="nav__links">
-        <a href="index.html" class="nav__link">Home</a>
-        <a href="services.html" class="nav__link">Services</a>
-        <a href="work.html" class="nav__link active">Work</a>
-        <a href="industries.html" class="nav__link">Industries</a>
-        <a href="pricing.html" class="nav__link">Pricing</a>
-        <a href="about.html" class="nav__link">About</a>
-        <a href="contact.html" class="nav__link">Contact</a>
-        <a href="contact.html" class="btn btn--primary btn--sm nav__cta">Get a Free Quote</a>
-      </div>
-
-      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMobile">
-        <span></span>
-        <span></span>
-        <span></span>
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main">
+      <a class="nav__brand" href="index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
+      <ul class="nav__links" role="list">
+        <li><a class="nav__link" href="index.html">Home</a></li>
+        <li><a class="nav__link" href="services.html">Services</a></li>
+        <li><a class="nav__link" href="work.html">Work</a></li>
+        <li><a class="nav__link" href="about.html">About</a></li>
+        <li><a class="nav__link" href="contact.html">Contact</a></li>
+      </ul>
+      <a class="btn btn--primary btn--sm nav__cta" href="contact.html">Start a project</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="navDrawer">
+        <span class="visually-hidden">Open menu</span>
+        <span class="nav__toggle-box" aria-hidden="true"><span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span></span>
       </button>
+    </nav>
+  </header>
+  <div class="nav-drawer" id="navDrawer" inert>
+    <nav aria-label="Mobile">
+      <ul class="nav-drawer__list" role="list">
+        <li><a class="nav-drawer__link" href="index.html">Home</a></li>
+        <li><a class="nav-drawer__link" href="services.html">Services</a></li>
+        <li><a class="nav-drawer__link" href="work.html">Work</a></li>
+        <li><a class="nav-drawer__link" href="about.html">About</a></li>
+        <li><a class="nav-drawer__link" href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--primary btn--block" href="contact.html">Start a project</a>
+    <div class="nav-drawer__contact">
+      <a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a>
+      <a href="tel:+16266220261">(626) 622-0261</a>
     </div>
-  </nav>
-
-  <!-- Mobile Menu -->
-  <div class="nav__mobile-overlay" id="navOverlay"></div>
-  <div class="nav__mobile" id="navMobile">
-    <a href="index.html" class="nav__mobile-link">Home</a>
-    <a href="services.html" class="nav__mobile-link">Services</a>
-    <a href="work.html" class="nav__mobile-link active">Work</a>
-    <a href="industries.html" class="nav__mobile-link">Industries</a>
-    <a href="pricing.html" class="nav__mobile-link">Pricing</a>
-    <a href="about.html" class="nav__mobile-link">About</a>
-    <a href="contact.html" class="nav__mobile-link">Contact</a>
-    <a href="contact.html" class="btn btn--primary" style="margin-top: auto;">Get a Free Quote</a>
   </div>
+  <div class="nav-overlay" aria-hidden="true"></div>
 
-  <!-- Page Header -->
-  <section class="section page-header">
-    <div class="container">
-      <span class="label reveal reveal--up">How We Work</span>
-      <h1 class="display-lg reveal reveal--up stagger-1">The work you can judge us on today.</h1>
-      <p class="text-lg reveal reveal--up stagger-2" style="max-width: 62ch; margin-top: var(--space-6);">
-        Sylvan C7 is a new studio, and we're taking on our first client projects now. We
-        could pad this page with work we didn't do or case studies nobody can check. We'd
-        rather tell you that plainly and then be specific about the part that actually
-        decides whether you end up with a good website: how the project is run, what lands
-        in your hands at each stage, and the standards the code is held to.
-      </p>
-      <p class="text-lg reveal reveal--up stagger-3" style="max-width: 62ch; margin-top: var(--space-5);">
-        A studio that's straight with you about what it hasn't done yet is a studio you can
-        believe about scope, price, and timeline. That's the <span class="accent">whole
-        argument</span> &mdash; and everything below is checkable before you spend a dollar.
-      </p>
-    </div>
-  </section>
-
-  <!-- From the Lab: the studio's own experiments. NOT client work, so it never goes in the
-       "Recent projects" block (see the comment near the end of this file). -->
-  <section class="section" id="lab">
-    <div class="container">
-      <div class="section-header">
-        <span class="label section-header__label reveal reveal--up">Our Own Experiments</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">From the lab</h2>
-        <p class="section-header__subtitle reveal reveal--up stagger-2">
-          Not client work &mdash; something we built for ourselves, because we liked the idea.
-          It's live, so you can use it and judge the craft firsthand.
-        </p>
-      </div>
-
-      <div class="grid grid--2">
-
-        <a class="project-card reveal reveal--up stagger-1"
-           href="lab/square-word-calligraphy/"
-           aria-label="Square Word Calligraphy — open the tool">
-          <img class="project-card__image" src="img/lab-square-word-calligraphy.png" width="1200" height="900" alt="The words Square Word Calligraphy written as three square blocks that look like Chinese characters">
-          <div class="project-card__overlay">
-            <div class="project-card__tags">
-              <span class="tag">Built in-house</span>
-            </div>
-            <h3 class="project-card__title">Square Word Calligraphy</h3>
-            <p class="project-card__desc">A free in-browser tool that writes English the way the artist Xu Bing imagined it in 1994: each word packed into one square block.</p>
-            <p class="project-card__desc"><span class="accent">Type any English word — get a Chinese-style character you can actually read.</span></p>
-            <span class="card__link">Try the tool &rarr;</span>
-          </div>
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- How a Project Actually Runs -->
-  <section class="section section--alt">
-    <div class="container">
-      <div class="section-header">
-        <span class="label section-header__label reveal reveal--up">The Process</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">How a project actually runs</h2>
-        <p class="section-header__subtitle reveal reveal--up stagger-2">
-          Five steps, from the first conversation to a site you own outright. Each one ends
-          with something concrete in your hands &mdash; not a status update. Ongoing care
-          after launch is an optional add-on, not a sixth step.
-        </p>
-      </div>
-
-      <div class="wk-steps">
-
-        <div class="wk-step reveal reveal--up stagger-1">
-          <div class="wk-step__num">01</div>
-          <div>
-            <h3 class="wk-step__title">Discovery call</h3>
-            <p class="wk-step__text">
-              A call, by phone or video, about your business rather than about websites:
-              who your customers are, what you need the site to make happen, what you
-              already have (domain, logo, photos, an existing host), and what's been
-              frustrating about whatever you're using now. No pitch deck, no pressure to
-              decide on the call.
-            </p>
-            <div class="wk-deliverable">
-              <span class="wk-deliverable__label">You receive</span>
-              <p>A written summary of the call: the pages discussed, the features you need,
-                the content you'd be responsible for supplying, and anything that could
-                complicate the build. Yours to keep, whether or not you hire us.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="wk-step reveal reveal--up stagger-2">
-          <div class="wk-step__num">02</div>
-          <div>
-            <h3 class="wk-step__title">Fixed quote in writing</h3>
-            <p class="wk-step__text">
-              We scope the project and put a price on it in writing before any work begins.
-              It's a fixed price, not an hourly estimate that drifts: if the build takes
-              longer than expected, that's our problem, not a surprise line on your invoice.
-              The number moves only if you ask for something outside the agreed scope, and
-              then only after you approve the change in writing.
-            </p>
-            <div class="wk-deliverable">
-              <span class="wk-deliverable__label">You receive</span>
-              <p>A fixed-price quote itemized by what's included, with the timeline, the
-                payment schedule, and an explicit list of what is <em>not</em> included, so
-                nothing is ambiguous later. See <a href="pricing.html" class="link">pricing</a>
-                for how quotes are put together.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="wk-step reveal reveal--up stagger-3">
-          <div class="wk-step__num">03</div>
-          <div>
-            <h3 class="wk-step__title">Design you approve</h3>
-            <p class="wk-step__text">
-              You see the design as a design first. We work up the key pages &mdash; usually
-              the homepage and the templates the rest of the site inherits from &mdash; and
-              revise them with you. How many rounds of revisions are included depends on the
-              package you choose, and the exact number is written into your quote before you
-              commit to anything. Changing a layout at this stage is a conversation; changing
-              it after the site is built is a rebuild. Nothing gets coded until you've signed
-              off on the design.
-            </p>
-            <div class="wk-deliverable">
-              <span class="wk-deliverable__label">You receive</span>
-              <p>Design concepts for the key pages, in both desktop and mobile widths,
-                revised through the rounds your package includes &mdash; plus a written note
-                of exactly what you approved, so we're both building from the same thing.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="wk-step reveal reveal--up stagger-4">
-          <div class="wk-step__num">04</div>
-          <div>
-            <h3 class="wk-step__title">Build and review</h3>
-            <p class="wk-step__text">
-              The approved design gets hand-coded. You get a private preview link early on
-              and you're asked to look at it at fixed checkpoints: once the structure is in
-              place, once your real content is loaded, and once it's polished. Open it on
-              your own phone, your own laptop, the tablet at the front desk. Testing on the
-              devices your customers actually use is the only testing that counts.
-            </p>
-            <div class="wk-deliverable">
-              <span class="wk-deliverable__label">You receive</span>
-              <p>A private staging URL you can open on any device at any time, and your
-                feedback at every checkpoint tracked in writing so nothing you asked for
-                quietly gets lost &mdash; drawn from the revision rounds your package
-                includes, as set out in your quote.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="wk-step reveal reveal--up stagger-1">
-          <div class="wk-step__num">05</div>
-          <div>
-            <h3 class="wk-step__title">Launch, training and handover</h3>
-            <p class="wk-step__text">
-              We handle the launch itself: domain and DNS, hosting, SSL, analytics, search
-              console, and redirects from the old site so existing links keep working. Then
-              we hand over the keys. Every account is registered in your name with you as
-              the owner &mdash; not ours with you as a guest &mdash; and we walk you through
-              editing the live site yourself.
-            </p>
-            <div class="wk-deliverable">
-              <span class="wk-deliverable__label">You receive</span>
-              <p>Owner access to the domain, hosting, and analytics accounts; the complete
-                source code; a recorded walkthrough of the updates you'll make yourself; and
-                a written handover document covering where everything lives and who to call.</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="wk-note reveal reveal--up">
-        <span class="wk-deliverable__label">After the five steps &mdash; optional add-on</span>
-        <h3 class="card__title">Ongoing care, only if you want it</h3>
-        <p class="card__text">
-          This is an add-on, not a sixth step. If you'd rather run the site yourself after
-          handover, you'll be able to: it's yours, it's documented, and it lives in your own
-          accounts. If you'd rather keep updates, backups, and monitoring off your plate,
-          that's a month-to-month arrangement you can end whenever you like, and ending it
-          stops the maintenance, not the website.
-        </p>
-        <div class="wk-deliverable" style="margin-top: var(--space-5);">
-          <span class="wk-deliverable__label">You receive</span>
-          <p>Optional ongoing maintenance &mdash; updates, backups, uptime monitoring,
-            and a direct line for changes &mdash; with no contract that holds your site
-            hostage if you stop. Details on the <a href="pricing.html" class="link">pricing page</a>.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- What You Get, Every Time -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <span class="label section-header__label reveal reveal--up">The Baseline</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">What you get, every time</h2>
-        <p class="section-header__subtitle reveal reveal--up stagger-2">
-          These aren't upgrades or optional line items. Every site we build will include
-          them, at every budget, because a site without them isn't finished. It's the
-          standard we hold every build to.
-        </p>
-      </div>
-
-      <div class="grid grid--3">
-        <div class="card reveal reveal--up stagger-1">
-          <h3 class="card__title">Hand-written code</h3>
-          <p class="card__text">
-            Your site is written in HTML, CSS, and JavaScript by a person, not exported from
-            a page builder. That's the difference between a page that loads in a blink and
-            one dragging along template machinery it never uses.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-2">
-          <h3 class="card__title">Responsive on every device</h3>
-          <p class="card__text">
-            Designed for the phone first, because that's where most of your visitors are,
-            then scaled up through tablet and desktop. Checked on real hardware, not just
-            by dragging a browser window narrower.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-3">
-          <h3 class="card__title">Accessibility from the start</h3>
-          <p class="card__text">
-            Semantic markup, keyboard navigation, real alt text, readable contrast, and
-            properly labelled forms &mdash; built in as we go rather than patched on at the
-            end, which is the only way it ever actually holds.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-4">
-          <h3 class="card__title">Fast load times</h3>
-          <p class="card__text">
-            Images compressed and correctly sized, fonts and scripts kept lean, nothing
-            loaded that the page doesn't need. Speed is measurable, so we measure it before
-            launch instead of asserting it afterward.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-1">
-          <h3 class="card__title">SEO fundamentals</h3>
-          <p class="card__text">
-            A unique title and meta description per page, a sensible heading structure,
-            clean URLs, a sitemap, and your business details marked up so search engines
-            and map listings read them correctly.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-2">
-          <h3 class="card__title">Analytics you can read</h3>
-          <p class="card__text">
-            Analytics installed and configured in your own account, with the things that
-            matter to you &mdash; calls, form submissions, direction requests &mdash;
-            tracked as goals, so you can tell whether the site is earning its keep.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-3">
-          <h3 class="card__title">Full ownership</h3>
-          <p class="card__text">
-            The domain, the hosting, the analytics, and the code are yours, in accounts
-            registered to you. No proprietary platform, no licence to renew, nothing that
-            stops working if you and we part ways.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-4">
-          <h3 class="card__title">Documentation and training</h3>
-          <p class="card__text">
-            A written handover document and a recorded walkthrough of the edits you'll make
-            yourself. You shouldn't have to pay somebody to change your own opening hours.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Standards We Hold Ourselves To -->
-  <section class="section section--alt">
-    <div class="container">
-      <div class="section-header">
-        <span class="label section-header__label reveal reveal--up">Verify, Don't Trust</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">Standards we hold ourselves to</h2>
-        <p class="section-header__subtitle reveal reveal--up stagger-2">
-          Claims are cheap. These four are things you can check for yourself rather than
-          take on faith &mdash; three of them with free tools, on this page right now.
-        </p>
-      </div>
-
-      <div class="grid grid--2">
-        <div class="card reveal reveal--up stagger-1">
-          <h3 class="card__title">Semantic, accessible HTML</h3>
-          <p class="card__text">
-            Real headings, landmark elements, labelled form fields, and alt text on every
-            meaningful image. Nothing that only works if you can see it and use a mouse.
-          </p>
-          <ul class="wk-check">
-            <li>Check it with WAVE, axe DevTools, or your browser's built-in accessibility inspector &mdash; on this page, right now.</li>
-          </ul>
-        </div>
-
-        <div class="card reveal reveal--up stagger-2">
-          <h3 class="card__title">Performance budgets</h3>
-          <p class="card__text">
-            The budget is a published number, not a vague promise: under 500 KB of total
-            page weight, and a Largest Contentful Paint &mdash; the moment the main content
-            finishes appearing &mdash; under 2.5 seconds on a throttled 4G connection, not on
-            fast office wifi. If a feature won't fit the budget, we find a lighter way to do
-            it or tell you what it would cost in speed before you decide.
-          </p>
-          <ul class="wk-check">
-            <li>Check it with Google PageSpeed Insights or Lighthouse, on any URL we hand you &mdash; those two numbers are exactly what it reports.</li>
-          </ul>
-        </div>
-
-        <div class="card reveal reveal--up stagger-3">
-          <h3 class="card__title">No lock-in, no proprietary platform</h3>
-          <p class="card__text">
-            We build on open web standards and host on infrastructure you can buy directly.
-            There's no Sylvan C7 platform to subscribe to, no builder account that has to
-            stay active, and nothing that degrades if you walk away.
-          </p>
-          <ul class="wk-check">
-            <li>Check it by asking, before you sign, what breaks if you move hosts &mdash; then hold us to the answer, which is nothing.</li>
-          </ul>
-        </div>
-
-        <div class="card reveal reveal--up stagger-4">
-          <h3 class="card__title">Code another developer can pick up</h3>
-          <p class="card__text">
-            Readable, commented, version-controlled source, structured the way a working
-            developer expects to find it. The real test of ownership is whether you could
-            hand the project to somebody else tomorrow without them wincing, so we write it
-            to be handed off.
-          </p>
-          <ul class="wk-check">
-            <li>Check it at handover by having any developer you trust read the source &mdash; it's delivered readable and version-controlled, so a successor can audit every line.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Taking On First Projects -->
-  <section class="section" id="first-projects">
-    <div class="container">
-      <div class="section-header">
-        <span class="label section-header__label reveal reveal--up">Where We Are</span>
-        <h2 class="section-header__title reveal reveal--up stagger-1">Taking on first projects</h2>
-        <p class="section-header__subtitle reveal reveal--up stagger-2">
-          Sylvan C7 is new and has no published client work yet. That's a real consideration
-          and you should weigh it. Here's the honest other side of it.
-        </p>
-      </div>
-
-      <div class="grid grid--2">
-        <div class="card reveal reveal--up stagger-1">
-          <h3 class="card__title">Genuine capacity and attention</h3>
-          <p class="card__text">
-            Your project gets worked on when you're told it will be, and you get a reply to
-            an email usually the same day, always within two business days.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-2">
-          <h3 class="card__title">Direct access to the person writing the code</h3>
-          <p class="card__text">
-            You talk directly to the person designing and building your site. Not an account
-            manager relaying your feedback to somebody you'll never meet, and not a
-            salesperson who disappears once the contract is signed.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-3">
-          <h3 class="card__title">No agency overhead in the price</h3>
-          <p class="card__text">
-            There's no sales department, no office lease, and no project-management layer
-            folded into your quote. You're paying for design and development, which is the
-            part you actually wanted to buy.
-          </p>
-        </div>
-
-        <div class="card reveal reveal--up stagger-4">
-          <h3 class="card__title">Every reason to overdeliver</h3>
-          <p class="card__text">
-            Early projects become the portfolio this page doesn't have yet, and the
-            references that come after it. That's a far stronger incentive to go past
-            &ldquo;good enough&rdquo; than any promise printed on a marketing site.
-          </p>
-        </div>
-      </div>
-
-      <div class="wk-note reveal reveal--up">
-        <h3 class="card__title">What we won't do to fill this page</h3>
-        <p class="card__text">
-          We won't show you work we didn't build, invent case studies or results, borrow a
-          client list, or claim years we haven't been in business. If any of that turned up
-          here, nothing else on this page would be worth reading. When there is real client
-          work to show, it will appear here with a live link you can open and judge for
-          yourself &mdash; named only where the client has given us permission to name them.
-        </p>
-        <a href="about.html" class="card__link" style="margin-top: var(--space-5);">More about who you'd be working with &rarr;</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="section cta-section">
-    <div class="container" style="text-align: center;">
-      <span class="label mb-6 reveal reveal--up">Let's Talk</span>
-      <h2 class="display-lg reveal reveal--up stagger-1">Be one of the first projects.</h2>
-      <p class="text-lg reveal reveal--up stagger-2" style="margin: var(--space-6) auto 0; max-width: 45ch;">
-        Tell us about your business and what the site needs to do. You'll get a written
-        summary and a fixed quote &mdash; and no obligation to go any further.
-      </p>
-      <div class="reveal reveal--up stagger-3" style="margin-top: var(--space-10);">
-        <div class="magnetic-wrap">
-          <a href="contact.html" class="btn btn--primary btn--lg">Start a Project</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__top">
-        <div class="footer__brand">
-          <a href="index.html" class="nav__logo">Sylvan <span>C7</span></a>
-          <p>We design and build fast, modern websites for businesses in every industry &mdash; then keep them running.</p>
-          <a href="contact.html" class="btn btn--outline btn--sm" style="margin-top: var(--space-5);">Start your project</a>
-        </div>
-        <div>
-          <h4 class="footer__heading">Navigate</h4>
-          <a href="index.html" class="footer__link">Home</a>
-          <a href="services.html" class="footer__link">Services</a>
-          <a href="work.html" class="footer__link">Work</a>
-          <a href="pricing.html" class="footer__link">Pricing</a>
-          <a href="about.html" class="footer__link">About</a>
-          <a href="faq.html" class="footer__link">FAQ</a>
-          <a href="contact.html" class="footer__link">Contact</a>
-        </div>
-        <div>
-          <h4 class="footer__heading">Industries</h4>
-          <a href="industries.html" class="footer__link">Restaurants &amp; Hospitality</a>
-          <a href="industries.html" class="footer__link">Dental &amp; Medical</a>
-          <a href="industries.html" class="footer__link">Legal &amp; Professional</a>
-          <a href="industries.html" class="footer__link">Home Services &amp; Trades</a>
-          <a href="industries.html" class="footer__link">Fitness &amp; Wellness</a>
-          <a href="industries.html" class="footer__link">Retail &amp; E-commerce</a>
-          <a href="industries.html" class="footer__link">SaaS &amp; Technology</a>
-          <a href="industries.html" class="footer__link">Real Estate &amp; Property</a>
-        </div>
-        <div>
-          <h4 class="footer__heading">Connect</h4>
-          <a href="mailto:greysonbmiller@protonmail.com" class="footer__link">greysonbmiller@protonmail.com</a>
-          <a href="tel:+16266220261" class="footer__link">+1 (626) 622-0261</a>
-          <span class="footer__link" style="cursor: default;">Los Angeles, California &mdash; working remotely with clients across the US</span>
-        </div>
-      </div>
-
-      <div class="footer__bottom">
-        <span>&copy; 2026 Sylvan C7. All rights reserved.</span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/animations.js"></script>
-  <script src="js/interactions.js"></script>
-  <script src="js/main.js"></script>
-
-  <!--
-    ADDING REAL PROJECTS — read this, then uncomment the section below.
-    1. Paste the whole <section> immediately after the page-header section, above "How a project actually runs", so real work leads the page.
-    2. Keep the .grid .grid--2 wrapper: it is what lays the cards out, and it collapses to a single column on phones on its own.
-    3. Duplicate the entire <a class="project-card"> block once per project inside that same wrapper, rotating stagger-1 through stagger-4 as you go.
-    4. Replace every ALL-CAPS token. IMAGE_PATH is a real screenshot you add to the project (a 4:3 crop fills the card exactly); LIVE_URL is the client's live site.
-    5. The card text sits over the image and appears on hover, so keep PROJECT_SUMMARY to a sentence or two and put the concrete result in RESULT_OR_OUTCOME.
-    6. Delete this comment once at least one real project is live on the page.
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="label section-header__label reveal reveal--up">Selected Work</span>
-          <h2 class="section-header__title reveal reveal--up stagger-1">Recent projects</h2>
-          <p class="section-header__subtitle reveal reveal--up stagger-2">
-            Live sites with the client's name on them. Open any of them and judge for yourself.
-          </p>
-        </div>
-
-        <div class="grid grid--2">
-
-          <a class="project-card reveal reveal--up stagger-1"
-             href="LIVE_URL"
-             target="_blank"
-             rel="noopener noreferrer"
-             aria-label="PROJECT_NAME — open the live site in a new tab">
-            <img class="project-card__image" src="IMAGE_PATH" alt="The PROJECT_NAME website shown on a desktop screen">
-            <div class="project-card__overlay">
-              <div class="project-card__tags">
-                <span class="tag">CLIENT_INDUSTRY</span>
-              </div>
-              <h3 class="project-card__title">PROJECT_NAME</h3>
-              <p class="project-card__desc">PROJECT_SUMMARY</p>
-              <p class="project-card__desc"><span class="accent">RESULT_OR_OUTCOME</span></p>
-              <span class="card__link">Visit the live site &rarr;</span>
-            </div>
-          </a>
-
+  <main id="main">
+    <!-- Hero: the one place the site says it is new. -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero__inner">
+        <span class="eyebrow">Work</span>
+        <h1 class="hero__title hero__title--page" id="hero-title" data-mask>Built and run solo. Open them and judge for yourself.</h1>
+        <p class="lead hero__lead" data-hero-follow>Sylvan C7 is a new practice with no client work published yet. Instead, here is what I've built and run on my own: a live product and two lab experiments you can use right now.</p>
+        <div class="btn-row" data-hero-follow style="--follow-i:1">
+          <a class="btn btn--primary" href="contact.html">Start a project</a>
+          <a class="btn btn--outline" href="#bibooks">See Bibooks</a>
         </div>
       </div>
     </section>
-  -->
-  <!-- MOBILECTA:START -->
-  <div class="mobile-cta">
-    <a href="tel:+16266220261" class="btn btn--outline btn--sm">Call</a>
-    <a href="contact.html" class="btn btn--primary btn--sm">Get a Free Quote</a>
+
+    <!-- Flagship: Bibooks. Greyson's own product, NOT client work. Facts only from the verified Bibooks brief. -->
+    <section class="section section--flush-top" id="bibooks" aria-labelledby="bibooks-title">
+      <div class="container work-case reveal">
+        <figure class="frame work-case__media">
+          <img src="img/work-bibooks.jpg" srcset="img/work-bibooks.jpg 1x, img/work-bibooks@2x.jpg 2x" width="1200" height="750" alt="Bibooks home page: 'Turn any book into a bilingual audiobook' with a Spanish–English read-along demo." fetchpriority="high" decoding="async">
+        </figure>
+        <div class="work-case__body">
+          <span class="eyebrow">My product</span>
+          <h2 class="section-title" id="bibooks-title">Bibooks: bilingual audiobooks</h2>
+          <p class="lead">Turns any text into a sentence-by-sentence bilingual audiobook with read-along highlighting.</p>
+          <p>I built Bibooks to make the learning material I couldn't find: stories at my level, read aloud in two languages. I designed it and I run all of it, from the job pipeline to billing.</p>
+          <h3 class="work-case__subtitle">What it shows</h3>
+          <ul class="check-list" role="list">
+            <li>A full product shipped solo: web app, payments, 49 interface languages.</li>
+            <li>An audio pipeline that syncs highlighting to speech, word by word, across scripts.</li>
+            <li>Production operations: blue/green deploys, monitored backups, self&#8209;hosted CI, thousands of automated tests.</li>
+          </ul>
+          <ul class="chip-list work-tags" role="list" aria-label="Built with">
+            <li class="chip">FastAPI</li>
+            <li class="chip">PostgreSQL</li>
+            <li class="chip">React</li>
+            <li class="chip">TypeScript</li>
+            <li class="chip">Stripe</li>
+            <li class="chip">Docker</li>
+          </ul>
+          <div class="btn-row">
+            <a class="btn btn--outline" href="https://bibooks.org" target="_blank" rel="noopener">Open bibooks.org</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- From the lab: Greyson's own experiment. NOT client work; never list it as a client project. -->
+    <section class="section section--alt" aria-labelledby="lab-title">
+      <div class="container work-case work-case--flip reveal">
+        <figure class="frame work-case__media">
+          <img src="img/lab-square-word-calligraphy.png" width="1200" height="900" alt="The words Square Word Calligraphy written as three square blocks that look like Chinese characters." loading="lazy" decoding="async">
+        </figure>
+        <div class="work-case__body">
+          <span class="eyebrow">From the lab</span>
+          <h2 class="section-title" id="lab-title">Square Word Calligraphy</h2>
+          <p>A free in-browser tool that writes English the way the artist Xu Bing imagined it in 1994: each word packed into one square block. I wrote its layout engine and renderer myself, with SVG and PNG export.</p>
+          <div class="btn-row">
+            <a class="btn btn--outline" href="lab/square-word-calligraphy/">Try the lab</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Also from the lab: Greyson's own experiment, NOT client work. Shorter card on purpose. -->
+      <div class="container">
+        <article class="card work-mini" aria-labelledby="finca-title">
+          <img class="work-mini__media" src="img/lab-nuestra-finca.jpg" width="1200" height="900" alt="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside" loading="lazy" decoding="async">
+          <div class="work-mini__body">
+            <span class="eyebrow">Also from the lab</span>
+            <h3 class="card__title" id="finca-title">Nuestra Finca</h3>
+            <p class="card__text">A small hillside farm rebuilt in 3D from 17 phone photos and a few measurements, then turned into a walkthrough you can explore in the browser.</p>
+            <a class="link-arrow" href="lab/nuestra-finca/">Take the walkthrough</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="process" aria-labelledby="process-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <span class="eyebrow">Process</span>
+          <h2 class="section-title" id="process-title">How a project runs</h2>
+          <p class="lead">Five steps. Each one ends with something concrete in your hands.</p>
+        </header>
+
+        <div class="stepper stepper--vertical" data-stepper>
+          <div class="stepper__list" role="tablist" aria-label="Process steps">
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-1" aria-selected="true" aria-controls="step-1"><span class="stepper__num" aria-hidden="true">1</span><span>Discovery call</span></button>
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-2" aria-selected="false" aria-controls="step-2" tabindex="-1"><span class="stepper__num" aria-hidden="true">2</span><span>Fixed quote in writing</span></button>
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-3" aria-selected="false" aria-controls="step-3" tabindex="-1"><span class="stepper__num" aria-hidden="true">3</span><span>Design you approve</span></button>
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-4" aria-selected="false" aria-controls="step-4" tabindex="-1"><span class="stepper__num" aria-hidden="true">4</span><span>Build and review</span></button>
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-5" aria-selected="false" aria-controls="step-5" tabindex="-1"><span class="stepper__num" aria-hidden="true">5</span><span>Launch, training and handover</span></button>
+          </div>
+          <div class="stepper__panels">
+            <div class="stepper__panel is-active" role="tabpanel" id="step-1" aria-labelledby="step-tab-1" tabindex="0">
+              <h3 class="stepper__panel-title">Discovery call</h3>
+              <p>A free 30-minute call, by phone or video, about what you need, what you already have, and what isn't working. No pitch.</p>
+              <p class="stepper__receive"><span class="stepper__receive-label">You receive</span>A written summary of the call, yours to keep whether or not you hire me.</p>
+            </div>
+            <div class="stepper__panel" role="tabpanel" id="step-2" aria-labelledby="step-tab-2" tabindex="0">
+              <h3 class="stepper__panel-title">Fixed quote in writing</h3>
+              <p>Scope, timeline and price in writing before any work starts. If the build takes longer than expected, that's my problem, not a surprise line on your invoice.</p>
+              <p class="stepper__receive"><span class="stepper__receive-label">You receive</span>A fixed quote that moves only if you change the scope, and only after you approve it in writing.</p>
+            </div>
+            <div class="stepper__panel" role="tabpanel" id="step-3" aria-labelledby="step-tab-3" tabindex="0">
+              <h3 class="stepper__panel-title">Design you approve</h3>
+              <p>You see the key pages as designs and revise them with me. Changing a layout at this stage is a conversation; changing it after the site is built is a rebuild. Nothing is coded before sign-off.</p>
+              <p class="stepper__receive"><span class="stepper__receive-label">You receive</span>Designs for desktop and mobile, revised through the rounds your package includes.</p>
+            </div>
+            <div class="stepper__panel" role="tabpanel" id="step-4" aria-labelledby="step-tab-4" tabindex="0">
+              <h3 class="stepper__panel-title">Build and review</h3>
+              <p>I build what you approved. You review it at fixed checkpoints on your own phone and laptop.</p>
+              <p class="stepper__receive"><span class="stepper__receive-label">You receive</span>A private preview link, with your feedback tracked in writing so nothing gets lost.</p>
+            </div>
+            <div class="stepper__panel" role="tabpanel" id="step-5" aria-labelledby="step-tab-5" tabindex="0">
+              <h3 class="stepper__panel-title">Launch, training and handover</h3>
+              <p>I handle the launch, then walk you through everything you'll run yourself.</p>
+              <p class="stepper__receive"><span class="stepper__receive-label">You receive</span>Every account in your name, the source code, a walkthrough and a written handover document.</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="work-care">Ongoing care is an optional add-on, not a sixth step. It's month to month, and ending it stops the maintenance, not the website.</p>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="verify-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <span class="eyebrow">Verify, don't trust</span>
+          <h2 class="section-title" id="verify-title">Standards you can check</h2>
+          <p class="lead">Claims are cheap. Every website gets these four, each with a way to check it yourself.</p>
+        </header>
+        <ul class="card-grid work-verify" role="list" data-glow>
+          <li class="card">
+            <h3 class="card__title">Semantic, accessible HTML</h3>
+            <p class="card__text">Real headings, landmarks, labeled forms and alt text. Usable by keyboard and screen reader.</p>
+            <p class="work-verify__check"><span class="work-verify__label">Check it</span>Run WAVE or axe on this page.</p>
+          </li>
+          <li class="card">
+            <h3 class="card__title">A published speed budget</h3>
+            <p class="card__text">Website pages under 500 KB, with LCP under 2.5 s on throttled 4G.</p>
+            <p class="work-verify__check"><span class="work-verify__label">Check it</span>Run PageSpeed Insights or Lighthouse.</p>
+          </li>
+          <li class="card">
+            <h3 class="card__title">No proprietary platform</h3>
+            <p class="card__text">Open web standards on hosting bought in your name. No platform fee, and nothing that breaks if you leave.</p>
+            <p class="work-verify__check"><span class="work-verify__label">Check it</span>Ask me what breaks if you move hosts. The answer is nothing.</p>
+          </li>
+          <li class="card">
+            <h3 class="card__title">Code another developer can pick up</h3>
+            <p class="card__text">Readable, version-controlled source, structured the way a working developer expects.</p>
+            <p class="work-verify__check"><span class="work-verify__label">Check it</span>Have any developer you trust read it.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="first-title">
+      <div class="container container--narrow work-first reveal">
+        <span class="eyebrow">Where I am</span>
+        <h2 class="section-title" id="first-title">Taking on first projects</h2>
+        <p>Being new is worth weighing. The other side: you talk directly to the person writing the code, not an account manager. There's no agency overhead in the price. And early projects become the portfolio this page doesn't have yet, which is every reason to go past good enough.</p>
+        <blockquote class="work-pledge">
+          <p>I won't show you work I didn't build, invent case studies or results, borrow a client list, or claim years I haven't been in business.</p>
+        </blockquote>
+        <p><a class="link-arrow" href="about.html">More about me</a></p>
+      </div>
+    </section>
+
+    <section class="cta-band" aria-labelledby="cta-title">
+      <div class="container cta-band__inner reveal">
+        <h2 class="cta-band__title" id="cta-title">Be one of the first projects.</h2>
+        <p class="cta-band__text">Tell me what you need. You'll get a written summary and a fixed quote, with no obligation.</p>
+        <div class="btn-row"><a class="btn btn--primary" href="contact.html">Start a project</a><a class="btn btn--outline" href="services.html#pricing">See pricing</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div>
+        <a class="nav__brand" href="index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
+        <p class="site-footer__tagline">Software that keeps working. Websites, web apps, integrations and instrument-control software.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Pages</p>
+        <ul class="site-footer__links" role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Contact</p>
+        <ul class="site-footer__contact" role="list">
+          <li><a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a></li>
+          <li><a href="tel:+16266220261">(626) 622-0261</a></li>
+          <li>Los Angeles, California</li>
+        </ul>
+      </div>
+    </div>
+    <div class="container site-footer__bottom">
+      <p>&copy; 2026 Sylvan C7</p>
+      <p>Based in Los Angeles; I work remotely with clients anywhere in the US.</p>
+    </div>
+  </footer>
+  <div class="sticky-cta" role="region" aria-label="Quick contact">
+    <a class="btn btn--outline" href="tel:+16266220261">Call</a>
+    <a class="btn btn--primary" href="contact.html">Start a project</a>
   </div>
-  <!-- MOBILECTA:END -->
+
+  <script src="js/main.js" defer></script>
+  <script src="js/animations.js" defer></script>
+  <script src="js/components.js" defer></script>
 </body>
 </html>

@@ -1,179 +1,163 @@
 /* =========================================
-   Sylvan C7 — Main (Nav, Mobile Menu, Shared)
+   Sylvan C7 — Main: js flag, header, mobile drawer, active link,
+   smooth in-page scroll
    ========================================= */
 
+// Pages also set this from an inline <head> script; doing it again here is
+// harmless and covers any page that forgot the inline snippet.
+document.documentElement.classList.add('js');
+
 (function () {
+  'use strict';
 
-  /* ---- Navigation Scroll Behavior ---- */
+  var root = document.documentElement;
+  var DESKTOP = window.matchMedia('(min-width: 1024px)');
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  function initNavScroll() {
-    const nav = document.getElementById('nav');
-    if (!nav) return;
-
-    let lastScroll = 0;
-    let ticking = false;
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-
-          if (scrollY > 50) {
-            nav.classList.add('scrolled');
-          } else {
-            nav.classList.remove('scrolled');
-          }
-
-          lastScroll = scrollY;
-          ticking = false;
-        });
-        ticking = true;
-      }
+  /* ---- Header: solid background once the page scrolls ---- */
+  function initHeader() {
+    var header = document.querySelector('.site-header');
+    if (!header) return;
+    var ticking = false;
+    function update() {
+      header.classList.toggle('is-scrolled', window.scrollY > 8);
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, { passive: true });
+    update();
   }
 
-  /* ---- Mobile Menu ---- */
+  /* ---- Mobile drawer ----
+     Closed: drawer is inert (out of tab order / AT) and visibility:hidden.
+     Open: main, footer and the sticky CTA become inert, so Tab cycles through
+     the header (toggle) and the drawer only. Escape / overlay / link click /
+     growing to desktop all close it; focus returns to the toggle. */
+  function initDrawer() {
+    var toggle = document.querySelector('.nav__toggle');
+    var drawer = toggle && document.getElementById(toggle.getAttribute('aria-controls'));
+    if (!toggle || !drawer) return;
+    var overlay = document.querySelector('.nav-overlay');
+    var label = toggle.querySelector('.visually-hidden');
+    var outside = function () {
+      return Array.prototype.slice.call(document.querySelectorAll('main, footer, .sticky-cta, .skip-link'));
+    };
+    var isOpen = false;
 
-  function initMobileMenu() {
-    const toggle = document.getElementById('navToggle');
-    const mobile = document.getElementById('navMobile');
-    const overlay = document.getElementById('navOverlay');
-
-    if (!toggle || !mobile || !overlay) return;
-
-    function openMenu() {
-      toggle.setAttribute('aria-expanded', 'true');
-      toggle.classList.add('open');
-      mobile.classList.add('open');
-      overlay.classList.add('open');
-      document.body.style.overflow = 'hidden';
+    function setInert(el, on) {
+      if (!el) return;
+      if (on) { el.setAttribute('inert', ''); el.inert = true; }
+      else { el.removeAttribute('inert'); el.inert = false; }
     }
 
-    function closeMenu() {
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.classList.remove('open');
-      mobile.classList.remove('open');
-      overlay.classList.remove('open');
-      document.body.style.overflow = '';
+    function render() {
+      toggle.setAttribute('aria-expanded', String(isOpen));
+      if (label) label.textContent = isOpen ? 'Close menu' : 'Open menu';
+      else toggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+      drawer.classList.toggle('is-open', isOpen);
+      if (overlay) overlay.classList.toggle('is-open', isOpen);
+      root.classList.toggle('nav-open', isOpen);
+      setInert(drawer, !isOpen);
+      outside().forEach(function (el) { setInert(el, isOpen); });
     }
 
-    toggle.addEventListener('click', () => {
-      if (mobile.classList.contains('open')) {
-        closeMenu();
-      } else {
-        openMenu();
-      }
-    });
-
-    overlay.addEventListener('click', closeMenu);
-
-    // Close on link click
-    mobile.querySelectorAll('.nav__mobile-link, .btn').forEach(link => {
-      link.addEventListener('click', closeMenu);
-    });
-
-    // Close on escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && mobile.classList.contains('open')) {
-        closeMenu();
-      }
-    });
-  }
-
-  /* ---- Smooth Scroll for Anchor Links ---- */
-
-  function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', (e) => {
-        const targetId = anchor.getAttribute('href');
-        if (targetId === '#') return;
-
-        const target = document.querySelector(targetId);
-        if (target) {
-          e.preventDefault();
-          const navHeight = document.getElementById('nav')?.offsetHeight || 80;
-          const targetPosition = target.getBoundingClientRect().top + window.scrollY - navHeight;
-
-          window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-  }
-
-  /* ---- Active Nav Link ---- */
-
-  function setActiveNavLink() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const links = document.querySelectorAll('.nav__link, .nav__mobile-link');
-
-    // Pages in subfolders (e.g. lab/square-word-calligraphy/) match no top-level href; keep the
-    // active link their markup already declares instead of clearing every link.
-    if (![...links].some(link => link.getAttribute('href') === currentPage)) return;
-
-    links.forEach(link => {
-      const href = link.getAttribute('href');
-      if (href === currentPage) {
-        link.classList.add('active');
-      } else {
-        link.classList.remove('active');
-      }
-    });
-  }
-
-  /* ---- Preload Fonts ---- */
-
-  function handleFontLoad() {
-    if ('fonts' in document) {
-      document.fonts.ready.then(() => {
-        document.documentElement.classList.add('fonts-loaded');
-      });
-    } else {
-      document.documentElement.classList.add('fonts-loaded');
+    function open() {
+      isOpen = true;
+      render();
+      var first = drawer.querySelector('a, button');
+      if (first) first.focus({ preventScroll: true });
     }
+
+    function close(restoreFocus) {
+      if (!isOpen) return;
+      isOpen = false;
+      render();
+      if (restoreFocus) toggle.focus({ preventScroll: true });
+    }
+
+    toggle.addEventListener('click', function () { isOpen ? close(true) : open(); });
+    if (overlay) overlay.addEventListener('click', function () { close(true); });
+    drawer.addEventListener('click', function (e) {
+      if (e.target.closest('a')) close(false);
+    });
+    // Focus trap while open: Tab / Shift+Tab cycle through the toggle and the
+    // drawer's controls only (the header's other links stay reachable by
+    // pointer, but keyboard focus never leaves the open menu).
+    function trapOrder() {
+      var items = Array.prototype.slice.call(drawer.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )).filter(function (el) { return el.getClientRects().length > 0; });
+      return [toggle].concat(items);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (!isOpen) return;
+      if (e.key === 'Escape') { close(true); return; }
+      if (e.key !== 'Tab') return;
+      var order = trapOrder();
+      var i = order.indexOf(document.activeElement);
+      var next;
+      if (i === -1) next = e.shiftKey ? order[order.length - 1] : order[0];
+      else if (e.shiftKey && i === 0) next = order[order.length - 1];
+      else if (!e.shiftKey && i === order.length - 1) next = order[0];
+      else return; // inside the cycle: let the browser move focus normally
+      e.preventDefault();
+      next.focus();
+    });
+    var onBreakpoint = function (e) { if (e.matches) close(false); };
+    if (DESKTOP.addEventListener) DESKTOP.addEventListener('change', onBreakpoint);
+    else DESKTOP.addListener(onBreakpoint);
+
+    render();
   }
 
-  /* ---- Service Card Expand (Services Page) ---- */
-
-  function initServiceExpand() {
-    const cards = document.querySelectorAll('.service-detail');
-
-    cards.forEach(card => {
-      const toggle = card.querySelector('.service-detail__toggle');
-      const content = card.querySelector('.service-detail__content');
-
-      if (!toggle || !content) return;
-
-      toggle.addEventListener('click', () => {
-        const isOpen = card.classList.contains('open');
-
-        if (isOpen) {
-          content.style.maxHeight = '0';
-          card.classList.remove('open');
-        } else {
-          content.style.maxHeight = content.scrollHeight + 'px';
-          card.classList.add('open');
-        }
-      });
+  /* ---- Active link ----
+     Marks the link to the current page with aria-current="page" (+ .active).
+     Pages in subfolders (the lab) match no top-level href and keep whatever
+     their markup declares. */
+  function initActiveLink() {
+    var links = document.querySelectorAll('.nav__link, .nav-drawer__link');
+    if (!links.length) return;
+    var file = window.location.pathname.split('/').pop() || 'index.html';
+    var matches = Array.prototype.filter.call(links, function (a) {
+      return (a.getAttribute('href') || '').split('#')[0] === file;
+    });
+    if (!matches.length) return;
+    links.forEach(function (a) {
+      var on = matches.indexOf(a) !== -1;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
     });
   }
 
-  /* ---- Initialize Everything ---- */
+  /* ---- Smooth in-page scroll ----
+     CSS scroll-padding-top already offsets the sticky header; this only adds
+     focus management so keyboard users land on the target. */
+  function initInPageLinks() {
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a) return;
+      var id = a.getAttribute('href').slice(1);
+      if (!id) return;
+      var target = document.getElementById(decodeURIComponent(id));
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' });
+      if (history.pushState) history.pushState(null, '', '#' + id);
+      if (!target.matches('a, button, input, select, textarea, [tabindex]')) target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    });
+  }
 
   function init() {
-    initNavScroll();
-    initMobileMenu();
-    initSmoothScroll();
-    setActiveNavLink();
-    handleFontLoad();
-    initServiceExpand();
+    initHeader();
+    initDrawer();
+    initActiveLink();
+    initInPageLinks();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();

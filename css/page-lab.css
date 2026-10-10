@@ -1,0 +1,97 @@
+/* =========================================
+   Lab page (lab/square-word-calligraphy/) — page-scoped; tokens from variables.css.
+   Loaded after app/src/app.css (generated, not editable), so the overrides below win.
+   ========================================= */
+
+.lab-top { padding-top: clamp(2rem, 1.5rem + 2vw, 3.5rem); }
+
+.lab-intro > * { margin: 0; }
+.lab-intro > * + * { margin-top: var(--space-4); }
+.lab-intro .lead { max-width: var(--measure-lead); }
+
+.swc-tool {
+  margin-top: var(--space-8);
+  min-height: 24rem; /* reserve room so the page doesn't jump while the fonts load */
+}
+
+.lab-built {
+  margin-top: var(--space-6);
+  color: var(--text-muted);
+}
+
+/* ---- How to read: example blocks ---- */
+.swc-examples {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.swc-example {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin: 0;
+  text-align: center;
+}
+
+.swc-example__block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8rem;
+  max-width: 100%;
+}
+
+.swc-example__block svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+.swc-example figcaption {
+  font-size: var(--fs-small);
+  color: var(--text-body);
+  max-width: 30ch;
+}
+
+.swc-example__word {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-family: var(--font-heading);
+  font-size: var(--fs-h4);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* ---- Credits ---- */
+.swc-credits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 70ch;
+}
+
+.swc-credits li {
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.swc-credits li:first-child { border-top: 1px solid var(--border-subtle); }
+
+.swc-credits__name {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-h4);
+}
+
+.swc-credits p { margin: 0; color: var(--text-body); }
+
+.swc-note {
+  margin-top: var(--space-6);
+  color: var(--text-muted);
+}
+
+/* Measure: the measure test reads 60ch as ~81 characters; 54ch keeps prose ≤ 75. */
+#main p { max-width: 54ch; }
+#main .lead { max-width: 50ch; }

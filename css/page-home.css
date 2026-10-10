@@ -1,0 +1,133 @@
+/* =========================================
+   Sylvan C7 — Home page (index.html) only.
+   Loaded after the shared CSS; uses foundation tokens.
+   ========================================= */
+
+/* "More" links under a section */
+.home-more { margin: var(--space-8) 0 0; }
+
+/* ---- Things I've built ([data-showcase]) ---- */
+.showcase {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.showcase__item {
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+  padding: clamp(1.25rem, 0.9rem + 1.5vw, 2.25rem);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  min-width: 0;
+}
+
+.showcase__item > * { min-width: 0; margin: 0; }
+
+.showcase__media { margin: 0; }
+.showcase__media img { display: block; height: auto; aspect-ratio: 1200 / 750; object-fit: cover; }
+
+.showcase__body { display: grid; gap: var(--space-4); align-content: start; }
+.showcase__body > * { margin: 0; }
+.showcase__body p { color: var(--text-body); }
+
+.showcase__title { font-size: var(--fs-h3); color: var(--text-primary); }
+
+.showcase__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+}
+
+.showcase__tags li {
+  margin: 0;
+  padding: 0.125rem var(--space-3);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-mono);
+  color: var(--text-muted);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-full);
+}
+
+/* Paragraphs stay at body size (prose floor 16px) */
+.showcase__demo .swc-mini__caption,
+.price-teaser .card__meta { font-size: var(--fs-body); }
+
+.showcase__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-6);
+}
+
+/* The mini demo sits inside the card: drop its own card chrome */
+.showcase__demo.swc-mini {
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
+@media (min-width: 1024px) {
+  .showcase__item--bibooks { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-10); }
+  .showcase__item--lab { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-10); }
+}
+
+@media (max-width: 479.98px) {
+  .showcase__links .btn { width: 100%; }
+}
+
+/* ---- Pricing teaser ---- */
+.price-teaser {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.price-teaser__item { max-width: none; }
+
+.price-teaser__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  font-size: var(--fs-h4);
+  color: var(--text-primary);
+}
+
+.price-teaser__name a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.price-teaser__name a:hover { color: var(--accent); }
+
+.price-teaser__price {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-heading);
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+
+.price-teaser__price--text { white-space: normal; }
+
+.price-teaser__from {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-mono);
+  color: var(--text-muted);
+  margin-right: var(--space-1);
+}

@@ -1,0 +1,173 @@
+/* =========================================
+   Lab page: Nuestra Finca (lab/nuestra-finca/). Page-scoped; tokens from variables.css.
+   ========================================= */
+
+.finca-top { padding-top: clamp(2rem, 1.5rem + 2vw, 3.5rem); }
+
+.finca-intro > * { margin: 0; }
+.finca-intro > * + * { margin-top: var(--space-4); }
+.finca-intro .lead,
+#main .section-header .lead { max-width: 52ch; }
+
+/* ---- The walkthrough stage (poster until clicked, then the iframe) ---- */
+.finca-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  margin-top: var(--space-8);
+  overflow: hidden;
+  border: 1px solid var(--border-medium, var(--border-subtle));
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  box-shadow: 0 0 0 1px var(--accent-glow), 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.finca-stage iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.finca-poster {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-6);
+  border: 0;
+  border-radius: inherit;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  background:
+    linear-gradient(180deg, rgba(6, 10, 8, 0.15) 0%, rgba(6, 10, 8, 0.55) 50%, rgba(6, 10, 8, 0.8) 100%),
+    url("../img/lab-nuestra-finca.jpg") center 85% / cover no-repeat;
+  /* The render's top ~22% is empty night sky: anchor the 16:9 crop low so the stage opens on the
+     hillside, not a black band above the model. */
+}
+
+.finca-poster:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+}
+
+.finca-poster:hover .finca-poster__btn { box-shadow: 0 0 24px var(--accent-glow-strong); }
+
+.finca-stage__noscript {
+  position: absolute;
+  inset: auto 0 0;
+  margin: 0;
+  padding: var(--space-4);
+  background: rgba(6, 10, 8, 0.85);
+  color: var(--text-body);
+}
+
+/* No JS: the poster button would do nothing, so hide it. */
+html:not(.js) .finca-poster { display: none; }
+
+.finca-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.finca-bar p {
+  margin: 0;
+  max-width: 56ch;
+  color: var(--text-muted);
+}
+
+@media (max-width: 639.98px) {
+  .finca-stage { aspect-ratio: 3 / 4; }
+}
+
+/* ---- Controls ---- */
+kbd {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.finca-keys {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 0 var(--space-8);
+}
+
+.finca-keys li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  max-width: none;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-body);
+}
+
+.finca-keys kbd {
+  flex: none;
+  min-width: 5rem;
+  font-size: var(--fs-label);
+  letter-spacing: .04em;
+}
+
+/* ---- Build notes ---- */
+.finca-notes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-8) var(--space-10);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+}
+
+.finca-notes li { max-width: none; }
+
+.finca-notes__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-h4);
+}
+
+.finca-notes p { margin: 0; color: var(--text-body); }
+
+/* ---- Credits ---- */
+.finca-credits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 50ch;
+}
+
+.finca-credits li {
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.finca-credits li:first-child { border-top: 1px solid var(--border-subtle); }
+
+.finca-credits__name {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-h4);
+}
+
+.finca-credits p { margin: 0; color: var(--text-body); }
+
+.finca-note {
+  max-width: 50ch;
+  margin-top: var(--space-6);
+  color: var(--text-muted);
+}

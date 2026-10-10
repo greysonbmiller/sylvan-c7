@@ -1,0 +1,76 @@
+/* =========================================
+   Sylvan C7 — Contact page (page-specific only)
+   ========================================= */
+
+/* Intro + tap targets first (above the form on phones), form beside it on desktop */
+.contact-main { padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem); }
+
+.contact-layout {
+  display: grid;
+  gap: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+}
+
+@media (min-width: 1024px) {
+  .contact-layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    column-gap: var(--space-16);
+  }
+  .contact-intro { position: sticky; top: calc(var(--nav-h) + var(--space-8)); }
+}
+
+.contact-intro {
+  display: grid;
+  gap: var(--space-5);
+  justify-items: start;
+  min-width: 0;
+}
+
+.contact-intro > * { margin: 0; }
+
+.contact-intro .contact-links { width: 100%; max-width: 28rem; }
+
+.contact-intro__where { color: var(--text-muted); }
+
+/* Form card */
+.contact-form-card {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+  padding: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+}
+
+.contact-form-card > * { margin: 0; }
+
+.contact-form-card__title { font-size: var(--fs-h3); }
+
+/* Paragraphs on this site never drop below 16px (the component default is 15px) */
+.contact-form-card .form__note { font-size: 1rem; }
+
+/* What happens next: three one-line steps */
+.next-steps {
+  list-style: none;
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.next-steps__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: none;
+}
+
+.next-steps__item p { margin: 0; }
+
+.next-steps__item strong { color: var(--text-strong); font-weight: 600; }
+
+@media (min-width: 1024px) {
+  .next-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+  .next-steps__item { align-items: flex-start; }
+}
