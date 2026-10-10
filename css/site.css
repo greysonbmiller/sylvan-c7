@@ -2382,3 +2382,8 @@ html:not(.js) .scroll-progress { display: none; }
 @media (prefers-reduced-motion: no-preference) {
   .status-dot { animation: pulse-dot 2.4s ease-in-out infinite; }
 }
+
+/* Footer line linking the owner's own product (Bibooks) from every page. */
+.site-footer__also { margin-top: var(--space-3); font-size: var(--fs-small); color: var(--text-muted); max-width: 32ch; }
+.site-footer__also a { color: var(--text-body); text-decoration: underline; text-underline-offset: 3px; }
+.site-footer__also a:hover { color: var(--accent); }
