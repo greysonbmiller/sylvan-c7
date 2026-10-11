@@ -93,7 +93,9 @@ test.describe('navigation', () => {
       }
       expect(hrefs).toContain('mailto:greysonbmiller@protonmail.com');
       expect(hrefs).toContain('tel:+16266220261');
-      const text = norm(await footer.innerText());
+      // textContent, not innerText: below-the-fold sections may use content-visibility: auto (index LCP),
+      // and innerText leaves out content the browser has not rendered yet.
+      const text = norm(await footer.textContent());
       expect(text).toMatch(/Los Angeles/);
       expect(text).toMatch(/©\s?2026 Sylvan C7/);
     });

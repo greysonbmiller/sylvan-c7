@@ -23,15 +23,12 @@
 
   <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/page-contact.css">
-  <link rel="stylesheet" href="css/fx-ui.css">
-  <link rel="stylesheet" href="css/fx-illus.css">
+  <link rel="stylesheet" href="css/site.min.css">
+  <link rel="stylesheet" href="css/page-contact.min.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
-  <div class="circuit-trace" aria-hidden="true"><span class="circuit-trace__track"></span><span class="circuit-trace__line"></span><span class="circuit-trace__head"></span></div>
 
   <header class="site-header">
     <nav class="nav container" aria-label="Main">
@@ -71,12 +68,12 @@
   <main id="main">
     <section class="section contact-main" aria-labelledby="contact-title">
       <div class="container contact-layout">
-        <div class="contact-intro">
+        <div class="contact-intro" data-pagehero="seedling">
           <div class="eyebrow">Contact</div>
           <h1 class="hero__title hero__title--page" id="contact-title" data-mask>Tell me what you need built</h1>
           <p class="lead">A website, a web app, an integration or software for an instrument: a few lines is enough to start.</p>
           <ul class="contact-links" role="list">
-            <li><a class="contact-link" href="mailto:greysonbmiller@protonmail.com"><svg class="contact-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span><span class="contact-link__label">Email</span><span class="contact-link__value">greysonbmiller@protonmail.com</span></span></a></li>
+            <li class="contact-links__item--copy"><a class="contact-link" href="mailto:greysonbmiller@protonmail.com"><svg class="contact-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span><span class="contact-link__label">Email</span><span class="contact-link__value">greysonbmiller@protonmail.com</span></span></a><button class="contact-copy" type="button" aria-label="Copy email address" data-copy="greysonbmiller@protonmail.com"><svg class="contact-copy__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/></svg></button></li>
             <li><a class="contact-link" href="tel:+16266220261"><svg class="contact-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><span><span class="contact-link__label">Phone</span><span class="contact-link__value">(626) 622-0261</span></span></a></li>
           </ul>
           <p class="contact-intro__where">Based in Los Angeles; I work remotely with clients anywhere in the US.</p>
@@ -117,8 +114,8 @@
             <input type="hidden" name="package" value="">
             <div class="form__hp" aria-hidden="true"><label for="f-gotcha">Leave this empty</label><input id="f-gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off"></div>
             <div class="form__actions">
-              <button class="btn btn--primary" type="submit">Send message</button>
-              <p class="form__note">I reply within two business days. No mailing list.</p>
+              <button class="btn btn--primary" type="submit"><span class="btn__label">Send message</span></button>
+              <p class="form__note form__note--live">I reply within two business days. No mailing list.</p>
             </div>
             <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
           </form>
@@ -137,6 +134,7 @@
       </div>
     </section>
   </main>
+  <div class="copy-toast" role="status" aria-live="polite"></div>
 
   <footer class="site-footer">
     <div class="container site-footer__inner">
@@ -174,7 +172,15 @@
   <script src="js/animations.js" defer></script>
   <script src="js/components.js" defer></script>
   <script src="js/interactions.js" defer></script>
-  <script src="js/fx-ui.js" defer></script>
-  <script src="js/fx-illus.js" defer></script>
+  <!-- Effects layer: inert here; js/main.js fetches it after `load` (stylesheet first) so it
+       never competes with the first paint. No JS: no effects, nothing missing. -->
+  <template data-fx-late>
+    <link rel="stylesheet" href="css/fx.css">
+    <script src="js/fx-ui.js"></script>
+    <script src="js/fx-illus.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/fx-pagehero.js"></script>
+    <script src="js/contact-fx.js"></script>
+  </template>
 </body>
 </html>

@@ -23,10 +23,8 @@
 
   <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/page-services.css">
-  <link rel="stylesheet" href="css/fx-ui.css">
-  <link rel="stylesheet" href="css/fx-illus.css">
+  <link rel="stylesheet" href="css/site.min.css">
+  <link rel="stylesheet" href="css/page-services.min.css">
 
   <script type="application/ld+json">
   {
@@ -80,7 +78,6 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
-  <div class="circuit-trace" aria-hidden="true"><span class="circuit-trace__track"></span><span class="circuit-trace__line"></span><span class="circuit-trace__head"></span></div>
 
   <header class="site-header">
     <nav class="nav container" aria-label="Main">
@@ -118,7 +115,7 @@
   <div class="nav-overlay" aria-hidden="true"></div>
 
   <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero" aria-labelledby="hero-title" data-pagehero="trees">
       <div class="container hero__inner">
         <div class="eyebrow">Services and pricing</div>
         <h1 class="hero__title hero__title--page" id="hero-title" data-mask>Software that <em>keeps working</em>, priced before it starts.</h1>
@@ -146,7 +143,7 @@
             <button class="tabs__tab" type="button" role="tab" id="svc-tab-6" aria-selected="false" aria-controls="svc-panel-6" tabindex="-1">Care plans</button>
           </div>
           <div class="tabs__panels">
-            <div class="tabs__panel is-active" role="tabpanel" id="svc-panel-1" aria-labelledby="svc-tab-1" tabindex="0">
+            <div class="tabs__panel is-active" data-illus="websites" role="tabpanel" id="svc-panel-1" aria-labelledby="svc-tab-1" tabindex="0">
               <h3 class="tabs__panel-title">Websites</h3>
               <div class="tabs__panel-body">
                 <p>Fast, accessible sites for small businesses, built by hand without a proprietary platform and sold as fixed packages.</p>
@@ -158,7 +155,7 @@
                 </ul>
               </div>
             </div>
-            <div class="tabs__panel" role="tabpanel" id="svc-panel-2" aria-labelledby="svc-tab-2" tabindex="0">
+            <div class="tabs__panel" data-illus="web-apps" role="tabpanel" id="svc-panel-2" aria-labelledby="svc-tab-2" tabindex="0">
               <h3 class="tabs__panel-title">Web apps &amp; internal tools</h3>
               <div class="tabs__panel-body">
                 <p>Browser-based tools that replace the spreadsheet, email chain or manual process your team works around.</p>
@@ -170,7 +167,7 @@
                 </ul>
               </div>
             </div>
-            <div class="tabs__panel" role="tabpanel" id="svc-panel-3" aria-labelledby="svc-tab-3" tabindex="0">
+            <div class="tabs__panel" data-illus="integrations" role="tabpanel" id="svc-panel-3" aria-labelledby="svc-tab-3" tabindex="0">
               <h3 class="tabs__panel-title">Integrations &amp; automation</h3>
               <div class="tabs__panel-body">
                 <p>Connect the systems you already pay for, so data moves between them without copy and paste.</p>
@@ -182,7 +179,7 @@
                 </ul>
               </div>
             </div>
-            <div class="tabs__panel" role="tabpanel" id="svc-panel-4" aria-labelledby="svc-tab-4" tabindex="0">
+            <div class="tabs__panel" data-illus="instrument" role="tabpanel" id="svc-panel-4" aria-labelledby="svc-tab-4" tabindex="0">
               <h3 class="tabs__panel-title">Hardware &amp; instrument control</h3>
               <div class="tabs__panel-body">
                 <p>Software that drives physical instruments and has to keep running unattended.</p>
@@ -194,7 +191,7 @@
                 </ul>
               </div>
             </div>
-            <div class="tabs__panel" role="tabpanel" id="svc-panel-5" aria-labelledby="svc-tab-5" tabindex="0">
+            <div class="tabs__panel" data-illus="data" role="tabpanel" id="svc-panel-5" aria-labelledby="svc-tab-5" tabindex="0">
               <h3 class="tabs__panel-title">Data tooling</h3>
               <div class="tabs__panel-body">
                 <p>Pipelines, checks and reports for data where a wrong answer is worse than no answer.</p>
@@ -206,7 +203,7 @@
                 </ul>
               </div>
             </div>
-            <div class="tabs__panel" role="tabpanel" id="svc-panel-6" aria-labelledby="svc-tab-6" tabindex="0">
+            <div class="tabs__panel" data-illus="care" role="tabpanel" id="svc-panel-6" aria-labelledby="svc-tab-6" tabindex="0">
               <h3 class="tabs__panel-title">Care &amp; maintenance</h3>
               <div class="tabs__panel-body">
                 <p>Optional monthly care after launch, so your site stays secure, backed up and current.</p>
@@ -339,6 +336,8 @@
           <h2 class="section-title" id="includes-title">Every project includes</h2>
           <p class="includes-moves"><strong>What moves the price:</strong> page count, a custom design versus an adapted layout, store or booking complexity, how ready your content and photos are, and the integrations you need.</p>
         </div>
+        <div class="build-frame" data-build-frame>
+          <div class="browser-bar" aria-hidden="true"><span class="browser-bar__dots"><i></i><i></i><i></i></span><span class="browser-bar__url">sylvan-c7/services</span></div>
         <ul class="check-list includes-list" role="list">
           <li>A fixed price, agreed before work starts</li>
           <li>A design you approve before anything is coded</li>
@@ -349,6 +348,12 @@
           <li>A walkthrough and a written handover doc</li>
           <li>No lock-in contract</li>
         </ul>
+          <div class="build-frame__foot" aria-hidden="true">
+            <span class="build-frame__ring"><svg viewBox="0 0 36 36" width="36" height="36"><circle class="ring-track" cx="18" cy="18" r="15"/><circle class="ring-fill" cx="18" cy="18" r="15" pathLength="100"/><path class="ring-check" d="M12 18.5l4 4 8-9" pathLength="1"/></svg></span>
+            <span class="build-frame__label">Page weight</span>
+            <span class="build-frame__status" data-page-weight></span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -444,7 +449,14 @@
   <script src="js/main.js" defer></script>
   <script src="js/animations.js" defer></script>
   <script src="js/components.js" defer></script>
-  <script src="js/fx-ui.js" defer></script>
-  <script src="js/fx-illus.js" defer></script>
+  <!-- Effects layer: inert here; js/main.js fetches it after `load` (stylesheet first) so it
+       never competes with the first paint. No JS: no effects, nothing missing. -->
+  <template data-fx-late>
+    <link rel="stylesheet" href="css/fx.css">
+    <script src="js/fx-ui.js"></script>
+    <script src="js/fx-illus.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/fx-pagehero.js"></script>
+  </template>
 </body>
 </html>

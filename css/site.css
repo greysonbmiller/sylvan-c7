@@ -43,27 +43,76 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Metric-matched fallbacks so the swap from system fonts to the web fonts
-   barely moves text (keeps CLS near zero while fonts load). Overrides are
-   computed from the shipped files: Inter 400 vs Arial (advance ratio 1.07,
-   ascent 0.969 / descent 0.241 em); Geist 700 vs Arial Bold (ratio 1.05,
-   ascent 1.005 / descent 0.295 em). Chrome scales the overrides by
-   size-adjust, hence ascent = 0.969 / 1.071 etc. */
+/* Metric-matched fallbacks, so the swap from system fonts to the web fonts moves nothing (CLS 0,
+   pinned by tests/fonts-cls.spec.mjs: hero h1/lead/section heights equal with the fonts blocked).
+   size-adjust = the web font's average advance over this site's own copy divided by the fallback's
+   (one face per weight in use, since Inter 400/500/600 and Geist 600/700 differ in width while
+   Arial has only two weights), then nudged inside the window where every hero wraps identically
+   from 320 to 1440 px. Ascent/descent are the web fonts' (Inter 0.969/0.241 em, Geist 1.005/0.295 em)
+   divided by size-adjust, because Chrome scales the overrides by it. Geist Mono's fallback has the
+   same 0.6 em advance, so mono widths and its ch are identical. Measures are in --ch-body/--ch-head
+   (below), never ch, which would follow whichever font is on screen. */
 @font-face {
-  font-family: 'Inter Fallback';
-  src: local('Arial'), local('ArialMT'), local('Helvetica Neue'), local('Helvetica');
-  size-adjust: 107.1%;
-  ascent-override: 90.4%;
-  descent-override: 22.5%;
+  font-family: 'Inter Fallback'; /* Inter 400 */
+  src: local('Arial'), local('ArialMT'), local('Helvetica');
+  font-weight: 100 450;
+  size-adjust: 106.9%;
+  ascent-override: 90.62%;
+  descent-override: 22.56%;
   line-gap-override: 0%;
 }
 @font-face {
-  font-family: 'Geist Fallback';
-  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Neue Bold'), local('Helvetica Bold'), local('Arial');
-  font-weight: 100 900; /* a bold face already: never synthesise bold on top */
-  size-adjust: 105%;
-  ascent-override: 95.7%;
-  descent-override: 28.1%;
+  font-family: 'Inter Fallback'; /* Inter 500: regular glyphs, Inter 500 widths */
+  src: local('Arial'), local('ArialMT'), local('Helvetica');
+  font-weight: 451 550;
+  size-adjust: 108.5%;
+  ascent-override: 89.29%;
+  descent-override: 22.23%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback'; /* Inter 600 */
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold');
+  font-weight: 551 900;
+  size-adjust: 101.35%;
+  ascent-override: 95.58%;
+  descent-override: 23.8%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist Fallback'; /* Geist 600 (and 500, which renders as 600) */
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold');
+  font-weight: 100 650;
+  size-adjust: 100.15%;
+  ascent-override: 100.34%;
+  descent-override: 29.45%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist Fallback'; /* Geist 700 */
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold');
+  font-weight: 651 900;
+  size-adjust: 102.2%;
+  ascent-override: 98.33%;
+  descent-override: 28.86%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist Mono Fallback'; /* same 0.6em advance: identical widths and ch */
+  src: local('Consolas');
+  font-weight: 100 900;
+  size-adjust: 109.13%;
+  ascent-override: 92.08%;
+  descent-override: 27.02%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist Mono Fallback Menlo'; /* macOS */
+  src: local('Menlo'), local('Menlo-Regular');
+  font-weight: 100 900;
+  size-adjust: 99.66%;
+  ascent-override: 100.83%;
+  descent-override: 29.59%;
   line-gap-override: 0%;
 }
 
@@ -113,7 +162,7 @@
   /* ---- Font families ---- */
   --font-heading: 'Geist', 'Geist Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
   --font-body:    'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
-  --font-mono:    'Geist Mono', ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  --font-mono:    'Geist Mono', 'Geist Mono Fallback', 'Geist Mono Fallback Menlo', ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
   --font-display: var(--font-heading); /* alias (lab app.css) */
 
   /* ---- Type scale (fluid) ---- */
@@ -136,8 +185,13 @@
   --tracking-heading: -0.015em;
   --tracking-mono:    0.04em;
 
-  --measure:      55ch;  /* ch = width of "0"; 55ch of Inter ≈ 70 characters per line */
-  --measure-lead: 50ch;
+  /* Measures count characters in the web fonts' "0" width, fixed in em. A plain ch is taken from
+     whichever font is on screen, so the measure (and every line break) would change when a
+     fallback swaps to Inter/Geist: a layout shift. --ch-body = Inter 400 "0", --ch-head = Geist 700 "0". */
+  --ch-body:      0.630859375em; /* 1292/2048 */
+  --ch-head:      0.693em;
+  --measure:      calc(55 * var(--ch-body));  /* 55ch of Inter ≈ 70 characters per line */
+  --measure-lead: calc(50 * var(--ch-body));
 
   /* ---- Spacing ---- */
   --space-1:  0.25rem;
@@ -188,7 +242,6 @@
   --z-drawer:   45;
   --z-overlay:  40;
   --z-sticky:   30;
-  --z-trace:    1;
 }
 
 @media (min-width: 1024px) {
@@ -483,8 +536,8 @@ section[tabindex='-1']:focus { outline: none; }
 
 .section-header > * { margin: 0; }
 
-.section-title { max-width: 22ch; }
-.section-header--center .section-title { max-width: 24ch; }
+.section-title { max-width: calc(22 * var(--ch-head)); }
+.section-header--center .section-title { max-width: calc(24 * var(--ch-head)); }
 
 /* Mono label above headings */
 .eyebrow {
@@ -799,7 +852,7 @@ html.nav-open { overflow: hidden; }
 
 .site-footer__tagline {
   margin-top: var(--space-3);
-  max-width: 34ch;
+  max-width: calc(34 * var(--ch-body));
   color: var(--text-body);
 }
 
@@ -1230,10 +1283,10 @@ html.nav-open { overflow: hidden; }
   font-size: var(--fs-display);
   line-height: var(--lh-display);
   letter-spacing: var(--tracking-display);
-  max-width: 17ch;
+  max-width: calc(17 * var(--ch-head));
 }
 
-.hero__title--page { font-size: var(--fs-h1); line-height: var(--lh-heading); max-width: 22ch; }
+.hero__title--page { font-size: var(--fs-h1); line-height: var(--lh-heading); max-width: calc(22 * var(--ch-head)); }
 
 .hero__title em,
 .text-gradient {
@@ -1461,7 +1514,7 @@ html.nav-open { overflow: hidden; }
   align-items: center;
   gap: var(--space-3);
   min-height: 56px;
-  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
+  padding: var(--space-2) var(--space-4);
   scroll-snap-align: start;
   text-align: left;
   font-size: var(--fs-small);
@@ -1478,8 +1531,7 @@ html.nav-open { overflow: hidden; }
 
 .stepper__tab:hover { color: var(--text-strong); border-color: var(--border-strong); }
 
-/* Step number: fixed square → always a circle, never a pill */
-.stepper__num,
+/* Step number (contact's next-steps list): fixed square → always a circle, never a pill */
 .step-num {
   display: inline-grid;
   place-items: center;
@@ -1501,12 +1553,6 @@ html.nav-open { overflow: hidden; }
   color: var(--text-strong);
   border-color: var(--accent);
   background: var(--bg-surface);
-}
-
-.stepper__tab[aria-selected='true'] .stepper__num {
-  color: var(--text-on-accent);
-  background: var(--accent);
-  border-color: var(--accent);
 }
 
 /* Autoplay progress: a thin bar along the active tab's bottom edge */
@@ -1857,7 +1903,7 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
 }
 
 .cta-band__inner > * { margin: 0; }
-.cta-band__title { max-width: 20ch; }
+.cta-band__title { max-width: calc(20 * var(--ch-head)); }
 .cta-band__text { max-width: var(--measure-lead); color: var(--text-body); font-size: var(--fs-lead); line-height: var(--lh-lead); }
 .cta-band .btn-row { justify-content: center; }
 
@@ -2312,58 +2358,6 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
 
 html:not(.js) .scroll-progress { display: none; }
 
-/* ---- Circuit trace (desktop ≥1024 only) ----
-   A thin left-margin line that draws as you scroll; animations.js sets
-   --trace (0..1) and moves the head. */
-.circuit-trace { display: none; }
-
-@media (min-width: 1024px) {
-  html.js .circuit-trace {
-    display: block;
-    position: fixed;
-    top: calc(var(--nav-h) + var(--space-6));
-    bottom: var(--space-6);
-    left: max(12px, calc((100vw - var(--container)) / 2 - 48px));
-    z-index: var(--z-trace);
-    width: 9px;
-    pointer-events: none;
-  }
-
-  .circuit-trace__track,
-  .circuit-trace__line {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 4px;
-    width: 1px;
-  }
-
-  .circuit-trace__track { background: var(--border-subtle); }
-
-  .circuit-trace__line {
-    background: linear-gradient(to bottom, var(--accent-dim), var(--accent));
-    transform: scaleY(var(--trace, 0));
-    transform-origin: top;
-  }
-
-  .circuit-trace__head {
-    position: absolute;
-    top: -4px;
-    left: 0;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow-strong), 0 0 12px var(--accent);
-    transform: translateY(var(--trace-px, 0px));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .circuit-trace__line { transform: none !important; }
-  .circuit-trace__head { display: none; }
-}
-
 /* ---- Small utilities ---- */
 @keyframes pulse-dot {
   0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow-strong); }
@@ -2384,6 +2378,300 @@ html:not(.js) .scroll-progress { display: none; }
 }
 
 /* Footer line linking the owner's own product (Bibooks) from every page. */
-.site-footer__also { margin-top: var(--space-3); font-size: var(--fs-small); color: var(--text-muted); max-width: 32ch; }
+.site-footer__also { margin-top: var(--space-3); font-size: var(--fs-small); color: var(--text-muted); max-width: calc(32 * var(--ch-body)); }
 .site-footer__also a { color: var(--text-body); text-decoration: underline; text-underline-offset: 3px; }
 .site-footer__also a:hover { color: var(--accent); }
+
+/* =========================================
+   Effects layer: first-paint rules
+   The effects themselves (css/fx.css + the fx scripts) are fetched only after `load` (js/main.js,
+   loadEffects), so they never compete with the hero (LCP). What must be right from the FIRST paint
+   lives here instead: space reserved for anything the effects inject, pre-JS hidden states,
+   styling of static markup, and the cross-document view transition (which has to be known when
+   the incoming page first renders). Pinned by tests/fx-late.spec.mjs: fx.css arriving late moves
+   nothing.
+   ========================================= */
+
+/* ---- View transitions (declared here: the incoming page must know at its first render) ---- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+
+  /* The header is its own layer: it stays put while the page underneath changes. */
+  .site-header { view-transition-name: fx-header; }
+  ::view-transition-group(fx-header) { animation: none; z-index: 2; }
+  ::view-transition-old(fx-header) { display: none; }
+  ::view-transition-new(fx-header) { animation: none; }
+
+  ::view-transition-old(root) { animation: fx-vt-out 140ms var(--ease-in-out) both; }
+  ::view-transition-new(root) { animation: fx-vt-in 300ms var(--ease-out) 40ms both; }
+}
+
+@keyframes fx-vt-out { to { opacity: 0; transform: translateY(-4px); } }
+@keyframes fx-vt-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* ---- Nav: link reset (beats the `li a` underline), indicator anchor, keycap reservation ---- */
+.nav { position: relative; }
+.nav__links { position: relative; z-index: 1; }
+.nav__links .nav__link { text-decoration: none; transition: color var(--dur-fast) ease; }
+
+/* Keycap: desktop only. The space is reserved before JS runs (margin on the CTA)
+   and handed to the button when it is inserted, so the nav never moves. */
+:root { --fx-kbd-w: 5.75rem; }
+.fx-kbd { display: none; }
+@media (min-width: 1024px) {
+  html.js:not(.fx-kbd-on) .nav__cta { margin-left: calc(var(--fx-kbd-w) + var(--space-6)); }
+}
+
+/* ---- 404 garden (static markup in 404.html) ---- */
+.not-found__grid { display: grid; gap: var(--space-10); align-items: center; }
+@media (min-width: 900px) {
+  .not-found__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--space-12); }
+}
+.fx-garden {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-width: 0;
+  background: linear-gradient(180deg, var(--bg-deep), var(--bg-primary));
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+html:not(.js) .fx-garden { display: none; }
+/* "Plant a tree" stays [hidden] until fx-ui.js wires it; keep its box so un-hiding moves nothing. */
+html.js .fx-garden [data-fx-plant][hidden] { display: inline-flex !important; visibility: hidden; }
+.fx-garden__hint { padding-left: var(--space-2); font-family: var(--font-mono); font-size: var(--fs-label); color: var(--text-muted); }
+.fx-garden__title {
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+}
+.fx-garden__title b { font-weight: 500; color: var(--accent); }
+.fx-garden__canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+.fx-garden__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+}
+
+/* ---- Footer skyline: its band is reserved ---- */
+/* The band is reserved before JS runs (html.js), so injecting the canvas
+   moves nothing. The canvas sits in that band only: footer text keeps its
+   solid background. */
+:root { --fx-sky-h: 88px; }
+@media (min-width: 768px) { :root { --fx-sky-h: 108px; } }
+html.js .site-footer { position: relative; padding-top: calc(var(--fx-sky-h) + var(--space-8)); }
+
+/* ---- Ambient dot grid ---- */
+/* 1px dots, barely there; a fine pointer brightens a soft circle around it.
+   Gutters only: the first mask layer cuts the whole content column (container
+   plus a margin) out of the grid, so text always sits on plain background.
+   Mask = column-cut ∩ (pointer circle + faint base). On screens without real
+   gutters the grid simply does not show. */
+:root { --fx-grid-col: calc(var(--container) / 2 + var(--space-6)); }
+main > .section { isolation: isolate; }
+main > .section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, rgba(51, 255, 170, 0.2) 1px, transparent 1.5px);
+  background-size: 24px 24px;
+  background-position: center top;
+  -webkit-mask-image:
+    linear-gradient(90deg, #000 calc(50% - var(--fx-grid-col) - 48px), transparent calc(50% - var(--fx-grid-col)),
+      transparent calc(50% + var(--fx-grid-col)), #000 calc(50% + var(--fx-grid-col) + 48px)),
+    radial-gradient(circle 300px at var(--fx-px, -600px) var(--fx-py, -600px), #000, transparent 75%),
+    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18));
+  mask-image:
+    linear-gradient(90deg, #000 calc(50% - var(--fx-grid-col) - 48px), transparent calc(50% - var(--fx-grid-col)),
+      transparent calc(50% + var(--fx-grid-col)), #000 calc(50% + var(--fx-grid-col) + 48px)),
+    radial-gradient(circle 300px at var(--fx-px, -600px) var(--fx-py, -600px), #000, transparent 75%),
+    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18));
+  -webkit-mask-composite: source-in, source-over, source-over;
+  mask-composite: intersect, add, add;
+}
+
+/* ---- Selection + scrollbar ---- */
+::selection { background: var(--accent); color: var(--text-on-accent); text-shadow: none; }
+@media (pointer: fine) {
+  html { scrollbar-color: #3d7a5c var(--bg-deep); }
+  .fx-palette__list { scrollbar-width: thin; scrollbar-color: #3d7a5c transparent; }
+}
+
+/* ---- Service-panel illustrations: placeholder box + panel layout, reserved before fx-illus.js ---- */
+.illus,
+html.js [data-illus] > .tabs__panel-body::before {
+  display: block;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(circle at 1px 1px, rgba(66, 86, 74, 0.45) 1px, transparent 1.4px) 0 0 / 16px 16px,
+    radial-gradient(120% 90% at 70% 0%, rgba(0, 217, 126, 0.07), transparent 60%),
+    var(--bg-deep);
+}
+
+html.js [data-illus] > .tabs__panel-body::before { content: ''; margin-bottom: var(--space-4); }
+html.js [data-illus] > .tabs__panel-body.has-illus::before { content: none; }
+.illus { position: relative; overflow: hidden; margin: 0 0 var(--space-4); }
+html.js [data-illus] .tabs__panel-body > .illus + p { margin-top: 0; }
+.illus svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+/* Panels with an illustration: text left, picture right, from 768 up. Rows 1 and 6 are flexible
+   spacers so the text block sits vertically centred against the picture. */
+@media (min-width: 768px) {
+  html.js .tabs__panel[data-illus] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto auto auto 1fr;
+    column-gap: clamp(1.5rem, 0.5rem + 2.5vw, 3rem);
+    align-content: stretch;
+  }
+  html.js .tabs__panel[data-illus] > .tabs__panel-title { grid-column: 1; grid-row: 2; }
+  html.js .tabs__panel[data-illus] > .tabs__panel-body { display: contents; }
+  html.js [data-illus] .tabs__panel-body > p:first-of-type { grid-column: 1; grid-row: 3; margin-top: var(--space-4); }
+  html.js [data-illus] .tabs__panel-body > ul {
+    grid-column: 1; grid-row: 4; align-self: start;
+    margin-top: var(--space-5);
+    grid-template-columns: minmax(0, 1fr);
+  }
+  html.js [data-illus] .tabs__panel-body > ul ~ p { grid-column: 1; grid-row: 5; margin-top: var(--space-5); }
+  html.js [data-illus] > .tabs__panel-body::before,
+  html.js [data-illus] .tabs__panel-body > .illus {
+    grid-column: 2; grid-row: 1 / -1; align-self: center; margin: 0;
+  }
+}
+
+/* ---- Process stepper: room for the rail (injected by fx-illus.js) ---- */
+html.js .stepper__list { position: relative; padding-top: 46px; }
+@media (min-width: 1024px) {
+  html.js .stepper--vertical .stepper__list { padding-top: 2px; padding-left: 50px; }
+}
+
+/* ---- Pricing odometer anchor ---- */
+.price__value { position: relative; }
+
+/* ---- "Every project includes" build frame (static markup, services) ---- */
+.build-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+.build-frame .browser-bar { position: static; }
+.build-frame .includes-list {
+  margin: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+.build-frame__foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-mono);
+}
+.build-frame__label { color: var(--text-muted); }
+.build-frame__status { margin-left: auto; color: var(--accent); }
+.build-frame__ring { display: inline-flex; flex: 0 0 auto; }
+.build-frame__ring svg { width: 36px; height: 36px; transform: rotate(-90deg); fill: none; stroke-width: 3; }
+.build-frame__ring .ring-track { stroke: var(--border-medium); }
+.build-frame__ring .ring-fill { stroke: var(--accent); stroke-dasharray: 100; stroke-dashoffset: 0; stroke-linecap: round; }
+.build-frame__ring .ring-check { stroke: var(--accent-bright); stroke-dasharray: 1; stroke-linecap: round; stroke-linejoin: round; transform: rotate(90deg); transform-origin: 18px 18px; }
+
+.includes-list > li:nth-child(1) { --i: 0; }
+.includes-list > li:nth-child(2) { --i: 1; }
+.includes-list > li:nth-child(3) { --i: 2; }
+.includes-list > li:nth-child(4) { --i: 3; }
+.includes-list > li:nth-child(5) { --i: 4; }
+.includes-list > li:nth-child(6) { --i: 5; }
+.includes-list > li:nth-child(7) { --i: 6; }
+.includes-list > li:nth-child(8) { --i: 7; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js .build-frame .includes-list > li::before {
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 160ms), opacity 0.3s ease calc(var(--i) * 160ms);
+  }
+  html.js .build-frame:not(.is-done) .includes-list > li::before { transform: scale(0); opacity: 0; }
+  html.js .build-frame .ring-fill { transition: stroke-dashoffset 1.3s var(--ease-out) 0.4s; }
+  html.js .build-frame:not(.is-done) .ring-fill { stroke-dashoffset: 100; }
+  html.js .build-frame .ring-check { transition: stroke-dashoffset 0.5s var(--ease-out) 1.6s; }
+  html.js .build-frame:not(.is-done) .ring-check { stroke-dashoffset: 1; }
+}
+
+/* ---- Browser-chrome frames around screenshots (static markup) ---- */
+.frame--browser,
+html.js .showcase__item--bibooks .showcase__media { position: relative; padding-top: 36px; }
+.frame--browser > img,
+.showcase__media > img { display: block; }
+
+.browser-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-3);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-medium);
+}
+.browser-bar__dots { display: inline-flex; gap: 6px; flex: 0 0 auto; }
+/* One window-chrome style sitewide: three 8px grey dots; the first turns accent green while the
+   window is active (css/fx/illus.css and the page sheets say when). */
+.browser-bar__dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--border-medium); }
+.browser-bar__url {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  height: 24px;
+  line-height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+  background: var(--bg-deep);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transform: translateX(-24px); /* optically centred against the dots */
+}
+.browser-bar__url::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 9px;
+  margin-right: 8px;
+  vertical-align: -1px;
+  border: 1.5px solid var(--accent);
+  border-top-width: 3px;
+  border-radius: 2px;
+}

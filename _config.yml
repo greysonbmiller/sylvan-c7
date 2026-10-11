@@ -8,5 +8,6 @@ exclude:
   - playwright.config.mjs
   - test-results
   - playwright-report
+  - scripts
   - lab/square-word-calligraphy/app/README.md
   - lab/nuestra-finca/app/README.md

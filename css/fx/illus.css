@@ -1,0 +1,281 @@
+/* =========================================
+   Sylvan C7 — css/fx/illus.css: service illustrations, stepper, pricing and Work effects (styles
+   for js/fx-illus.js). Concatenated after css/fx/ui.css into css/fx.css by scripts/build-css.mjs.
+   One visual system throughout: 1.75 strokes, radii from the tokens, the accent-green family only
+   (red, at 70%, for the data-tooling "rejected" state alone), mono labels in the muted text colour,
+   and one window chrome (three 8px grey dots, the first accent-green when the window is active).
+   ========================================= */
+
+/* =========================================
+   10. Service-panel illustrations (injected into the boxes site.css reserves)
+   A .browser-bar (the shared window chrome) sits on top; the SVG fills the rest of the box.
+   ========================================= */
+.illus > svg {
+  position: absolute;
+  left: 0;
+  top: 36px;
+  width: 100%;
+  height: calc(100% - 36px);
+}
+
+/* SVG vocabulary */
+.illus rect { rx: var(--radius-sm); }
+.illus .lg { rx: var(--radius-md); }
+.illus .pill { rx: var(--radius-full); }
+.illus .b { fill: var(--bg-elevated); stroke: var(--border-medium); stroke-width: 1.75px; }
+.illus .s { fill: var(--bg-surface); }
+.illus .scr { fill: var(--bg-deep); }
+.illus .m { fill: var(--border-strong); }
+.illus .af { fill: var(--accent); }
+.illus .af.dim { fill: var(--accent-dim); }
+.illus .at { fill: var(--accent-tint); }
+.illus .l { fill: none; stroke: var(--border-strong); stroke-width: 1.75px; stroke-linecap: round; stroke-linejoin: round; }
+.illus .l.a { stroke: var(--accent); }
+.illus .l.g { stroke: var(--border-subtle); stroke-dasharray: 2 5; }
+.illus .l.dash { stroke-dasharray: 5 5; }
+.illus .l.faint { stroke: var(--border-subtle); }
+.illus .gate { fill: var(--accent-tint); }
+.illus .rb { stroke: var(--border-strong); stroke-width: 1.75px; }
+.illus .t {
+  font-family: var(--font-mono);
+  font-size: var(--il-fs, 14px); /* fx-illus.js keeps this at 14px on screen at any box size */
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  fill: var(--text-muted);
+}
+.illus .t.c { dominant-baseline: central; }
+.illus .draw { stroke-dasharray: 1; }
+.illus [style*='transform-origin'], .illus .spin { transform-box: view-box; }
+.illus .grow { transform-box: fill-box; transform-origin: 50% 100%; }
+
+/* Packets, rows and flows sit at a sensible static spot; animations move them. */
+.illus .pk { fill: var(--accent-bright); }
+.illus .flow { fill: none; stroke: var(--accent); stroke-width: 1.75px; stroke-dasharray: 3 6; stroke-linecap: round; }
+
+/* Data tooling's "rejected" state: the only red, always at 70%. */
+.illus .rf { fill: var(--error); fill-opacity: 0.7; }
+.illus .x-mark { fill: none; stroke: var(--error); stroke-opacity: 0.7; stroke-width: 1.75px; stroke-linecap: round; }
+.illus .red-gate { fill: none; stroke: var(--error); stroke-opacity: 0.7; stroke-width: 1.75px; opacity: 0; }
+.illus .x-wrap { transform-box: fill-box; transform-origin: center; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .illus.is-on .up { animation: il-up 0.45s var(--ease-out) var(--d, 0s) both; }
+  .illus.is-on .fade { animation: il-fade 0.4s ease var(--d, 0s) both; }
+  .illus.is-on .draw { animation: il-draw 0.8s var(--ease-out) var(--d, 0s) both; }
+  .illus.is-on .grow { animation: il-grow 0.6s var(--ease-out) var(--d, 0s) both; }
+  .illus.is-on .slide { animation: il-slide 0.45s var(--ease-out) var(--d, 0s) both; }
+
+  /* web apps */
+  .illus.is-on .ping { animation: il-ping 1.8s ease-out 1.6s infinite; transform-box: fill-box; transform-origin: center; }
+
+  /* integrations */
+  .illus.is-on .spin { animation: il-spin 6s linear infinite; }
+  .illus.is-on .pk1 { animation: il-p1 3.6s var(--ease-in-out) 0.8s infinite both; }
+  .illus.is-on .pk2 { animation: il-p2 3.6s linear 0.8s infinite both; }
+  .illus.is-on .pk3 { animation: il-p3 3.6s linear 0.8s infinite both; }
+  .illus.is-on .hit1 { animation: il-hit 3.6s ease 0.8s infinite; }
+  .illus.is-on .hit2 { animation: il-hit 3.6s ease 0.8s infinite; }
+
+  /* instrument */
+  .illus.is-on .wave { animation: il-wave 1.4s linear infinite; }
+  .illus.is-on .rotor { animation: il-spin 1.6s linear infinite; }
+  .illus.is-on .flow { animation: il-flow 0.8s linear infinite; }
+  .illus.is-on .valve { animation: il-valve 6s steps(1) 1s infinite; }
+  .illus.is-on .flow2 { animation: il-flow 0.8s linear infinite, il-flowgate 6s steps(1) 1s infinite; }
+  .illus.is-on .led { animation: il-led 1.2s ease-in-out infinite; }
+
+  /* data */
+  .illus.is-on .row { animation: il-row 6s linear var(--d, 0s) infinite both; }
+  .illus.is-on .row.bad { animation-name: il-bad; }
+  .illus.is-on .red-gate { animation: il-redgate 6s linear var(--d, 0s) infinite both; }
+  .illus.is-on .x-wrap { animation: il-xmark 6s linear var(--d, 0s) infinite both; }
+  .illus.is-on .scan { animation: il-scan 1.5s var(--ease-in-out) infinite alternate; }
+
+  /* care */
+  .illus.is-on .beat { animation: il-beat 2.6s linear infinite; }
+}
+
+.illus .beat { stroke-dasharray: 22 78; }
+
+.illus.is-paused,
+.illus.is-paused * { animation-play-state: paused !important; }
+
+@keyframes il-up { from { opacity: 0; transform: translateY(8px); } }
+@keyframes il-fade { from { opacity: 0; } }
+@keyframes il-draw { from { stroke-dashoffset: 1; } }
+@keyframes il-grow { from { transform: scaleY(0); } }
+@keyframes il-slide { from { opacity: 0; transform: translateX(-12px); } }
+@keyframes il-ping { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(3); } }
+@keyframes il-spin { to { transform: rotate(360deg); } }
+@keyframes il-p1 {
+  0% { transform: translate(88px, 85px); opacity: 0; }
+  6% { opacity: 1; }
+  32% { transform: translate(138px, 85px); opacity: 1; }
+  36%, 100% { transform: translate(138px, 85px); opacity: 0; }
+}
+@keyframes il-p2 {
+  0%, 34% { transform: translate(182px, 85px); opacity: 0; }
+  38% { opacity: 1; }
+  46% { transform: translate(200px, 85px); }
+  66% { transform: translate(200px, 42px); }
+  80% { transform: translate(228px, 42px); opacity: 1; }
+  84%, 100% { transform: translate(228px, 42px); opacity: 0; }
+}
+@keyframes il-p3 {
+  0%, 34% { transform: translate(182px, 85px); opacity: 0; }
+  38% { opacity: 1; }
+  46% { transform: translate(200px, 85px); }
+  66% { transform: translate(200px, 128px); }
+  80% { transform: translate(228px, 128px); opacity: 1; }
+  84%, 100% { transform: translate(228px, 128px); opacity: 0; }
+}
+@keyframes il-hit { 0%, 78%, 96%, 100% { stroke: var(--border-medium); } 82% { stroke: var(--accent); } }
+@keyframes il-wave { to { transform: translateX(-50px); } }
+@keyframes il-flow { to { stroke-dashoffset: -9; } }
+@keyframes il-valve { 0% { fill: var(--accent); } 62% { fill: var(--border-strong); } }
+@keyframes il-flowgate { 0% { opacity: 1; } 62% { opacity: 0; } }
+@keyframes il-led { 50% { opacity: 0.35; } }
+@keyframes il-row {
+  0% { transform: translate(-60px, 76px); opacity: 0; }
+  6% { opacity: 1; }
+  40%, 52% { transform: translate(152px, 76px); }
+  88% { transform: translate(300px, 76px); opacity: 1; }
+  96%, 100% { transform: translate(330px, 76px); opacity: 0; }
+}
+@keyframes il-bad {
+  0% { transform: translate(-60px, 76px); opacity: 0; }
+  6% { opacity: 1; }
+  40%, 54% { transform: translate(152px, 76px); }
+  64%, 90% { transform: translate(152px, 118px); opacity: 1; }
+  98%, 100% { transform: translate(152px, 118px); opacity: 0; }
+}
+@keyframes il-redgate { 0%, 46% { opacity: 0; } 50%, 60% { opacity: 1; } 66%, 100% { opacity: 0; } }
+@keyframes il-xmark { 0%, 62% { opacity: 0; transform: scale(0.4); } 68%, 90% { opacity: 1; transform: none; } 98%, 100% { opacity: 0; } }
+@keyframes il-scan { from { transform: translateY(-26px); } to { transform: translateY(26px); } }
+@keyframes il-beat { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+
+/* =========================================
+   11. Process stepper rail ([data-stepper] .fx-rail)
+   Space is reserved by padding from first paint; the rail is absolute. No number badges: a quiet
+   track, a filled stretch up to the current step, and one icon per step, the current one lit.
+   ========================================= */
+.fx-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 44px;
+  pointer-events: none;
+  --pos: 0px;
+  --start: 0px;
+}
+.fx-rail__track,
+.fx-rail__fill {
+  position: absolute;
+  top: 21px;
+  left: var(--start);
+  height: 2px;
+  border-radius: var(--radius-full);
+  background: var(--border-subtle);
+}
+.fx-rail__track { width: var(--len, 0px); }
+.fx-rail__fill {
+  width: calc(var(--pos) - var(--start));
+  background: var(--accent-dim);
+  transition: width 0.4s var(--ease-out);
+}
+.fx-rail__node {
+  position: absolute;
+  top: 8px;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-faint);
+  transition: color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out);
+}
+.fx-rail__node svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75px; stroke-linecap: round; stroke-linejoin: round; }
+.fx-rail__node svg * { stroke-dasharray: 1; }
+.fx-rail__node.is-past { color: var(--accent-dim); }
+.fx-rail__node.is-active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Vertical rail (work page, ≥1024) */
+.fx-rail--v { width: 44px; height: auto; bottom: 0; }
+.fx-rail--v .fx-rail__track,
+.fx-rail--v .fx-rail__fill { top: var(--start); left: 21px; width: 2px; height: var(--len, 0px); }
+.fx-rail--v .fx-rail__fill { height: calc(var(--pos) - var(--start)); transition: height 0.4s var(--ease-out); }
+.fx-rail--v .fx-rail__node { left: 8px; top: auto; margin: -14px 0 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .fx-rail__node.is-active svg * { animation: il-draw 0.45s var(--ease-out) 0.1s both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fx-rail *, .fx-rail { transition: none !important; }
+}
+
+/* =========================================
+   12. Pricing: the real prices never change. Switching to "Project + care" only slides the
+   "+ $X/mo" add-on line in beside the unchanged figure (display: inline-block is set in
+   page-services.css, so this sheet arriving late moves nothing).
+   ========================================= */
+@media (prefers-reduced-motion: no-preference) {
+  [data-price-mode='care'] .price__variant[data-variant='care'] small {
+    animation: price-addon 0.35s var(--ease-out) both;
+  }
+}
+@keyframes price-addon { from { opacity: 0; transform: translateX(-8px); } }
+
+/* =========================================
+   13. One window chrome: three 8px grey dots, the first accent-green while the window is active
+   (an illustration on show, a finished build frame, a screenshot being looked at). Services and
+   Work carry the same rules render-blocking in their page sheets; this copy covers the bars
+   fx-illus.js injects elsewhere (the home page's illustrations and Bibooks frame).
+   ========================================= */
+.browser-bar__dots { gap: 6px; }
+.browser-bar__dots i,
+.browser-bar__dots i:nth-child(2),
+.browser-bar__dots i:nth-child(3) {
+  width: 8px;
+  height: 8px;
+  background: var(--border-medium);
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+.illus .browser-bar__dots i:first-child,
+.build-frame.is-done .browser-bar__dots i:first-child,
+.frame--browser:hover .browser-bar__dots i:first-child,
+.showcase__media:hover .browser-bar__dots i:first-child,
+.is-panning > .browser-bar .browser-bar__dots i:first-child { background: var(--accent); }
+
+/* Bibooks pan inside its browser frame (frame styles: site.css) */
+.fx-pan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 36px;
+  bottom: 0;
+  overflow: hidden;
+  container-type: size;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.fx-pan img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translateY(0);
+  transition: transform 1.1s var(--ease-out);
+}
+.is-panning > .fx-pan.is-ready { opacity: 1; }
+.is-panning > .fx-pan.is-ready img {
+  transform: translateY(calc(-100% + 100cqh));
+  transition: transform 9s cubic-bezier(0.45, 0, 0.4, 1) 0.25s;
+}

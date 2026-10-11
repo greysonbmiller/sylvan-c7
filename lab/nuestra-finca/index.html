@@ -26,11 +26,11 @@
 
   <link rel="preload" href="../../fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="../../img/lab-nuestra-finca.jpg" as="image" fetchpriority="high">
-  <link rel="stylesheet" href="../../css/site.css">
-  <link rel="stylesheet" href="../../css/page-finca.css">
-  <link rel="stylesheet" href="../../css/fx-ui.css">
-  <link rel="stylesheet" href="../../css/fx-illus.css">
+  <!-- LCP poster: one of these two matches (same queries as css/page-finca.css), never both -->
+  <link rel="preload" href="../../img/lab-nuestra-finca-720.jpg" as="image" fetchpriority="high" media="(max-width: 440px) and (max-resolution: 1.5dppx)">
+  <link rel="preload" href="../../img/lab-nuestra-finca.jpg" as="image" fetchpriority="high" media="not all and (max-width: 440px) and (max-resolution: 1.5dppx)">
+  <link rel="stylesheet" href="../../css/site.min.css">
+  <link rel="stylesheet" href="../../css/page-finca.min.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -209,8 +209,13 @@
   <script src="../../js/main.js" defer></script>
   <script src="../../js/animations.js" defer></script>
   <script src="../../js/components.js" defer></script>
-  <script src="../../js/fx-ui.js" defer></script>
-  <script src="../../js/fx-illus.js" defer></script>
+  <!-- Effects layer: inert here; js/main.js fetches it after `load` (stylesheet first) so it
+       never competes with the first paint. No JS: no effects, nothing missing. -->
+  <template data-fx-late>
+    <link rel="stylesheet" href="../../css/fx.css">
+    <script src="../../js/fx-ui.js"></script>
+    <script src="../../js/fx-illus.js"></script>
+  </template>
   <script>
     // Load the walkthrough (~7 MB) only when asked, then hand it keyboard focus.
     (function () {

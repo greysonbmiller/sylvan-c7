@@ -23,10 +23,8 @@
 
   <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/page-work.css">
-  <link rel="stylesheet" href="css/fx-ui.css">
-  <link rel="stylesheet" href="css/fx-illus.css">
+  <link rel="stylesheet" href="css/site.min.css">
+  <link rel="stylesheet" href="css/page-work.min.css">
   <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -49,7 +47,6 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
-  <div class="circuit-trace" aria-hidden="true"><span class="circuit-trace__track"></span><span class="circuit-trace__line"></span><span class="circuit-trace__head"></span></div>
 
   <header class="site-header">
     <nav class="nav container" aria-label="Main">
@@ -88,7 +85,7 @@
 
   <main id="main">
     <!-- Hero: the one place the site says it is new. -->
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero" aria-labelledby="hero-title" data-pagehero="roots">
       <div class="container hero__inner">
         <span class="eyebrow">Work</span>
         <h1 class="hero__title hero__title--page" id="hero-title" data-mask>Built and run solo. Open them and judge for yourself.</h1>
@@ -103,8 +100,9 @@
     <!-- Flagship: Bibooks. Greyson's own product, NOT client work. Facts only from the verified Bibooks brief. -->
     <section class="section section--flush-top" id="bibooks" aria-labelledby="bibooks-title">
       <div class="container work-case reveal">
-        <figure class="frame work-case__media">
-          <img src="img/work-bibooks.jpg" srcset="img/work-bibooks.jpg 1x, img/work-bibooks@2x.jpg 2x" width="1200" height="750" alt="Bibooks home page: 'Turn any book into a bilingual audiobook' with a Spanish–English read-along demo." fetchpriority="high" decoding="async">
+        <figure class="frame frame--browser work-case__media" data-pan="img/work-bibooks-tall.jpg">
+          <div class="browser-bar" aria-hidden="true"><span class="browser-bar__dots"><i></i><i></i><i></i></span><span class="browser-bar__url">bibooks.org</span></div>
+          <img src="img/work-bibooks.jpg" srcset="img/work-bibooks-600.jpg 600w, img/work-bibooks.jpg 1200w, img/work-bibooks@2x.jpg 2400w" sizes="(min-width: 1024px) 670px, calc(100vw - 32px)" width="1200" height="750" alt="Bibooks home page: 'Turn any book into a bilingual audiobook' with a Spanish–English read-along demo." fetchpriority="high" decoding="async">
         </figure>
         <div class="work-case__body">
           <span class="eyebrow">My product</span>
@@ -135,7 +133,8 @@
     <!-- From the lab: Greyson's own experiment. NOT client work; never list it as a client project. -->
     <section class="section section--alt" aria-labelledby="lab-title">
       <div class="container work-case work-case--flip reveal">
-        <figure class="frame work-case__media">
+        <figure class="frame frame--browser work-case__media">
+          <div class="browser-bar" aria-hidden="true"><span class="browser-bar__dots"><i></i><i></i><i></i></span><span class="browser-bar__url">sylvan-c7/lab</span></div>
           <img src="img/lab-square-word-calligraphy.png" width="1200" height="900" alt="The words Square Word Calligraphy written as three square blocks that look like Chinese characters." loading="lazy" decoding="async">
         </figure>
         <div class="work-case__body">
@@ -151,7 +150,10 @@
       <!-- Also from the lab: Greyson's own experiment, NOT client work. Shorter card on purpose. -->
       <div class="container">
         <article class="card work-mini" aria-labelledby="finca-title">
-          <img class="work-mini__media" src="img/lab-nuestra-finca.jpg" width="1200" height="900" alt="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside" loading="lazy" decoding="async">
+          <figure class="frame frame--browser work-mini__frame">
+            <div class="browser-bar" aria-hidden="true"><span class="browser-bar__dots"><i></i><i></i><i></i></span><span class="browser-bar__url">sylvan-c7/lab</span></div>
+            <img class="work-mini__media" src="img/lab-nuestra-finca.jpg" width="1200" height="900" alt="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside" loading="lazy" decoding="async">
+          </figure>
           <div class="work-mini__body">
             <span class="eyebrow">Also from the lab</span>
             <h3 class="card__title" id="finca-title">Nuestra Finca</h3>
@@ -172,11 +174,11 @@
 
         <div class="stepper stepper--vertical" data-stepper>
           <div class="stepper__list" role="tablist" aria-label="Process steps">
-            <button class="stepper__tab" type="button" role="tab" id="step-tab-1" aria-selected="true" aria-controls="step-1"><span class="stepper__num" aria-hidden="true">1</span><span>Discovery call</span></button>
-            <button class="stepper__tab" type="button" role="tab" id="step-tab-2" aria-selected="false" aria-controls="step-2" tabindex="-1"><span class="stepper__num" aria-hidden="true">2</span><span>Fixed quote in writing</span></button>
-            <button class="stepper__tab" type="button" role="tab" id="step-tab-3" aria-selected="false" aria-controls="step-3" tabindex="-1"><span class="stepper__num" aria-hidden="true">3</span><span>Design you approve</span></button>
-            <button class="stepper__tab" type="button" role="tab" id="step-tab-4" aria-selected="false" aria-controls="step-4" tabindex="-1"><span class="stepper__num" aria-hidden="true">4</span><span>Build and review</span></button>
-            <button class="stepper__tab" type="button" role="tab" id="step-tab-5" aria-selected="false" aria-controls="step-5" tabindex="-1"><span class="stepper__num" aria-hidden="true">5</span><span>Launch, training and handover</span></button>
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-1" aria-selected="true" aria-controls="step-1"><span>Discovery call</span></button>
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-2" aria-selected="false" aria-controls="step-2" tabindex="-1"><span>Fixed quote in writing</span></button>
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-3" aria-selected="false" aria-controls="step-3" tabindex="-1"><span>Design you approve</span></button>
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-4" aria-selected="false" aria-controls="step-4" tabindex="-1"><span>Build and review</span></button>
+            <button class="stepper__tab" type="button" role="tab" id="step-tab-5" aria-selected="false" aria-controls="step-5" tabindex="-1"><span>Launch, training and handover</span></button>
           </div>
           <div class="stepper__panels">
             <div class="stepper__panel is-active" role="tabpanel" id="step-1" aria-labelledby="step-tab-1" tabindex="0">
@@ -303,7 +305,14 @@
   <script src="js/main.js" defer></script>
   <script src="js/animations.js" defer></script>
   <script src="js/components.js" defer></script>
-  <script src="js/fx-ui.js" defer></script>
-  <script src="js/fx-illus.js" defer></script>
+  <!-- Effects layer: inert here; js/main.js fetches it after `load` (stylesheet first) so it
+       never competes with the first paint. No JS: no effects, nothing missing. -->
+  <template data-fx-late>
+    <link rel="stylesheet" href="css/fx.css">
+    <script src="js/fx-ui.js"></script>
+    <script src="js/fx-illus.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/fx-pagehero.js"></script>
+  </template>
 </body>
 </html>

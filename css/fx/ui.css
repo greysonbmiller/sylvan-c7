@@ -1,0 +1,422 @@
+/* =========================================
+   Sylvan C7 — css/fx/ui.css: first half of the effects layer. scripts/build-css.mjs concatenates
+   css/fx/ui.css + css/fx/illus.css into css/fx.css; edit these sources, never fx.css. Styles for
+   what js/fx-ui.js (and js/fx-illus.js, sections 10-12 in illus.css) inject. Not render-blocking: js/main.js fetches it after `load` and only then runs the
+   effect scripts, so nothing here is ever on screen unstyled. Anything that must hold from the
+   first paint (reserved space, pre-JS states, static markup) is in site.css, "Effects layer:
+   first-paint rules"; this file must never move static content (tests/fx-late.spec.mjs).
+     1. Nav indicator + keycap        5. Command palette       9. Konami burst + toast
+     2. Primary button shine + press  6. Back to top, phone CTA 10. Service-panel illustrations
+     3. Card spotlight border         7. Footer skyline       11. Process-stepper rail
+     4. Eyebrow decode                8. Section seams        12. Pricing odometer, Bibooks pan
+   ========================================= */
+
+/* ---- 1. Nav indicator + keycap ---------------------------------------- */
+.fx-nav-ind {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: var(--fx-w, 0px);
+  height: var(--fx-h, 0px);
+  transform: translate(var(--fx-x, 0px), var(--fx-y, 0px));
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+  transition: transform 380ms var(--ease-out), width 380ms var(--ease-out), opacity var(--dur-base) var(--ease-out);
+  opacity: 0;
+}
+.fx-nav-ind.is-placed { opacity: 1; }
+.fx-nav-ind::before { /* soft pill: only while pointing at / focusing a link */
+  content: '';
+  position: absolute;
+  inset: 4px 0;
+  border-radius: inherit;
+  background: var(--accent-tint);
+  box-shadow: inset 0 0 0 1px rgba(0, 217, 126, 0.16);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.fx-nav-ind.is-hovering::before { opacity: 1; }
+.fx-nav-ind::after { /* the accent bar */
+  content: '';
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: 6px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(0, 217, 126, 0.55);
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.fx-nav-ind.is-idle::after { opacity: 0; } /* no current page in the nav (lab, 404) */
+html.fx-nav .nav__link[aria-current='page']::after,
+html.fx-nav .nav__link.active::after { opacity: 0; }
+
+/* Keycap: desktop only; its space is reserved in site.css until it is inserted. */
+@media (min-width: 1024px) {
+  .fx-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    flex: 0 0 var(--fx-kbd-w);
+    width: var(--fx-kbd-w);
+    height: 36px;
+    padding: 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--fs-label);
+    letter-spacing: 0.02em;
+    color: var(--text-muted);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-medium);
+    border-bottom-width: 2px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 200ms var(--ease-out);
+  }
+  .fx-kbd:hover { color: var(--text-strong); border-color: var(--accent-dim); }
+  .fx-kbd:active { transform: translateY(1px); border-bottom-width: 1px; }
+  .fx-kbd svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--accent); }
+}
+
+/* ---- 2. Primary buttons: shine + press -------------------------------- */
+.btn--primary { position: relative; isolation: isolate; overflow: hidden; }
+.btn--primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1; /* above the button's fill, below its label */
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.55) 48%, rgba(255, 255, 255, 0.2) 55%, transparent 70%);
+  transform: translateX(-130%);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn--primary:hover::after,
+  .btn--primary:focus-visible::after {
+    transform: translateX(130%);
+    transition: transform 450ms var(--ease-out);
+  }
+}
+.btn--primary:active {
+  transform: translateY(1px) scale(0.985);
+  box-shadow: 0 2px 10px var(--accent-glow-strong);
+}
+
+/* ---- 3. Card spotlight border ----------------------------------------- */
+[data-glow] :is(.card, [data-glow-item])::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(51, 255, 170, 0.75), rgba(0, 217, 126, 0.28) 38%, transparent 68%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  [data-glow].is-glowing :is(.card, [data-glow-item])::after { opacity: 1; }
+}
+
+/* ---- 4. Eyebrow decode ------------------------------------------------- */
+.eyebrow.fx-decoding { position: relative; -webkit-text-fill-color: transparent; }
+.eyebrow.fx-decoding::after {
+  content: attr(data-fx-scramble) / ''; /* empty alt text: never announced */
+  position: absolute;
+  left: var(--fx-dx, 0px);
+  top: var(--fx-dy, 0px);
+  white-space: pre;
+  pointer-events: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* ---- 5. Command palette ----------------------------------------------- */
+.fx-palette {
+  position: fixed;
+  inset: 0;
+  margin: min(14vh, 8rem) auto auto;
+  width: min(36rem, calc(100vw - 2 * var(--gutter)));
+  max-height: min(32rem, calc(100dvh - 2 * var(--gutter)));
+  padding: 0;
+  color: var(--text-body);
+  background: rgba(10, 16, 13, 0.97);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 217, 126, 0.06), 0 0 60px rgba(0, 217, 126, 0.08);
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+.fx-palette[open] { display: flex; flex-direction: column; }
+.fx-palette::backdrop {
+  background: rgba(3, 6, 4, 0.66);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fx-palette[open] { animation: fx-pal-in 200ms var(--ease-out); }
+  .fx-palette[open]::backdrop { animation: fx-fade-in 200ms var(--ease-out); }
+}
+@keyframes fx-pal-in { from { opacity: 0; transform: translateY(-8px) scale(0.985); } }
+@keyframes fx-fade-in { from { opacity: 0; } }
+
+.fx-palette__chrome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+}
+/* The site's one window chrome: three 8px grey dots, the first accent green while the window is active. */
+.fx-palette__dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--border-medium); }
+.fx-palette[open] .fx-palette__dot:first-child { background: var(--accent); }
+
+.fx-palette__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.fx-palette__prompt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.fx-palette__input {
+  flex: 1;
+  min-width: 0;
+  font: 500 1.0625rem/1.4 var(--font-mono);
+  color: var(--text-strong);
+  background: transparent;
+  border: 0;
+  outline: none;
+  caret-color: var(--accent-bright);
+}
+.fx-palette__input::placeholder { color: var(--text-muted); opacity: 1; }
+
+.fx-palette__list {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  flex: 1;
+}
+.fx-palette__opt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-primary);
+  border-left: 2px solid transparent;
+}
+.fx-palette__opt[aria-selected='true'] {
+  background: var(--bg-surface);
+  border-left-color: var(--accent);
+  color: var(--text-strong);
+}
+.fx-palette__glyph {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--accent);
+  width: 1.25rem;
+  flex-shrink: 0;
+  text-align: center;
+}
+.fx-palette__label { font-weight: 500; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fx-palette__hint {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.fx-palette__empty { padding: var(--space-4); font-family: var(--font-mono); font-size: var(--fs-label); color: var(--text-muted); }
+.fx-palette__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  max-width: none;
+  padding: var(--space-3) var(--space-4);
+  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--text-muted);
+}
+.fx-palette__foot kbd {
+  font: inherit;
+  color: var(--text-primary);
+  padding: 0 0.35em;
+  border: 1px solid var(--border-medium);
+  border-radius: 4px;
+}
+.fx-palette__status { margin-left: auto; color: var(--accent); }
+@media (max-width: 600px) {
+  .fx-palette__hint { display: none; }
+  .fx-palette__keys { display: none; }
+}
+
+/* ---- 6. Back to top (desktop) + one CTA at a time on phones ------------
+   A plain button: the top progress bar (site.css) is the page's one scroll
+   indicator. Under 768px it is not shown at all: the sticky CTA bar owns the
+   bottom of the screen there. */
+.fx-top {
+  position: fixed;
+  right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  z-index: calc(var(--z-sticky) + 1);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--text-primary);
+  background: rgba(17, 26, 21, 0.92);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out),
+    visibility 0s linear var(--dur-base), border-color 200ms var(--ease-out), color 200ms var(--ease-out);
+}
+.fx-top.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out),
+    visibility 0s, border-color 200ms var(--ease-out), color 200ms var(--ease-out);
+}
+.fx-top:hover { color: var(--accent-bright); border-color: var(--accent-dim); }
+.fx-top:active { transform: translateY(1px); }
+.fx-top:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.fx-top svg { width: 18px; height: 18px; }
+.fx-top__arrow { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+html.nav-open .fx-top { visibility: hidden; opacity: 0; }
+
+@media (max-width: 767.98px) {
+  .fx-top { display: none; }
+
+  /* While the sticky CTA bar shows, the header's CTA steps aside (it keeps its
+     box, so the header never reflows). */
+  .site-header .nav__cta {
+    transition: opacity var(--dur-base) var(--ease-out), visibility 0s;
+  }
+  html:has(.sticky-cta.is-visible) .site-header .nav__cta {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity var(--dur-base) var(--ease-out), visibility 0s linear var(--dur-base);
+  }
+}
+
+/* ---- 7. Footer skyline canvas (its band is reserved in site.css) ------ */
+.fx-skyline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: var(--fx-sky-h);
+  pointer-events: none;
+}
+
+/* ---- 8. Section seam: one per page, at the top of the closing CTA band -- */
+.fx-seam {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  width: min(37.5rem, 84%);
+  aspect-ratio: 25 / 1; /* 600 x 24 at most */
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.fx-seam--inset { transform: translate(-50%, 0); } /* .cta-band clips overflow */
+.fx-seam svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.fx-seam__trace { stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+.fx-seam__pads { opacity: 0; }
+.fx-seam__node { fill: var(--bg-deep); stroke: var(--accent); stroke-width: 1.25; opacity: 0; }
+.fx-seam.is-drawn .fx-seam__trace { stroke-dashoffset: 0; transition: stroke-dashoffset 450ms var(--ease-out) 100ms; }
+.fx-seam.is-drawn .fx-seam__node { opacity: 1; transition: opacity var(--dur-base) var(--ease-out); }
+.fx-seam.is-drawn .fx-seam__pads { opacity: 0.8; transition: opacity 300ms var(--ease-out) 450ms; }
+
+/* ---- 9. Konami: burst layer + toast ----------------------------------- */
+.fx-burst-layer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: calc(var(--z-sticky) - 1); /* under the sticky CTA bar and the toast */
+  width: 100%;
+  height: 150px;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(transparent, #000 45%);
+  mask-image: linear-gradient(transparent, #000 45%);
+  transition: opacity 450ms var(--ease-out);
+}
+.fx-burst-layer.is-leaving { opacity: 0; }
+
+.fx-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  z-index: calc(var(--z-sticky) + 2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: max-content;
+  max-width: calc(100vw - 2 * var(--gutter));
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg), 0 0 32px rgba(0, 217, 126, 0.18);
+  transform: translate(-50%, 8px);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.fx-toast.is-shown { opacity: 1; transform: translate(-50%, 0); }
+.fx-toast__msg {
+  margin: 0;
+  max-width: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--text-primary);
+}
+.fx-toast__close {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.fx-toast__close:hover { color: var(--text-strong); background: var(--bg-surface); }
+.fx-toast__close:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.fx-toast__close svg { width: 16px; height: 16px; }
+@media (max-width: 767.98px) {
+  html.has-sticky-cta .fx-toast { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+}
+

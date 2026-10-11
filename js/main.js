@@ -151,11 +151,62 @@ document.documentElement.classList.add('js');
     });
   }
 
+  /* ---- Effects layer ----
+     Decoration (css/fx.css and the fx scripts) is not needed for the first paint, so each page lists
+     it in an inert <template data-fx-late> and it is fetched only after `load` plus an idle moment:
+     it never competes with the hero for bandwidth or main-thread time (LCP). The stylesheet is
+     applied before any effect script runs, so nothing is ever injected unstyled; if it fails, the
+     effects are skipped. Everything the first paint needs (reserved space, pre-JS states) is in the
+     render-blocking site/page CSS. html[data-fx] reports the state: loading | ready | failed. */
+  function loadEffects() {
+    var tpl = document.querySelector('template[data-fx-late]');
+    if (!tpl || root.hasAttribute('data-fx')) return;
+    var items = Array.prototype.slice.call(tpl.content.children);
+    var attach = function (el) {
+      return new Promise(function (resolve, reject) {
+        el.addEventListener('load', resolve);
+        el.addEventListener('error', reject);
+        (el.tagName === 'LINK' ? document.head : document.body).appendChild(el);
+      });
+    };
+    root.setAttribute('data-fx', 'loading');
+    var sheets = items.filter(function (n) { return n.tagName === 'LINK'; }).map(function (n) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = n.getAttribute('href');
+      return attach(link);
+    });
+    Promise.all(sheets).then(function () {
+      // Scripts run in their listed order (async = false); a missing one does not stop the others.
+      return Promise.all(items.filter(function (n) { return n.tagName === 'SCRIPT'; }).map(function (n) {
+        var s = document.createElement('script');
+        if (n.type) s.type = n.type;
+        s.async = false;
+        s.src = n.getAttribute('src');
+        return attach(s).catch(function () {});
+      }));
+    }).then(function () {
+      root.setAttribute('data-fx', 'ready');
+    }, function () {
+      root.setAttribute('data-fx', 'failed');
+    });
+  }
+
+  function whenLoadedAndIdle(fn) {
+    var go = function () {
+      if ('requestIdleCallback' in window) window.requestIdleCallback(fn, { timeout: 1000 });
+      else setTimeout(fn, 1);
+    };
+    if (document.readyState === 'complete') go();
+    else window.addEventListener('load', go, { once: true });
+  }
+
   function init() {
     initHeader();
     initDrawer();
     initActiveLink();
     initInPageLinks();
+    whenLoadedAndIdle(loadEffects);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

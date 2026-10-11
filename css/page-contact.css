@@ -74,3 +74,186 @@
   .next-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
   .next-steps__item { align-items: flex-start; }
 }
+
+/* =========================================
+   Delight: conversion details (js/contact-fx.js)
+   Everything here is decoration on top of a form that already works;
+   without JS the copy button is hidden, nothing else changes.
+   ========================================= */
+
+/* --- Field states: focus underline sweep + drawn check when valid --- */
+.contact-form-card .field { position: relative; }
+
+.contact-form-card .field__input,
+.contact-form-card .field__textarea {
+  background-image: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  background-repeat: no-repeat;
+  background-position: 50% 100%;
+  background-size: 0% 2px;
+  transition: border-color 200ms var(--ease-out), box-shadow var(--dur-base) var(--ease-out),
+    background-size 400ms var(--ease-out);
+}
+
+.contact-form-card .field__input:focus,
+.contact-form-card .field__textarea:focus { background-size: 100% 2px; }
+
+.contact-form-card .field.is-valid:not(.is-invalid) .field__input,
+.contact-form-card .field.is-valid:not(.is-invalid) .field__textarea { border-color: var(--accent-dim); }
+
+.field__check {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+  pointer-events: none;
+}
+
+.field__check svg { width: 18px; height: 18px; }
+
+.field__check-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 200ms var(--ease-out);
+}
+
+.field.is-valid:not(.is-invalid) .field__check-path {
+  stroke-dashoffset: 0;
+  transition-duration: 420ms;
+}
+
+/* --- Submit: hand-off to the email app (mailto fallback) --- */
+.contact-form-card [type='submit'] { position: relative; overflow: hidden; isolation: isolate; }
+
+.contact-form-card [type='submit']::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: var(--text-on-accent);
+  opacity: 0.35;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.contact-form-card [type='submit'].is-handoff::after { animation: handoff-fill 2.4s var(--ease-out) forwards; }
+
+@keyframes handoff-fill { to { transform: scaleX(1); } }
+
+/* --- Reply line: small live-status dot (pseudo-elements: decorative, no new words) --- */
+.form__note--live { position: relative; padding-left: calc(8px + var(--space-3)); }
+
+.form__note--live::before,
+.form__note--live::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(0.8em - 4px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.form__note--live::after { opacity: 0; }
+
+/* --- Copy email: an icon button overlaid on the email card's right edge --- */
+.contact-links__item--copy { position: relative; }
+
+html.js .contact-links__item--copy .contact-link { padding-right: calc(var(--space-3) + 44px + var(--space-2)); }
+
+.contact-copy {
+  position: absolute;
+  top: 50%;
+  right: var(--space-3);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--accent);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
+}
+
+.contact-copy:hover { border-color: var(--accent); background: var(--accent-tint); }
+.contact-copy:active { transform: translateY(calc(-50% + 1px)); }
+.contact-copy:focus-visible { outline: 2px solid var(--accent-bright); outline-offset: 2px; }
+.contact-copy__icon { width: 20px; height: 20px; transition: transform var(--dur-base) var(--ease-out); }
+.contact-copy.is-copied { border-color: var(--accent); background: var(--accent-tint); }
+.contact-copy.is-copied .contact-copy__icon { transform: scale(1.15); }
+
+html:not(.js) .contact-copy { display: none; }
+
+.copy-toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(var(--space-6), env(safe-area-inset-bottom));
+  z-index: 60;
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--bg-surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 12px);
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility 0s linear var(--dur-base);
+}
+
+.copy-toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility 0s;
+}
+
+/* Motion only when allowed: reduced motion gets the finished states instantly. */
+@media (prefers-reduced-motion: no-preference) {
+  /* a few beats on arrival, then still: nothing loops beside text */
+  .form__note--live::after { animation: reply-pulse 2.4s var(--ease-out) 3; }
+  @keyframes reply-pulse {
+    0% { transform: scale(1); opacity: 0.55; }
+    70%, 100% { transform: scale(2.6); opacity: 0; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field__check-path,
+  .contact-form-card .field__input,
+  .contact-form-card .field__textarea,
+  .copy-toast,
+  .copy-toast.is-visible { transition: none; }
+  .contact-form-card [type='submit'].is-handoff::after { animation: none; transform: scaleX(1); }
+}
+
+/* ---- Hero visual: a seedling under the intro (js/fx-pagehero.js injects canvas.pagehero) ----
+   Wide screens only. The strip it grows in is reserved here, from the first paint (html.js), in
+   the space the shorter intro column leaves beside the form anyway; the canvas is absolutely
+   positioned in it and reaches into the column gap toward the form, so it moves nothing. */
+:root { --seedling-h: 9rem; }
+
+.pagehero { display: none; pointer-events: none; }
+
+@media (min-width: 1024px) {
+  html.js .contact-intro { padding-bottom: var(--seedling-h); }
+  .contact-intro .pagehero {
+    position: absolute;
+    left: 0;
+    width: calc(100% + var(--space-16) - var(--space-3));
+    bottom: 0;
+    z-index: -1;
+    display: block;
+    height: var(--seedling-h);
+  }
+}

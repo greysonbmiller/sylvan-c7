@@ -23,15 +23,12 @@
 
   <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/page-about.css">
-  <link rel="stylesheet" href="css/fx-ui.css">
-  <link rel="stylesheet" href="css/fx-illus.css">
+  <link rel="stylesheet" href="css/site.min.css">
+  <link rel="stylesheet" href="css/page-about.min.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
-  <div class="circuit-trace" aria-hidden="true"><span class="circuit-trace__track"></span><span class="circuit-trace__line"></span><span class="circuit-trace__head"></span></div>
 
   <header class="site-header">
     <nav class="nav container" aria-label="Main">
@@ -71,7 +68,26 @@
   <main id="main">
     <section class="hero about-hero" aria-labelledby="hero-title">
       <div class="container hero__inner about-hero__inner">
-        <img class="about-hero__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" width="192" height="192" alt="Greyson Miller" fetchpriority="high" decoding="async">
+        <div class="about-portrait">
+          <img class="about-hero__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" width="192" height="192" alt="Greyson Miller" fetchpriority="high" decoding="async">
+          <svg class="about-portrait__trace" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+            <path class="apt-ring" pathLength="1" d="M120 14A106 106 0 0 1 120 226A106 106 0 0 1 120 14"/>
+            <path class="apt-bus" pathLength="1" d="M169.8 26.4L174 18.5A115 115 0 0 1 228.1 80.7"/>
+            <path class="apt-bus" pathLength="1" d="M176.2 209.9L180.9 217.5A115 115 0 0 1 88.3 230.5"/>
+            <path class="apt-bus" pathLength="1" d="M32.1 179.3L24.7 184.3A115 115 0 0 1 5.3 128"/>
+            <path class="apt-bus" pathLength="1" d="M28.2 67L20.4 62.5A115 115 0 0 1 62.5 20.4"/>
+            <circle class="apt-node" cx="169.8" cy="26.4" r="2.6"/>
+            <circle class="apt-node" cx="176.2" cy="209.9" r="2.6"/>
+            <circle class="apt-node" cx="32.1" cy="179.3" r="2.6"/>
+            <circle class="apt-node" cx="28.2" cy="67" r="2.6"/>
+            <circle class="about-portrait__pad" style="--i:0" cx="228.1" cy="80.7" r="3.4"/>
+            <circle class="about-portrait__pad" style="--i:1" cx="88.3" cy="230.5" r="3.4"/>
+            <circle class="about-portrait__pad" style="--i:2" cx="5.3" cy="128" r="3.4"/>
+            <circle class="about-portrait__pad" style="--i:3" cx="62.5" cy="20.4" r="3.4"/>
+            <path class="apt-pulse fx-pulse" pathLength="1" d="M120 14A106 106 0 0 1 120 226A106 106 0 0 1 120 14"/>
+            <path class="apt-pulse apt-pulse--2 fx-pulse" pathLength="1" d="M120 14A106 106 0 0 1 120 226A106 106 0 0 1 120 14"/>
+          </svg>
+        </div>
         <div class="about-hero__body">
           <div class="eyebrow">About</div>
           <h1 class="hero__title hero__title--page" id="hero-title" data-mask>Greyson Miller</h1>
@@ -99,16 +115,50 @@
           <div class="eyebrow">How I work</div>
           <h2 class="section-title" id="principles-title">Three principles</h2>
         </header>
-        <ul class="card-grid" role="list" data-glow>
+        <ul class="card-grid about-principles" role="list" data-glow>
           <li class="card">
+            <span class="about-icon" data-icon="hold" aria-hidden="true">
+              <svg viewBox="0 0 48 48" focusable="false">
+                <path class="ai-ln" pathLength="1" d="M3 32H45"/>
+                <path class="ai-ln" pathLength="1" d="M10.5 22H37.5"/>
+                <path class="ai-ln ai-web" pathLength="1" d="M6 32L10.5 22L15 32L19.5 22L24 32L28.5 22L33 32L37.5 22L42 32"/>
+                <path class="ai-ln ai-pier" pathLength="1" d="M9 32V42M39 32V42M5 42H13M35 42H43"/>
+                <rect class="ai-load" x="19.5" y="11" width="9" height="8" rx="1.5"/>
+              </svg>
+            </span>
             <h3 class="card__title">Built to hold up</h3>
             <p class="card__text">I assume something will eventually go wrong: a traffic spike, a failed update, an outage. Nobody can promise software never has a bad day. My job is to make the bad day survivable and fixable.</p>
           </li>
           <li class="card">
+            <span class="about-icon" data-icon="clarity" aria-hidden="true">
+              <svg viewBox="0 0 48 48" focusable="false">
+                <defs><clipPath id="about-lens-clip"><circle class="ai-lens-clip" cx="17" cy="24" r="9"/></clipPath></defs>
+                <g class="ai-blur">
+                  <path class="ai-ln ai-text" pathLength="1" d="M5 14H33M5 21H38M5 28H28M5 35H34"/>
+                </g>
+                <g clip-path="url(#about-lens-clip)">
+                  <path class="ai-ln ai-crisp" pathLength="1" d="M5 14H33M5 21H38M5 28H28M5 35H34"/>
+                </g>
+                <g class="ai-lens">
+                  <circle class="ai-ln" pathLength="1" cx="17" cy="24" r="9"/>
+                  <path class="ai-ln" pathLength="1" d="M23.4 30.4L30 37"/>
+                </g>
+              </svg>
+            </span>
             <h3 class="card__title">Radical clarity</h3>
             <p class="card__text">Every decision, mockup and status update comes in plain language you can act on. If I can't explain it simply, I haven't thought it through.</p>
           </li>
           <li class="card">
+            <span class="about-icon" data-icon="longterm" aria-hidden="true">
+              <svg viewBox="0 0 48 48" focusable="false">
+                <path class="ai-ln ai-ring" style="--i:0" pathLength="1" d="M28 24L27.9 24.8L27.6 25.6L27.1 26.3L26.5 26.9L25.6 27.2L24.8 27.3L24 27.5L23.1 27.6L22.2 27.5L21.4 27.1L20.8 26.4L20.5 25.6L20.3 24.8L20.2 24L20.3 23.2L20.6 22.4L21 21.8L21.6 21.2L22.2 20.6L23.1 20.2L24 20.1L24.9 20.4L25.6 20.9L26.2 21.4L26.9 21.8L27.6 22.4L27.9 23.2L28 24Z"/>
+                <path class="ai-ln ai-ring" style="--i:1" pathLength="1" d="M32 24L31.9 25.7L31.2 27.3L30 28.5L28.5 29.3L27.1 30.1L25.7 31L24 31.7L22.1 31.7L20.4 30.9L19.1 29.7L18.1 28.4L17.1 27.1L16.5 25.6L16.4 24L16.7 22.4L17.1 20.9L17.8 19.3L18.8 17.9L20.4 16.9L22.2 16.7L24 17L25.6 17.4L27.2 17.7L28.9 18.3L30.3 19.3L31.2 20.7L31.7 22.3L32 24Z"/>
+                <path class="ai-ln ai-ring" style="--i:2" pathLength="1" d="M36.2 24L35.4 26.4L33.9 28.5L32.4 30.3L31 32.2L29.2 34.1L26.8 35.5L24 35.6L21.4 34.9L19 33.8L16.8 32.5L15 30.8L13.7 28.7L13.1 26.3L12.8 24L12.6 21.5L12.8 18.9L14.1 16.6L16.4 15L19 14.3L21.6 14L24 13.7L26.6 13.5L29.1 13.9L31.4 15.3L33.2 17.1L34.8 19.1L35.9 21.4L36.2 24Z"/>
+                <path class="ai-ln ai-ring" style="--i:3" pathLength="1" d="M38.9 24L37.9 27L37.2 30L36.2 33.1L34.3 36.1L31.2 38L27.6 38.7L24 38.6L20.6 38.2L17.3 37.2L14.4 35.3L12.3 32.7L10.7 30L9.1 27.2L7.7 24L7.5 20.5L9 17.2L11.8 14.9L14.8 13.2L17.6 11.6L20.6 10.1L24 9.3L27.5 9.6L30.8 10.7L33.9 12.4L36.7 14.5L38.8 17.3L39.5 20.7L38.9 24Z"/>
+                <path class="ai-ln ai-ring ai-ring--new" style="--i:4" pathLength="1" d="M42 24L42.6 28L42.2 32.2L40.1 36.1L36.6 38.9L32.5 40.7L28.3 41.9L24 42.4L19.7 41.8L15.9 39.9L12.6 37.4L9.4 35L6.1 32.1L3.5 28.4L3 24L4.5 19.8L7.1 16.3L9.6 13.2L12.3 10.2L15.6 7.6L19.7 6.1L24 5.8L28.4 6L32.8 6.8L36.9 8.8L39.9 12.1L41.2 16.2L41.6 20.2L42 24Z"/>
+                <circle class="ai-pith" cx="24" cy="24" r="1.4"/>
+              </svg>
+            </span>
             <h3 class="card__title">Long-term thinking</h3>
             <p class="card__text">I choose tools that age well and keep you free of lock-in, so each change is easier than the last. Shortcuts today become debt tomorrow.</p>
           </li>
@@ -120,6 +170,43 @@
       <div class="container about-name reveal">
         <h2 class="section-title" id="name-title">The name</h2>
         <p><span class="about-name__word">Sylvan</span> means of the forest: systems that adapt, stay connected and are still standing years later. <span class="about-name__word">C7</span> is the code half, short and precise.</p>
+        <div class="about-name__fig" aria-hidden="true">
+          <svg viewBox="0 0 480 200" focusable="false">
+            <defs>
+              <pattern id="about-grid" width="16" height="16" patternUnits="userSpaceOnUse" x="4" y="4"><circle cx="2" cy="2" r="1"/></pattern>
+            </defs>
+            <rect class="anf-grid" x="262" y="12" width="210" height="176" fill="url(#about-grid)"/>
+            <g class="anf-half anf-half--forest">
+              <path class="anf-ln anf-trunk" style="--d:0" pathLength="1" d="M14 184C52 178 86 150 124 118S198 100 240 100"/>
+              <path class="anf-ln" style="--d:.3" pathLength="1" d="M124 118C146 92 178 60 240 56"/>
+              <path class="anf-ln" style="--d:.25" pathLength="1" d="M96 140C134 140 188 146 240 144"/>
+              <path class="anf-ln anf-twig" style="--d:.45" pathLength="1" d="M168 72C170 58 178 46 192 38"/>
+              <path class="anf-ln anf-twig" style="--d:.35" pathLength="1" d="M62 164C66 148 72 136 84 128"/>
+              <path class="anf-ln anf-twig" style="--d:.55" pathLength="1" d="M186 145C196 158 206 168 222 174"/>
+              <path class="anf-ln anf-twig" style="--d:.4" pathLength="1" d="M178 104C186 94 196 88 210 86"/>
+              <circle class="anf-leaf" style="--d:.6" cx="192" cy="38" r="3"/>
+              <circle class="anf-leaf" style="--d:.5" cx="84" cy="128" r="3"/>
+              <circle class="anf-leaf" style="--d:.7" cx="222" cy="174" r="3"/>
+              <circle class="anf-leaf" style="--d:.55" cx="210" cy="86" r="3"/>
+            </g>
+            <g class="anf-half anf-half--code">
+              <rect class="anf-ln anf-chip" style="--d:0" pathLength="1" x="368" y="68" width="72" height="64" rx="4"/>
+              <path class="anf-ln" style="--d:.1" pathLength="1" d="M368 100H240"/>
+              <path class="anf-ln" style="--d:.2" pathLength="1" d="M368 82H330L304 56H240"/>
+              <path class="anf-ln" style="--d:.2" pathLength="1" d="M368 118H330L304 144H240"/>
+              <path class="anf-ln anf-twig" style="--d:.3" pathLength="1" d="M440 86H462M440 114H462M392 68V46M416 132V154"/>
+              <circle class="anf-leaf" style="--d:.5" cx="466" cy="86" r="3"/>
+              <circle class="anf-leaf" style="--d:.5" cx="466" cy="114" r="3"/>
+              <circle class="anf-leaf" style="--d:.5" cx="392" cy="42" r="3"/>
+              <circle class="anf-leaf" style="--d:.5" cx="416" cy="158" r="3"/>
+              <path class="anf-core" d="M392 90h24v20h-24z"/>
+            </g>
+            <circle class="anf-join" cx="240" cy="56" r="4.5"/>
+            <circle class="anf-join" cx="240" cy="100" r="4.5"/>
+            <circle class="anf-join" cx="240" cy="144" r="4.5"/>
+          </svg>
+          <div class="about-name__labels"><span>Sylvan</span><span>C7</span></div>
+        </div>
       </div>
     </section>
 
@@ -175,7 +262,13 @@
   <script src="js/main.js" defer></script>
   <script src="js/animations.js" defer></script>
   <script src="js/components.js" defer></script>
-  <script src="js/fx-ui.js" defer></script>
-  <script src="js/fx-illus.js" defer></script>
+  <!-- Effects layer: inert here; js/main.js fetches it after `load` (stylesheet first) so it
+       never competes with the first paint. No JS: no effects, nothing missing. -->
+  <template data-fx-late>
+    <link rel="stylesheet" href="css/fx.css">
+    <script src="js/fx-ui.js"></script>
+    <script src="js/fx-illus.js"></script>
+    <script src="js/about-fx.js"></script>
+  </template>
 </body>
 </html>

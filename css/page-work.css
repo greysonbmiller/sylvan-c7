@@ -102,13 +102,13 @@
   padding: var(--space-4);
 }
 
+.work-mini__frame { margin: 0; box-shadow: var(--shadow-md); }
 .work-mini__media {
   display: block;
   width: 100%;
   height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: var(--radius-md);
 }
 
 .work-mini__body > * { margin: 0; }
@@ -133,5 +133,62 @@
 }
 
 /* Measure: the measure test reads 60ch as ~81 characters; 54ch keeps prose ≤ 75. */
-#main p { max-width: 54ch; }
-#main .lead { max-width: 50ch; }
+#main p { max-width: calc(54 * var(--ch-body)); }
+#main .lead { max-width: calc(50 * var(--ch-body)); }
+
+/* ---- Project rows: text and media start on the same line. From 1024 up the media column
+   sticks under the header while the (taller) text scrolls past it, so no empty hole opens
+   beside the copy. ---- */
+.work-case { align-items: start; }
+@media (min-width: 640px) {
+  .work-mini { align-items: start; }
+}
+@media (min-width: 1024px) {
+  .work-case__media,
+  .work-mini__frame {
+    position: sticky;
+    top: calc(var(--nav-h) + var(--space-6));
+  }
+}
+
+/* ---- Process steps: no number badges, so the label gets the tab's full padding ---- */
+
+
+/* ---- One window chrome (same rules as css/fx/illus.css, render-blocking here): three 8px grey
+   dots, the first accent-green while the screenshot is being looked at ---- */
+.browser-bar__dots { gap: 6px; }
+.browser-bar__dots i,
+.browser-bar__dots i:nth-child(2),
+.browser-bar__dots i:nth-child(3) {
+  width: 8px;
+  height: 8px;
+  background: var(--border-medium);
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+.frame--browser:hover .browser-bar__dots i:first-child,
+.work-case:focus-within .browser-bar__dots i:first-child,
+.work-mini:focus-within .browser-bar__dots i:first-child,
+.is-panning > .browser-bar .browser-bar__dots i:first-child { background: var(--accent); }
+
+/* ---- Hero visual (js/fx-pagehero.js injects canvas.pagehero after `load`) ----
+   Absolutely positioned on the hero's right side (the script sets `left` to clear the copy), so it
+   moves nothing. Wide screens only: below 1024px the copy fills the width. It fades in from the
+   copy side and toward the top and bottom edges. */
+.pagehero {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  display: none;
+  height: 100%;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 28%), linear-gradient(to bottom, transparent, #000 14%, #000 72%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 28%), linear-gradient(to bottom, transparent, #000 14%, #000 72%, transparent);
+  mask-composite: intersect;
+}
+
+@media (min-width: 1024px) {
+  .pagehero { display: block; }
+}

@@ -2,7 +2,6 @@
    Sylvan C7 — Scroll motion
    - .reveal: one subtle fade/rise per section (CSS in site.css, "Motion")
    - .scroll-progress: reading progress bar
-   - .circuit-trace: left-margin line that draws with scroll (≥1024px)
    The headline mask reveal ([data-mask]) is pure CSS and needs nothing here.
    No count-ups, no parallax.
    ========================================= */
@@ -79,24 +78,17 @@
     }
   }
 
-  /* ---- Scroll progress + circuit trace (one rAF-throttled handler) ---- */
+  /* ---- Scroll progress (rAF-throttled) ---- */
   function initScrollLinked() {
     var bar = document.querySelector('.scroll-progress__bar');
-    var trace = document.querySelector('.circuit-trace');
-    var head = trace && trace.querySelector('.circuit-trace__head');
-    var wide = window.matchMedia('(min-width: 1024px)'); // fixed elements have no offsetParent
-    if (!bar && !trace) return;
+    if (!bar) return;
 
     var ticking = false;
     function update() {
       ticking = false;
       var max = document.documentElement.scrollHeight - window.innerHeight;
       var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-      if (bar) bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
-      if (trace && wide.matches && !reduced) {
-        trace.style.setProperty('--trace', p.toFixed(4));
-        if (head) trace.style.setProperty('--trace-px', (p * trace.clientHeight).toFixed(1) + 'px');
-      }
+      bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
     }
     function request() {
       if (!ticking) { ticking = true; requestAnimationFrame(update); }

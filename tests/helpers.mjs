@@ -53,7 +53,7 @@ export const url = (path) => new URL(path, BASE).href;
 
 /** Every served .html / .js / .css file under the repo (what GitHub Pages would publish). */
 export function servedFiles(exts = ['.html', '.js', '.mjs', '.css']) {
-  const skip = new Set(['node_modules', 'tests', '.git', 'test-results', 'playwright-report']);
+  const skip = new Set(['node_modules', 'tests', 'scripts', '.git', 'test-results', 'playwright-report']);
   const out = [];
   const walk = (dir) => {
     for (const entry of readdirSync(dir)) {
@@ -67,10 +67,19 @@ export function servedFiles(exts = ['.html', '.js', '.mjs', '.css']) {
   return out.map((full) => ({ rel: relative(REPO, full).split(sep).join('/'), text: readFileSync(full, 'utf8') }));
 }
 
-/** Navigate and let reveal / load-time JS settle. */
+/**
+ * Navigate and let reveal / load-time JS settle. The effects layer (css/fx.css + the fx scripts) is
+ * fetched by js/main.js only after `load`; wait until it has run (html[data-fx] = ready | failed)
+ * or, with JS off / no layer on the page, carry straight on.
+ */
 export async function open(page, path, { settle = 600 } = {}) {
   const res = await page.goto(path, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts && document.fonts.ready.then(() => true)).catch(() => {});
+  await page.waitForFunction(() => {
+    const tpl = document.querySelector('template[data-fx-late]');
+    const state = document.documentElement.getAttribute('data-fx');
+    return !tpl || !document.documentElement.classList.contains('js') || state === 'ready' || state === 'failed';
+  }, null, { timeout: 10_000 }).catch(() => {});
   if (settle) await page.waitForTimeout(settle);
   return res;
 }

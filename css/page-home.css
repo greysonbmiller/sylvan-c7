@@ -131,3 +131,207 @@
   color: var(--text-muted);
   margin-right: var(--space-1);
 }
+
+/* =========================================
+   Home hero delight layer (was fx-hero.css). Render-blocking on purpose: most of it is room the
+   terminal status needs from the first paint, and the sheen/cue are CSS-only.
+   - circuit-forest canvas framing (js/particles.js draws it)
+   - headline: one-time sheen over "keeps working" (no caret here: the typer has the only one)
+   - terminal: reserved room for the post-phrase status (js/fx-hero.js fills it)
+   - scroll cue at the hero's foot
+   Text colours never change here; every effect is decoration layered on solid text and
+   reduced motion gets the finished, static state.
+   ========================================= */
+
+/* The hero paints its own page colour so the sheen's blend has a real backdrop
+   (same colour as body: visually a no-op). */
+.hero { background-color: var(--bg-deep); }
+
+.hero__canvas {
+  opacity: 1;
+  -webkit-mask-image: linear-gradient(to bottom, #000 75%, transparent);
+  mask-image: linear-gradient(to bottom, #000 75%, transparent);
+}
+
+/* Wide screens: the forest is brightest in the open right-hand margin and recedes toward the
+   copy column (the canvas never paints under the copy itself; this just calms its edges). */
+@media (min-width: 1024px) {
+  .hero__canvas {
+    -webkit-mask-image: linear-gradient(to bottom, #000 75%, transparent), linear-gradient(to right, rgba(0, 0, 0, 0.45) 30%, #000 62%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to bottom, #000 75%, transparent), linear-gradient(to right, rgba(0, 0, 0, 0.45) 30%, #000 62%);
+    mask-composite: intersect;
+  }
+}
+
+/* ---- Headline ---- */
+.hero__title em { position: relative; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* A light band crosses "keeps working" once. color-dodge only brightens what is already
+     bright (the green glyphs); the near-black page under it barely moves, so contrast only
+     ever goes up while it passes. */
+  html.js .hero__title em::after {
+    content: '';
+    position: absolute;
+    inset: -0.08em -0.25em;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 43%, rgb(92, 92, 92) 50%, transparent 57%) no-repeat;
+    background-size: 260% 100%;
+    background-position: 135% 0;
+    mix-blend-mode: color-dodge;
+    opacity: 0;
+    animation: hero-sheen 1.25s var(--ease-in-out) 0.75s 1 backwards;
+  }
+}
+
+@keyframes hero-sheen {
+  0% { opacity: 1; background-position: 135% 0; }
+  100% { opacity: 1; background-position: -35% 0; }
+}
+
+/* ---- Terminal ---- */
+.hero .terminal { position: relative; }
+
+/* The typed text hugs its caret (the caret follows the text) and the box itself reserves the
+   longest phrase ("build --instrument-control", 26ch) plus the caret, from the first paint. */
+.hero [data-typer] { min-width: calc(26ch + 0.55em + 2px); }
+.hero [data-typer] .typer__text { min-width: 0 !important; }
+
+/* Room for the status after the longest phrase, reserved from the first paint (html.js is set
+   by an inline script in <head>), so nothing resizes when it appears. */
+html.js .hero .terminal { padding-right: calc(var(--space-4) + 10.5ch); }
+
+.terminal__status {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4ch;
+  color: var(--accent);
+  font-size: var(--fs-label);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-4px, -50%);
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+
+.terminal__status svg { width: 0.95em; height: 0.95em; flex-shrink: 0; }
+
+.terminal__status.is-on { opacity: 1; transform: translate(0, -50%); }
+
+@media (max-width: 479.98px) {
+  html.js .hero .terminal { padding-right: calc(var(--space-4) + 2.5ch); }
+  .terminal__word { display: none; }
+}
+
+/* Below ~375px the longest phrase already fills the box: no status, no extra room. */
+@media (max-width: 374.98px) {
+  .hero .terminal { gap: var(--space-2); padding-inline: var(--space-3); font-size: 0.9375rem; }
+  html.js .hero .terminal { padding-right: var(--space-3); }
+  .terminal__status { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal__status { display: none; }
+}
+
+/* ---- Scroll cue ---- */
+.hero__cue {
+  position: absolute;
+  left: max(var(--gutter), calc((100% - var(--container)) / 2));
+  bottom: clamp(0.75rem, 0.4rem + 1.2vw, 1.5rem);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 16px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js .hero__cue {
+    display: flex;
+    animation: hero-cue-in 0.8s var(--ease-out) 1.4s backwards;
+  }
+}
+
+.hero__cue-line {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 36px;
+  overflow: hidden;
+  background: var(--border-medium);
+}
+
+.hero__cue-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, var(--accent) 70%, var(--accent-bright));
+  transform: translateY(-100%);
+  animation: hero-cue-draw 2.2s var(--ease-in-out) 1.6s infinite;
+}
+
+.hero__cue-chev {
+  display: block;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: hero-cue-bob 2.2s var(--ease-in-out) 1.6s infinite;
+}
+
+@media (max-width: 639.98px) {
+  .hero__cue { bottom: 0.625rem; gap: 4px; }
+  .hero__cue-line { height: 18px; }
+}
+
+@keyframes hero-cue-in { from { opacity: 0; transform: translateY(-6px); } }
+
+@keyframes hero-cue-draw {
+  0% { transform: translateY(-100%); }
+  55%, 100% { transform: translateY(100%); }
+}
+
+@keyframes hero-cue-bob {
+  0%, 40%, 100% { transform: none; opacity: 0.55; }
+  55% { transform: translateY(3px); opacity: 1; }
+}
+
+/* ---- First-paint budget: skip rendering the sections below the hero ----
+   The home page's LCP (the hero lead) is its first paint, and that paint waits for the style and
+   layout of the whole ~7,500 px phone-width document (tabs, stepper, showcase, pricing, footer). On a
+   4x-throttled CPU that render work was 0.4-1.2 s and was the whole spread of the LCP. With
+   content-visibility: auto the browser lays out and paints a section only when it nears the
+   viewport, so the first frame does the hero (and whatever else is on screen) only. Nothing is
+   hidden: on-screen sections render as usual, the content stays in find-in-page and the
+   accessibility tree, and a section keeps its real size once it has been rendered (`auto`).
+   The intrinsic sizes are each section's measured height (phone, then >= 768 px) so the scrollbar
+   and the scroll-progress bar barely move as sections render in. */
+main > section:not(.hero),
+.site-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1000px;
+}
+main > section[aria-labelledby="svc-title"] { contain-intrinsic-size: auto 1300px; }
+main > section[aria-labelledby="founder-title"] { contain-intrinsic-size: auto 570px; }
+main > section[aria-labelledby="process-title"] { contain-intrinsic-size: auto 610px; }
+main > section[aria-labelledby="built-title"] { contain-intrinsic-size: auto 1880px; }
+main > section[aria-labelledby="price-title"] { contain-intrinsic-size: auto 1100px; }
+main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 420px; }
+.site-footer { contain-intrinsic-size: auto 1070px; }
+
+@media (min-width: 768px) {
+  main > section[aria-labelledby="svc-title"] { contain-intrinsic-size: auto 900px; }
+  main > section[aria-labelledby="founder-title"] { contain-intrinsic-size: auto 370px; }
+  main > section[aria-labelledby="process-title"] { contain-intrinsic-size: auto 680px; }
+  main > section[aria-labelledby="built-title"] { contain-intrinsic-size: auto 1700px; }
+  main > section[aria-labelledby="price-title"] { contain-intrinsic-size: auto 850px; }
+  main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 400px; }
+  .site-footer { contain-intrinsic-size: auto 515px; }
+}

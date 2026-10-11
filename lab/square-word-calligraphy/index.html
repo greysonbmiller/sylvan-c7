@@ -26,12 +26,10 @@
 
   <link rel="preload" href="../../fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../../css/site.css">
+  <link rel="stylesheet" href="../../css/site.min.css">
   <!-- The tool's own styles; generated into app/ by the square-word-calligraphy export. -->
   <link rel="stylesheet" href="app/src/app.css">
-  <link rel="stylesheet" href="../../css/page-lab.css">
-  <link rel="stylesheet" href="../../css/fx-ui.css">
-  <link rel="stylesheet" href="../../css/fx-illus.css">
+  <link rel="stylesheet" href="../../css/page-lab.min.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -205,8 +203,13 @@
   <script src="../../js/main.js" defer></script>
   <script src="../../js/animations.js" defer></script>
   <script src="../../js/components.js" defer></script>
-  <script src="../../js/fx-ui.js" defer></script>
-  <script src="../../js/fx-illus.js" defer></script>
+  <!-- Effects layer: inert here; js/main.js fetches it after `load` (stylesheet first) so it
+       never competes with the first paint. No JS: no effects, nothing missing. -->
+  <template data-fx-late>
+    <link rel="stylesheet" href="../../css/fx.css">
+    <script src="../../js/fx-ui.js"></script>
+    <script src="../../js/fx-illus.js"></script>
+  </template>
   <script type="module">
     import { mountSwc, renderStatic } from './app/src/app.js';
 

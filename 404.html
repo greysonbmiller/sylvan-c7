@@ -25,13 +25,16 @@
        "#main" skip link to the home page. -->
   <link rel="preload" href="/sylvan-c7/fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/sylvan-c7/fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/sylvan-c7/css/site.css">
-  <link rel="stylesheet" href="/sylvan-c7/css/fx-ui.css">
-  <link rel="stylesheet" href="/sylvan-c7/css/fx-illus.css">
+  <link rel="stylesheet" href="/sylvan-c7/css/site.min.css">
   <style>
     .not-found { min-height: calc(100vh - var(--nav-h) - 12rem); display: grid; align-items: center; }
     .not-found__inner { display: grid; gap: var(--space-6); justify-items: start; }
     .not-found__inner > * { margin: 0; }
+    /* The site's one window chrome: three 8px grey dots, the first accent green while the window is live */
+    .fx-garden__title { display: flex; align-items: center; gap: var(--space-3); }
+    .win-dots { display: inline-flex; gap: 6px; flex: none; }
+    .win-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--border-medium); }
+    .win-dots i:first-child { background: var(--accent); }
   </style>
 </head>
 <body>
@@ -75,13 +78,23 @@
 
   <main id="main">
     <section class="section not-found" aria-labelledby="nf-title">
-      <div class="container not-found__inner">
-        <div class="eyebrow">404</div>
-        <h1 class="hero__title hero__title--page" id="nf-title" data-mask>This page grew somewhere else.</h1>
-        <p class="lead">The link may be old, or the page has moved.</p>
-        <div class="btn-row">
-          <a class="btn btn--primary" href="/sylvan-c7/index.html">Go to the home page</a>
-          <a class="btn btn--outline" href="/sylvan-c7/contact.html">Contact me</a>
+      <div class="container not-found__grid">
+        <div class="not-found__inner">
+          <div class="eyebrow">404</div>
+          <h1 class="hero__title hero__title--page" id="nf-title" data-mask>This page grew somewhere else.</h1>
+          <p class="lead">The link may be old, or the page has moved.</p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href="/sylvan-c7/index.html">Go to the home page</a>
+            <a class="btn btn--outline" href="/sylvan-c7/contact.html">Contact me</a>
+          </div>
+        </div>
+        <div class="fx-garden" data-fx-garden>
+          <div class="fx-garden__title" aria-hidden="true"><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span><span><b>$</b> grow --forest</span></div>
+          <canvas class="fx-garden__canvas" aria-hidden="true" data-trees="0"></canvas>
+          <div class="fx-garden__bar">
+            <span class="fx-garden__hint" aria-hidden="true">click to plant</span>
+            <button class="btn btn--ghost btn--sm" type="button" data-fx-plant hidden>Plant a tree</button>
+          </div>
         </div>
       </div>
     </section>
@@ -121,7 +134,12 @@
 
   <script src="/sylvan-c7/js/main.js" defer></script>
   <script src="/sylvan-c7/js/animations.js" defer></script>
-  <script src="/sylvan-c7/js/fx-ui.js" defer></script>
-  <script src="/sylvan-c7/js/fx-illus.js" defer></script>
+  <!-- Effects layer: inert here; js/main.js fetches it after `load` (stylesheet first) so it
+       never competes with the first paint. No JS: no effects, nothing missing. -->
+  <template data-fx-late>
+    <link rel="stylesheet" href="/sylvan-c7/css/fx.css">
+    <script src="/sylvan-c7/js/fx-ui.js"></script>
+    <script src="/sylvan-c7/js/fx-illus.js"></script>
+  </template>
 </body>
 </html>

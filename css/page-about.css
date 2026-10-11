@@ -8,14 +8,65 @@
   align-items: center;
 }
 
+/* Portrait: the photo (unaltered) inside a circuit-trace frame. The frame is the photo / 0.8, so the
+   trace ring (r 106 of 240) sits a few px outside the photo (r 96 of 240) at every size. */
+.about-portrait {
+  --size: 170px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  /* the trace overhang does not push the copy around */
+  margin: calc(var(--size) * -0.1) 0 calc(var(--size) * -0.1) calc(var(--size) * -0.06);
+}
+
+.about-portrait > * { grid-area: 1 / 1; }
+
 .about-hero__photo {
-  width: 136px;
-  height: 136px;
+  width: 80%;
+  height: 80%;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid var(--border-medium);
-  box-shadow: 0 0 0 8px var(--accent-tint);
+}
+
+.about-portrait__trace {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: filter 400ms var(--ease-out);
+}
+
+.apt-ring { stroke: var(--accent); stroke-width: 1.5; opacity: 0.75; }
+.apt-bus { stroke: var(--accent-dim); stroke-width: 1.25; opacity: 0.8; }
+.apt-node { fill: var(--accent); }
+.about-portrait__pad {
+  fill: var(--bg-deep);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.apt-pulse { display: none; }
+
+/* Hover: the trace comes alive a little more; the photo itself is never touched. */
+.about-portrait:hover .about-portrait__trace {
+  filter: drop-shadow(0 0 6px rgba(0, 217, 126, 0.55));
+}
+.about-portrait:hover .apt-ring { opacity: 1; }
+
+@media (min-width: 768px) {
+  .about-hero__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+  .about-portrait { --size: 240px; align-self: start; margin-top: calc(var(--space-8) - 24px); }
 }
 
 .about-hero__body {
@@ -38,14 +89,6 @@
   margin-top: calc(var(--space-3) * -1);
 }
 
-@media (min-width: 768px) {
-  .about-hero__inner {
-    grid-template-columns: auto minmax(0, 1fr);
-    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
-  }
-  .about-hero__photo { width: 192px; height: 192px; align-self: start; margin-top: var(--space-8); }
-}
-
 /* Background: reading column (p/li already capped at the 66ch measure) */
 .about-background {
   display: grid;
@@ -53,6 +96,58 @@
 }
 
 .about-background > * { margin: 0; }
+
+/* Principles: a bespoke line icon per card */
+.about-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  color: var(--accent);
+  background: var(--accent-tint);
+  border: 1px solid rgba(0, 217, 126, 0.2);
+  border-radius: var(--radius-md);
+  transition: border-color var(--dur-base) ease, box-shadow var(--dur-base) ease;
+}
+
+.about-icon svg {
+  width: 48px;
+  height: 48px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.about-icon .ai-load { fill: var(--accent); stroke: none; }
+.about-icon .ai-pier { stroke: var(--accent-dim); }
+.about-icon .ai-text { stroke: var(--text-muted); stroke-width: 2.5; opacity: 0.5; }
+.about-icon .ai-blur { filter: blur(0.9px); }
+.about-icon .ai-crisp { stroke: var(--accent-bright); stroke-width: 2; }
+.about-icon .ai-ring { stroke-width: 1.25; opacity: calc(0.45 + var(--i) * 0.12); }
+.about-icon .ai-ring--new { stroke: var(--accent-bright); stroke-width: 1.5; }
+.about-icon .ai-pith { fill: var(--accent); stroke: none; }
+.about-icon .ai-lens,
+.about-icon .ai-lens-clip,
+.about-icon .ai-load { transform-box: view-box; }
+
+.about-principles .card {
+  transition: border-color var(--dur-base) ease, transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .about-principles .card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-strong);
+    box-shadow: 0 18px 40px -22px rgba(0, 217, 126, 0.45);
+  }
+  .about-principles .card:hover .about-icon {
+    border-color: rgba(0, 217, 126, 0.45);
+    box-shadow: 0 0 22px -4px rgba(0, 217, 126, 0.45);
+  }
+}
 
 /* The name */
 .about-name {
@@ -68,8 +163,250 @@
   color: var(--accent);
 }
 
+/* Forest + code figure. --p (0..1) is how far the two halves have grown toward each other; it
+   defaults to 1 (finished) so no-JS and reduced motion show the joined figure. */
+.about-name__fig {
+  --p: 1;
+  width: 100%;
+  max-width: 34rem;
+  margin-top: var(--space-4);
+}
+
+.about-name__fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 480 / 200;
+  overflow: visible;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.anf-grid { fill: url(#about-grid); }
+#about-grid circle { fill: var(--border-medium); }
+.anf-half--forest .anf-ln { stroke: var(--accent); stroke-width: 2.25; }
+.anf-half--forest .anf-trunk { stroke-width: 3; }
+.anf-half--forest .anf-twig { stroke-width: 1.5; stroke: var(--accent-dim); }
+.anf-half--code .anf-ln { stroke: var(--accent-blue); stroke-width: 1.75; }
+.anf-half--code .anf-twig { stroke-width: 1.25; opacity: 0.8; }
+.anf-core { fill: rgba(0, 160, 228, 0.18); stroke: var(--accent-blue); stroke-width: 1; }
+.anf-half--forest .anf-leaf { fill: var(--accent-bright); }
+.anf-half--code .anf-leaf { fill: var(--bg-deep); stroke: var(--accent-blue); stroke-width: 1.5; }
+.anf-join {
+  fill: var(--bg-deep);
+  stroke: var(--accent-bright);
+  stroke-width: 2;
+  opacity: clamp(0, (var(--p) - 0.9) * 10, 1);
+}
+
+.anf-half { transform-box: view-box; }
+.anf-half--forest { transform: translateX(calc((1 - var(--p)) * -28px)); }
+.anf-half--code { transform: translateX(calc((1 - var(--p)) * 28px)); }
+
+/* (Classes, not [pathLength]: Chrome misses style invalidation on camelCase SVG attribute selectors.) */
+/* Each stroke starts growing once --p passes its own --d, and is complete at --p = 1 */
+.about-name__fig .anf-ln {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: calc(1 - clamp(0, (var(--p) - var(--d, 0)) / (1 - var(--d, 0)), 1));
+}
+.about-name__fig .anf-leaf { opacity: clamp(0, (var(--p) - var(--d, 0)) / (1 - var(--d, 0)) * 1.5 - 0.5, 1); }
+
+.about-name__labels {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 2% 6%;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-mono);
+  color: var(--text-muted);
+}
+.about-name__labels span:first-child { color: var(--accent); }
+.about-name__labels span:last-child { color: var(--accent-blue); }
+
+@media (min-width: 900px) {
+  .about-name {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
+    align-items: center;
+  }
+  .about-name > h2 { grid-column: 1; align-self: end; }
+  .about-name > p { grid-column: 1; align-self: start; }
+  .about-name__fig { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; justify-self: end; }
+}
+
+/* Link previews (about-fx.js builds one on first hover/focus of an in-copy project link). It sits in
+   the right margin beside the paragraph, level with the link, joined to it by a short leader line, so
+   it never covers the text being read. Touch devices get none. */
+.about-peek {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  width: 248px;
+  padding: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 217, 126, 0.08);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(var(--x, 0), var(--y, 0), 0) translateX(-8px);
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility 0s linear var(--dur-base);
+}
+
+.about-peek.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translate3d(var(--x, 0), var(--y, 0), 0);
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility 0s;
+}
+
+/* Leader: from the paragraph's edge to the card, at the link's line */
+.about-peek::before {
+  content: '';
+  position: absolute;
+  top: var(--ly, 50%);
+  right: 100%;
+  width: calc(var(--lead, 40px) - 6px);
+  height: 1px;
+  margin-right: 1px;
+  background: linear-gradient(90deg, rgba(0, 217, 126, 0), var(--accent-dim));
+}
+
+@media (hover: none) {
+  .about-peek { display: none; }
+}
+
+.about-peek__shot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: calc(var(--radius-md) - 4px);
+  background: var(--bg-surface);
+}
+
+.about-peek__url {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 8px 4px 2px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-mono);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.about-peek__url::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+}
+
+/* ---- Motion: only once about-fx.js is running (html.js); otherwise everything is finished ---- */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .about-portrait__trace :is(.apt-ring, .apt-bus),
+  html.js .about-icon .ai-ln {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+  }
+  html.js .about-portrait__trace .apt-node,
+  html.js .about-portrait__pad,
+  html.js .about-icon .ai-load,
+  html.js .about-icon .ai-pith { opacity: 0; }
+  html.js .about-icon .ai-lens { opacity: 0; transform: translateX(-6px); }
+  html.js .about-icon .ai-lens-clip { transform: translateX(-6px); }
+
+  /* Portrait: ring draws from the top, buses branch off it, then the pads land */
+  html.js .about-portrait.is-drawn .apt-ring { stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s var(--ease-in-out); }
+  html.js .about-portrait.is-drawn .apt-bus { stroke-dashoffset: 0; transition: stroke-dashoffset 0.7s var(--ease-out) 0.75s; }
+  html.js .about-portrait.is-drawn .apt-node { opacity: 1; transition: opacity 0.2s ease 0.7s; }
+  .about-portrait.is-drawn .about-portrait__pad {
+    opacity: 1;
+    transition: opacity 0.2s ease calc(1.3s + var(--i) * 0.08s);
+  }
+
+  /* Signal pulses travel the ring while it is on screen (is-live) */
+  .about-portrait.is-drawn.is-live .apt-pulse {
+    display: inline;
+    stroke: var(--accent-bright);
+    stroke-width: 2.5;
+    stroke-dasharray: 0.035 0.965;
+    animation: about-pulse 7s linear 1.6s infinite both;
+  }
+  .about-portrait.is-drawn.is-live .apt-pulse--2 { animation-delay: 5.1s; }
+  .about-portrait.is-drawn.is-live .about-portrait__pad {
+    animation: about-pad 7s ease-out calc(2.1s + var(--i) * 1.75s) infinite;
+  }
+
+  /* Principle icons */
+  .card.is-drawn .about-icon .ai-ln { stroke-dashoffset: 0; transition: stroke-dashoffset 0.9s var(--ease-out); }
+  .card.is-drawn .about-icon .ai-web { transition-delay: 0.25s; }
+  .card.is-drawn .about-icon .ai-pier { transition-delay: 0.15s; }
+  .card.is-drawn .about-icon .ai-crisp { transition-delay: 0.35s; }
+  .card.is-drawn .about-icon .ai-ring { transition: stroke-dashoffset 0.7s var(--ease-out) calc(var(--i) * 0.14s); }
+  .card.is-drawn .about-icon .ai-pith { opacity: 1; transition: opacity 0.3s ease; }
+  .card.is-drawn .about-icon .ai-load { animation: about-load 0.7s var(--ease-out) 0.9s both; }
+  .card.is-drawn .about-icon .ai-lens { opacity: 1; transform: none; transition: opacity 0.3s ease 0.3s, transform 1s var(--ease-in-out) 0.5s; }
+  .card.is-drawn .about-icon .ai-lens-clip { transform: none; transition: transform 1s var(--ease-in-out) 0.5s; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card.is-drawn:hover .about-icon .ai-load { animation: about-load-again 0.7s var(--ease-out) both; }
+    .card.is-drawn:hover .about-icon .ai-lens,
+    .card.is-drawn:hover .about-icon .ai-lens-clip { transform: translateX(9px); transition: transform 0.7s var(--ease-in-out); }
+    .card.is-drawn:hover .about-icon .ai-ring--new { animation: about-ring 1.4s var(--ease-out); }
+  }
+}
+
+@keyframes about-pulse {
+  from { stroke-dashoffset: 0; opacity: 0; }
+  6%   { opacity: 1; }
+  40%  { opacity: 1; }
+  52%  { stroke-dashoffset: -1; opacity: 0; }
+  to   { stroke-dashoffset: -1; opacity: 0; }
+}
+
+@keyframes about-pad {
+  0%, 100% { filter: none; }
+  4%  { filter: drop-shadow(0 0 4px var(--accent-bright)); stroke: var(--accent-bright); }
+  14% { filter: none; }
+}
+
+@keyframes about-load {
+  from { opacity: 0; transform: translateY(-8px); }
+  60%  { opacity: 1; transform: translateY(1px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes about-load-again {
+  from { transform: translateY(-6px); }
+  60%  { transform: translateY(1px); }
+  to   { transform: none; }
+}
+
+@keyframes about-ring {
+  0%   { opacity: 1; }
+  40%  { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-peek, .about-peek.is-open { transition: none; }
+  .about-principles .card:hover { transform: none; }
+}
+
 /* 66ch of Inter averages ~86 characters per line; hold prose under the site's 75-character limit */
-.about-hero .hero__lead { max-width: 56ch; }
+.about-hero .hero__lead { max-width: calc(56 * var(--ch-body)); }
 .about-background p,
 .about-name p,
-.cta-band__text { max-width: 52ch; }
+.cta-band__text { max-width: calc(52 * var(--ch-body)); }
