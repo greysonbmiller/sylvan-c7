@@ -102,14 +102,33 @@
   /* =========================================
      Command palette
      ========================================= */
+  var EMAIL = 'greysonbmiller@protonmail.com'; // every page's footer carries it too; this covers a page without one
+
   function contactInfo() {
     var mail = doc.querySelector('a[href^="mailto:"]');
     var tel = doc.querySelector('a[href^="tel:"]');
     return {
-      email: mail ? mail.getAttribute('href').replace(/^mailto:/, '').split('?')[0] : '',
+      email: mail ? mail.getAttribute('href').replace(/^mailto:/, '').split('?')[0] : EMAIL,
       tel: tel ? tel.getAttribute('href') : '',
       telText: tel ? tel.textContent.trim() : ''
     };
+  }
+
+  /* Follows a mailto: or external link the way a real <a> click would (target and rel included). */
+  function follow(href, external, host) {
+    var a = el('a', { href: href, hidden: '' });
+    if (external) { a.target = '_blank'; a.rel = 'noopener'; }
+    (host || doc.body).appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  /* When nothing matches, the palette still offers a way forward. */
+  function fallbackItems(raw, email) {
+    return [
+      { label: 'Email me about “' + raw + '”', kind: 'action', hint: 'mailto', href: 'mailto:' + email + '?subject=' + encodeURIComponent(raw) },
+      { label: 'Start a project', path: 'contact.html', kind: 'page' }
+    ];
   }
 
   function buildItems() {
@@ -125,28 +144,24 @@
       { label: 'Process', path: 'work.html#process', kind: 'section', kw: 'steps how a project runs' },
       { label: 'Bibooks', path: 'work.html#bibooks', kind: 'section', kw: 'audiobooks product bilingual' },
       { label: 'Square Word Calligraphy', path: 'lab/square-word-calligraphy/', kind: 'lab', kw: 'lab xu bing tool' },
-      { label: 'Nuestra Finca', path: 'lab/nuestra-finca/', kind: 'lab', kw: 'lab 3d walkthrough farm' }
+      { label: 'Nuestra Finca', path: 'lab/nuestra-finca/', kind: 'lab', kw: 'lab 3d walkthrough farm' },
+      { label: 'Bibooks', external: true, href: 'https://bibooks.org', kind: 'action', hint: 'bibooks.org', kw: 'audiobooks bilingual site product' },
+      { label: 'Copy email', kind: 'action', hint: c.email, kw: 'mail address clipboard', run: function (api) { copyEmail(c.email, api); } },
+      { label: 'Send an email', kind: 'action', hint: 'mailto', kw: 'mail write', href: 'mailto:' + c.email }
     ];
-    if (c.email) {
-      items.push({ label: 'Copy email', kind: 'action', hint: c.email, kw: 'mail address clipboard', run: function (api) { copyText(c.email, api); } });
-      items.push({ label: 'Send an email', kind: 'action', hint: 'mailto', kw: 'mail write', href: 'mailto:' + c.email });
-    }
     if (c.tel) items.push({ label: 'Call', kind: 'action', hint: c.telText || c.tel.replace(/^tel:/, ''), kw: 'phone ring', href: c.tel });
     return items;
   }
 
-  function copyText(text, api) {
-    var done = function () { api.status('Copied'); setTimeout(api.close, 700); };
-    var fallback = function () {
-      var t = el('textarea');
-      t.value = text; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
-      api.dialog.appendChild(t); t.select();
-      try { doc.execCommand('copy'); done(); } catch (e) { api.status('Copy failed'); }
-      t.remove();
-      api.input.focus();
-    };
-    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback);
-    else fallback();
+  /* Clipboard first, confirmed in the palette's live region; with no clipboard
+     (or a refusal) the address opens in the visitor's email app instead. */
+  function copyEmail(email, api) {
+    var toMail = function () { api.follow('mailto:' + email); };
+    if (!navigator.clipboard || !navigator.clipboard.writeText || !window.isSecureContext) { toMail(); return; }
+    navigator.clipboard.writeText(email).then(function () {
+      api.status('Email copied');
+      setTimeout(api.close, 1200);
+    }, toMail);
   }
 
   /* Fuzzy score: exact prefix > word-start substring > substring > ordered subsequence. 0 = no match. */
@@ -196,9 +211,11 @@
     var list = dialog.querySelector('ul');
     var statusEl = dialog.querySelector('.fx-palette__status');
     var shown = [], active = 0, returnTo = null;
+    var email = contactInfo().email;
 
     function render() {
-      var q = input.value.trim().toLowerCase();
+      var raw = input.value.trim();
+      var q = raw.toLowerCase();
       shown = items.map(function (it, i) {
         var s = Math.max(score(q, it.label), sub(q, it.kw) * 0.7, sub(q, it.path) * 0.6);
         return { it: it, s: s, i: i };
@@ -208,14 +225,19 @@
       active = 0;
       list.innerHTML = '';
       if (!shown.length) {
+        // No dead end: say so, then offer to ask about it directly.
         list.appendChild(el('li', { 'class': 'fx-palette__empty', role: 'presentation' }, 'No matches'));
-        input.removeAttribute('aria-activedescendant');
-        return;
+        shown = fallbackItems(raw, email);
       }
       shown.forEach(function (it, i) {
         var li = el('li', { 'class': 'fx-palette__opt', role: 'option', id: 'fx-opt-' + i, 'aria-selected': 'false' });
         var g = el('span', { 'class': 'fx-palette__glyph', 'aria-hidden': 'true' }); g.textContent = GLYPH[it.kind] || '>';
         var l = el('span', { 'class': 'fx-palette__label' }); l.textContent = it.label;
+        if (it.external) {
+          var arrow = el('span', { 'aria-hidden': 'true' }); arrow.textContent = ' ↗';
+          var note = el('span', { 'class': 'visually-hidden' }); note.textContent = ' (opens in a new tab)';
+          l.appendChild(arrow); l.appendChild(note);
+        }
         var h = el('span', { 'class': 'fx-palette__hint', 'aria-hidden': 'true' }); h.textContent = it.hint || it.path;
         li.appendChild(g); li.appendChild(l); li.appendChild(h);
         li.addEventListener('mousemove', function () { if (active !== i) select(i); });
@@ -239,13 +261,20 @@
     var api = {
       dialog: dialog, input: input,
       status: function (s) { statusEl.textContent = s; },
-      close: function () { close(); }
+      close: function () { close(); },
+      follow: function (href) { follow(href, false, dialog); close(); }
     };
 
     function choose() {
       var it = shown[active];
       if (!it) return;
       if (it.run) { it.run(api); return; }
+      if (it.external || /^(mailto|tel):/.test(it.href || '')) {
+        // A real link click: new tab + noopener for external sites, the mail/phone app otherwise.
+        follow(it.href, !!it.external, dialog);
+        close();
+        return;
+      }
       var href = it.href || new URL(it.path, SITE).href;
       close(true);
       location.href = href;
@@ -390,10 +419,55 @@
       '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
       '<path class="fx-top__arrow" d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></svg>');
     doc.body.appendChild(btn);
-    var ticking = false;
+    var footer = doc.querySelector('.site-footer');
+    var row = footer && footer.querySelector('.site-footer__bottom');
+    var ticking = false, lift = 0;
+
+    /* Line boxes of the footer's text, in viewport coordinates. */
+    function footerText() {
+      var out = [];
+      var w = doc.createTreeWalker(footer, NodeFilter.SHOW_TEXT);
+      for (var n = w.nextNode(); n; n = w.nextNode()) {
+        if (!n.nodeValue.trim()) continue;
+        var r = doc.createRange();
+        r.selectNodeContents(n);
+        toArray(r.getClientRects()).forEach(function (b) { if (b.width && b.height) out.push(b); });
+      }
+      return out;
+    }
+
+    /* Over the footer the button climbs until it is clear of every line of
+       footer text and above the bottom row (whose rule it would otherwise sit on). */
+    function clearance() {
+      if (!footer || !btn.getClientRects().length) return 0;
+      var vh = window.innerHeight;
+      if (footer.getBoundingClientRect().top >= vh) return 0;
+      var GAP = 12, PAD = 8;
+      var r = btn.getBoundingClientRect();
+      var h = btn.offsetHeight;
+      var base = parseFloat(getComputedStyle(btn).bottom) - lift; // resting offset from the bottom edge
+      var bottom = vh - base;
+      var obstacles = footerText();
+      if (row) { var rr = row.getBoundingClientRect(); obstacles.push({ left: -Infinity, right: Infinity, top: rr.top, bottom: rr.bottom }); }
+      for (var k = 0; k < 24; k++) {
+        var top = bottom - h, hit = null;
+        for (var i = 0; i < obstacles.length; i++) {
+          var o = obstacles[i];
+          if (o.left < r.right + PAD && o.right > r.left - PAD && o.top < bottom + GAP && o.bottom > top - GAP) {
+            if (!hit || o.top < hit.top) hit = o;
+          }
+        }
+        if (!hit) break;
+        bottom = hit.top - GAP;
+      }
+      return Math.max(0, Math.round(vh - base - bottom));
+    }
+
     function update() {
       ticking = false;
       btn.classList.toggle('is-shown', window.scrollY > window.innerHeight * 1.5);
+      var next = clearance();
+      if (next !== lift) { lift = next; btn.style.setProperty('--fx-top-lift', lift + 'px'); }
     }
     function req() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
     window.addEventListener('scroll', req, { passive: true });
@@ -900,56 +974,6 @@
   }
 
   /* =========================================
-     Section seams: a branching trace that draws from the centre outward.
-     Out of flow (absolute, straddling the section's top edge), so it takes
-     no layout space.
-     ========================================= */
-  var seamId = 0;
-  function seamSVG() {
-    var id = 'fx-seam-g' + (++seamId);
-    // Left half is the mirror of the right; every path starts at the centre.
-    var R = 'M308 12H392l8-8h52M330 12l7 7h40M392 12H560';
-    var L = 'M292 12H208l-8-8h-52M270 12l-7 7h-40M208 12H40';
-    return '<svg viewBox="0 0 600 24" focusable="false">' +
-      '<defs><linearGradient id="' + id + '" x1="0" x2="600" y1="0" y2="0" gradientUnits="userSpaceOnUse">' +
-      '<stop offset="0" stop-color="#00d97e" stop-opacity="0"/><stop offset=".3" stop-color="#00d97e" stop-opacity=".55"/>' +
-      '<stop offset=".5" stop-color="#33ffaa" stop-opacity=".9"/><stop offset=".7" stop-color="#00d97e" stop-opacity=".55"/>' +
-      '<stop offset="1" stop-color="#00d97e" stop-opacity="0"/></linearGradient></defs>' +
-      '<g fill="none" stroke="url(#' + id + ')" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">' +
-      '<path class="fx-seam__trace" pathLength="1" d="' + R + '"/>' +
-      '<path class="fx-seam__trace" pathLength="1" d="' + L + '"/></g>' +
-      '<g class="fx-seam__pads" fill="none" stroke="#33ffaa" stroke-width="1">' +
-      '<circle cx="454" cy="4" r="2"/><circle cx="146" cy="4" r="2"/><circle cx="379" cy="19" r="1.6"/><circle cx="221" cy="19" r="1.6"/></g>' +
-      '<rect class="fx-seam__node" x="295" y="7" width="10" height="10" rx="2" transform="rotate(45 300 12)"/></svg>';
-  }
-
-  function initSeams() {
-    // One seam per page, only where the page turns to its closing CTA band.
-    var secs = toArray(doc.querySelectorAll('main > section + section.cta-band')).filter(function (s) {
-      return getComputedStyle(s).position !== 'static';
-    });
-    if (!secs.length) return;
-    var seams = secs.map(function (s) {
-      // .cta-band clips overflow, so the seam sits just inside its top edge.
-      var d = el('div', { 'class': 'fx-seam fx-seam--inset', 'aria-hidden': 'true', 'data-fx-seam': '' }, seamSVG());
-      s.insertBefore(d, s.firstChild);
-      return d;
-    });
-    if (reduced() || !('IntersectionObserver' in window)) {
-      seams.forEach(function (d) { d.classList.add('is-drawn'); });
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        io.unobserve(en.target);
-        en.target.classList.add('is-drawn');
-      });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 1 });
-    afterPaint(function () { seams.forEach(function (d) { io.observe(d); }); });
-  }
-
-  /* =========================================
      Ambient dot grid: sections' ::before brightens around a fine pointer.
      ========================================= */
   function initAmbient() {
@@ -1048,7 +1072,6 @@
     initEyebrows();
     initTop();
     initSkyline();
-    initSeams();
     initAmbient();
     initKonami();
     var garden = doc.querySelector('[data-fx-garden]');

@@ -192,3 +192,42 @@
 @media (min-width: 1024px) {
   .pagehero { display: block; }
 }
+
+/* ---- First paint: render only what is near the screen ----
+   The work page's LCP (the Bibooks screenshot) lands in the first frame, and that frame waits for
+   style and layout of the whole ~7,600 px phone-width document: every case study, the process
+   stepper, the four standards, the pledge and the footer, ~480 layout objects and ~160 text runs
+   shaped (plus their system fallback fonts) on a 4x-throttled CPU. With content-visibility: auto the
+   browser lays out and paints the sections after Bibooks only as they near the viewport, as on the
+   home page (css/page-home.css). Nothing is hidden: on-screen sections render as usual, the content
+   stays in find-in-page and the accessibility tree, and a section keeps its real size once it has
+   been rendered (`auto`). The intrinsic sizes are each section's measured height (phone, >= 768 px,
+   >= 1024 px), so the scrollbar and the scroll-progress bar barely move as sections render in. */
+main > section:not(.hero):not(#bibooks),
+.site-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1000px;
+}
+main > section[aria-labelledby="lab-title"] { contain-intrinsic-size: auto 1400px; }
+main > section[aria-labelledby="process-title"] { contain-intrinsic-size: auto 940px; }
+main > section[aria-labelledby="verify-title"] { contain-intrinsic-size: auto 1450px; }
+main > section[aria-labelledby="first-title"] { contain-intrinsic-size: auto 650px; }
+main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 400px; }
+.site-footer { contain-intrinsic-size: auto 1065px; }
+
+@media (min-width: 768px) {
+  main > section[aria-labelledby="lab-title"] { contain-intrinsic-size: auto 1340px; }
+  main > section[aria-labelledby="process-title"] { contain-intrinsic-size: auto 850px; }
+  main > section[aria-labelledby="verify-title"] { contain-intrinsic-size: auto 985px; }
+  main > section[aria-labelledby="first-title"] { contain-intrinsic-size: auto 590px; }
+  main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 355px; }
+  .site-footer { contain-intrinsic-size: auto 515px; }
+}
+
+@media (min-width: 1024px) {
+  main > section[aria-labelledby="lab-title"] { contain-intrinsic-size: auto 1250px; }
+  main > section[aria-labelledby="process-title"] { contain-intrinsic-size: auto 820px; }
+  main > section[aria-labelledby="verify-title"] { contain-intrinsic-size: auto 950px; }
+  main > section[aria-labelledby="first-title"] { contain-intrinsic-size: auto 650px; }
+  main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 410px; }
+}

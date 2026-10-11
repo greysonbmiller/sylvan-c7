@@ -181,3 +181,50 @@ kbd {
   margin-top: var(--space-6);
   color: var(--text-muted);
 }
+
+/* ---- First paint: render only what is near the screen ----
+   The LCP (the walkthrough poster) lands in the first frame, and that frame waits for style and
+   layout of the whole page: the controls list, the build notes, the credits and the footer, ~280
+   layout objects and ~90 text runs shaped (plus the system fonts they fall back to) on a
+   4x-throttled CPU. With content-visibility: auto the browser lays out and paints the sections
+   below the walkthrough only as they near the viewport, as on the home page (css/page-home.css).
+   Nothing is hidden: on-screen sections render as usual, the content stays in find-in-page and the
+   accessibility tree, and a section keeps its real size once rendered (`auto`). The intrinsic
+   sizes are each section's measured height (phone, then >= 768 px). */
+main > section:not(.finca-top),
+.site-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
+main > section[aria-labelledby="controls-title"] { contain-intrinsic-size: auto 750px; }
+main > section[aria-labelledby="how-title"] { contain-intrinsic-size: auto 880px; }
+main > section[aria-labelledby="credits-title"] { contain-intrinsic-size: auto 620px; }
+main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 325px; }
+.site-footer { contain-intrinsic-size: auto 1065px; }
+
+@media (min-width: 768px) {
+  main > section[aria-labelledby="controls-title"] { contain-intrinsic-size: auto 600px; }
+  main > section[aria-labelledby="how-title"] { contain-intrinsic-size: auto 700px; }
+  main > section[aria-labelledby="credits-title"] { contain-intrinsic-size: auto 660px; }
+  main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 355px; }
+  .site-footer { contain-intrinsic-size: auto 515px; }
+}
+
+/* ---- The "↗" on "Open on its own page" (U+2197) ----
+   No font in the button's stack has this glyph, so on its first layout the browser walks the whole
+   list, loading each system font to look (Inter Fallback's Arial, Segoe UI, -apple-system, Arial
+   again, the default Times New Roman) before the platform fallback finds Segoe UI Symbol. That run
+   is just below the fold on a phone, so it is in the first frame, and on a 4x-throttled CPU the walk
+   was ~40-260 ms of the poster's LCP. This face, for that one code point only, points straight at
+   the font the fallback ends on anyway (Windows), so the glyph is unchanged and the walk is skipped.
+   Where Segoe UI Symbol is not installed the face simply fails and the usual fallback runs. Weight
+   400, as the system font has only that weight: the 600-weight button gets the same synthetic bold
+   it got from the fallback. */
+@font-face {
+  font-family: 'Finca Arrow';
+  src: local('Segoe UI Symbol'), local('SegoeUISymbol');
+  font-weight: 400;
+  unicode-range: U+2197;
+}
+
+.finca-bar .btn { font-family: 'Finca Arrow', var(--font-body); }

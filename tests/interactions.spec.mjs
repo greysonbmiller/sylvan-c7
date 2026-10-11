@@ -230,3 +230,157 @@ test.describe('motion allowed', () => {
     expect(norm(await shown.textContent())).toBe(final);
   });
 });
+
+// ---------------------------------------------------------------------------------------------
+// Design critique round 4: one call to action at a time on phones, a drawer that covers the page,
+// the contact email that wraps only at "@", and an error-coloured focus ring on invalid fields.
+
+const STICKY_PAGES = ['./', 'services.html', 'work.html', 'about.html', 'lab/square-word-calligraphy/', 'lab/nuestra-finca/'];
+
+test.describe('390px: the sticky CTA bar steps aside for the closing CTA band', () => {
+  for (const path of STICKY_PAGES) {
+    test(`${path}: shown mid-page, hidden while the CTA band is in view`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await open(page, path);
+      const bar = page.locator('.sticky-cta');
+      const geo = await page.evaluate(() => {
+        const sel = document.querySelector('.sticky-cta').getAttribute('data-sticky-trigger');
+        const trig = (sel && document.querySelector(sel)) || document.querySelector('.hero .btn-row') || document.querySelector('.hero');
+        const band = document.querySelector('main .cta-band');
+        return { trigBottom: trig.getBoundingClientRect().bottom + scrollY, bandTop: band.getBoundingClientRect().top + scrollY };
+      });
+      // Positive control: past the hero, with the band still below the fold, the bar shows.
+      const y = geo.trigBottom + 40;
+      if (geo.bandTop > y + 844 + 40) {
+        await page.evaluate((yy) => scrollTo(0, yy), y);
+        await expect(bar).toHaveClass(/is-visible/);
+      }
+      for (const block of ['end', 'center', 'start']) {
+        await page.locator('main .cta-band .btn-row, main .cta-band .btn').first().evaluate((e, b) => e.scrollIntoView({ block: b }), block);
+        await expect(bar, `band at ${block}`).not.toHaveClass(/is-visible/);
+        await page.waitForTimeout(350);
+        const covered = await page.evaluate(() => [...document.querySelectorAll('main .cta-band .btn')].filter((b) => {
+          const r = b.getBoundingClientRect();
+          if (r.bottom <= 0 || r.top >= innerHeight) return false;
+          const hit = document.elementFromPoint(r.left + r.width / 2, Math.min(innerHeight - 1, Math.max(0, r.top + r.height / 2)));
+          return !(hit && (hit === b || b.contains(hit)));
+        }).map((b) => b.textContent.trim()));
+        expect(covered, `band at ${block}: nothing covers the band's buttons`).toEqual([]);
+      }
+    });
+  }
+});
+
+test.describe('header "Start a project" is never a duplicate', () => {
+  for (const vp of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
+    test(`${vp.width}: hidden on the contact page it points to (marked aria-current, out of the tab order)`, async ({ page }) => {
+      await page.setViewportSize(vp);
+      await open(page, 'about.html');
+      const box = await page.locator('.site-header .nav__cta').boundingBox();
+      expect(box.width, 'positive control: shown on other pages').toBeGreaterThan(40);
+      await open(page, 'contact.html');
+      const cta = page.locator('.site-header .nav__cta');
+      await expect(cta).toHaveAttribute('aria-current', 'page');
+      await expect(cta).toHaveAttribute('tabindex', '-1');
+      const r = await cta.evaluate((a) => { const b = a.getBoundingClientRect(); return { w: b.width, h: b.height }; });
+      expect(r.w * r.h, 'not visible on the page').toBeLessThanOrEqual(1);
+    });
+  }
+
+  test('desktop contact: the nav does not move when the keycap is injected', async ({ page }) => {
+    await page.route('**/js/fx-ui.js', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+    await open(page, 'contact.html');
+    const before = await page.locator('.nav__links').boundingBox();
+    await page.unroute('**/js/fx-ui.js');
+    await open(page, 'contact.html');
+    const after = await page.locator('.nav__links').boundingBox();
+    expect(Math.abs(after.x - before.x)).toBeLessThan(1);
+  });
+
+  test('390: hidden while the mobile drawer is open (the drawer has its own), back when it closes', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await open(page, './');
+    const cta = page.locator('.site-header .nav__cta');
+    await expect(cta, 'positive control').toBeVisible();
+    await page.locator('.nav__toggle').click();
+    await expect(page.locator('#navDrawer')).toHaveClass(/is-open/);
+    await expect(cta).toBeHidden();
+    await expect(page.locator('#navDrawer .btn--primary')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(cta).toBeVisible();
+  });
+});
+
+for (const width of [320, 390]) {
+  test(`${width}: the open mobile drawer covers the full width (no strip of page at the left edge)`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await open(page, './');
+    await page.locator('.nav__toggle').click();
+    const drawer = page.locator('#navDrawer');
+    await expect(drawer).toHaveClass(/is-open/);
+    await page.waitForTimeout(500);
+    const r = await drawer.evaluate((d) => { const b = d.getBoundingClientRect(); return { l: b.left, r: b.right, w: innerWidth, bl: getComputedStyle(d).borderLeftWidth }; });
+    expect(r.l).toBeLessThanOrEqual(0.5);
+    expect(r.r).toBeGreaterThanOrEqual(r.w - 0.5);
+    expect(r.bl, 'no edge line').toBe('0px');
+  });
+}
+
+test.describe('contact email', () => {
+  for (const width of [320, 390, 1440]) {
+    test(`${width}: on one line, or broken only before "@"; never below 16px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      await open(page, 'contact.html');
+      const m = await page.locator('.contact-links .contact-link__value').first().evaluate((el) => {
+        const text = el.textContent;
+        const lines = [];
+        const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        for (let n = w.nextNode(); n; n = w.nextNode()) {
+          for (let i = 0; i < n.nodeValue.length; i++) {
+            const r = document.createRange();
+            r.setStart(n, i); r.setEnd(n, i + 1);
+            const b = r.getClientRects()[0];
+            if (!b) continue;
+            const top = Math.round(b.top);
+            let line = lines.find((l) => Math.abs(l.top - top) < 4);
+            if (!line) { line = { top, s: '' }; lines.push(line); }
+            line.s += n.nodeValue[i];
+          }
+        }
+        return { text, lines: lines.sort((a, b) => a.top - b.top).map((l) => l.s), size: parseFloat(getComputedStyle(el).fontSize) };
+      });
+      expect(m.text).toBe('greysonbmiller@protonmail.com');
+      expect(m.size).toBeGreaterThanOrEqual(16);
+      if (m.lines.length > 1) expect(m.lines).toEqual(['greysonbmiller', '@protonmail.com']);
+      else expect(m.lines).toEqual(['greysonbmiller@protonmail.com']);
+    });
+  }
+});
+
+test('contact: an invalid field\'s focus ring is the error colour, not the accent', async ({ page }) => {
+  await open(page, 'contact.html');
+  await page.fill('#f-name', 'Ana Lopez');
+  await page.fill('#f-email', 'ana@');
+  await page.fill('#f-message', 'We need a booking site');
+  await page.locator('#contactForm [type="submit"]').click();
+  const email = page.locator('#f-email');
+  await expect(email).toBeFocused();
+  await expect(email).toHaveAttribute('aria-invalid', 'true');
+  await page.waitForTimeout(450);
+  const s = await email.evaluate((e) => {
+    const probe = (v) => { const i = document.createElement('i'); i.style.color = `var(${v})`; document.body.appendChild(i); const c = getComputedStyle(i).color; i.remove(); return c; };
+    const cs = getComputedStyle(e);
+    return { shadow: cs.boxShadow, border: cs.borderTopColor, bgImg: cs.backgroundImage, error: probe('--error'), accent: probe('--accent'), bright: probe('--accent-bright') };
+  });
+  const rgb = (c) => c.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number);
+  const colors = (str) => (str.match(/rgba?\([^)]+\)/g) || []).map(rgb);
+  const greenish = ([r, g, b]) => g > r + 40 && g > b;
+  const [er, eg, eb] = rgb(s.error);
+  expect(s.border).toBe(s.error);
+  expect(s.shadow, 'a visible focus indicator remains').not.toBe('none');
+  const ring = colors(s.shadow);
+  expect(ring.length).toBeGreaterThan(0);
+  expect(ring.some(([r, g, b]) => r === er && g === eg && b === eb), `ring uses --error: ${s.shadow}`).toBe(true);
+  expect(ring.filter(greenish), `no green in the ring: ${s.shadow}`).toEqual([]);
+  expect(colors(s.bgImg).filter(greenish), `no green focus underline: ${s.bgImg}`).toEqual([]);
+});

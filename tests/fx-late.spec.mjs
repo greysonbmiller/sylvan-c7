@@ -46,7 +46,16 @@ for (const p of LIVE_PAGES) {
             // Effect scripts off in both runs, so the only difference is the stylesheet.
             await pg.route(FX_JS, (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
             if (cssBlocked) await pg.route(FX_CSS, (r) => r.abort());
+            // Below-the-fold sections use content-visibility: auto (LCP). Inside a skipped section
+            // Chrome can report stale styles and boxes (and defer font loads), so this check renders
+            // every section from the start: it is about what fx.css moves, not about skipping.
+            await pg.addInitScript(() => document.addEventListener('DOMContentLoaded', () => {
+              const s = document.createElement('style');
+              s.textContent = '*{content-visibility:visible!important}';
+              document.head.appendChild(s);
+            }));
             await open(pg, p.path);
+            await pg.evaluate(() => document.fonts.ready);
             return await pg.evaluate(() => ({
               fx: document.documentElement.getAttribute('data-fx'),
               els: [...document.body.querySelectorAll('*')].filter((e) => !e.closest('svg,canvas,template,script,link,style,[data-swc-mini] .swc-mini__out'))

@@ -390,7 +390,9 @@
 
   /* =========================================
      .sticky-cta — mobile bar, shown once the hero CTA has scrolled out above
-     the viewport; hidden again while the footer is on screen.
+     the viewport; hidden again while the page's own closing call to action
+     (any .cta-band) or the footer is on screen, so two identical buttons
+     never stack and the band's other button is never covered.
      Trigger: data-sticky-trigger="<selector>" on the bar, else .hero .btn-row,
      else .hero. Don't include the bar on contact.html.
      ========================================= */
@@ -398,11 +400,11 @@
     document.documentElement.classList.add('has-sticky-cta');
     var sel = bar.getAttribute('data-sticky-trigger');
     var trigger = (sel && document.querySelector(sel)) || document.querySelector('.hero .btn-row') || document.querySelector('.hero');
-    var footer = document.querySelector('.site-footer');
-    var past = false, footerIn = false;
+    var ends = toArray(document.querySelectorAll('.cta-band, .site-footer'));
+    var past = false, inView = [];
 
     function render() {
-      var show = past && !footerIn && !document.documentElement.classList.contains('nav-open');
+      var show = past && !inView.length && !document.documentElement.classList.contains('nav-open');
       bar.classList.toggle('is-visible', show);
     }
 
@@ -418,11 +420,16 @@
         past = window.scrollY > 600; render();
       }, { passive: true });
     }
-    if (footer) {
-      new IntersectionObserver(function (entries) {
-        footerIn = entries[0].isIntersecting;
+    if (ends.length) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var i = inView.indexOf(e.target);
+          if (e.isIntersecting && i === -1) inView.push(e.target);
+          else if (!e.isIntersecting && i !== -1) inView.splice(i, 1);
+        });
         render();
-      }).observe(footer);
+      });
+      ends.forEach(function (el) { io.observe(el); });
     }
   }
 

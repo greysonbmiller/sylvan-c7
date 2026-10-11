@@ -135,15 +135,16 @@
 @keyframes il-valve { 0% { fill: var(--accent); } 62% { fill: var(--border-strong); } }
 @keyframes il-flowgate { 0% { opacity: 1; } 62% { opacity: 0; } }
 @keyframes il-led { 50% { opacity: 0.35; } }
+/* Rows (56 wide) live inside the 320-wide viewBox for their whole trip, so no frame width clips them. */
 @keyframes il-row {
-  0% { transform: translate(-60px, 76px); opacity: 0; }
+  0% { transform: translate(8px, 76px); opacity: 0; }
   6% { opacity: 1; }
   40%, 52% { transform: translate(152px, 76px); }
-  88% { transform: translate(300px, 76px); opacity: 1; }
-  96%, 100% { transform: translate(330px, 76px); opacity: 0; }
+  86% { transform: translate(246px, 76px); opacity: 1; }
+  94%, 100% { transform: translate(256px, 76px); opacity: 0; }
 }
 @keyframes il-bad {
-  0% { transform: translate(-60px, 76px); opacity: 0; }
+  0% { transform: translate(8px, 76px); opacity: 0; }
   6% { opacity: 1; }
   40%, 54% { transform: translate(152px, 76px); }
   64%, 90% { transform: translate(152px, 118px); opacity: 1; }
@@ -223,15 +224,25 @@
 
 /* =========================================
    12. Pricing: the real prices never change. Switching to "Project + care" only slides the
-   "+ $X/mo" add-on line in beside the unchanged figure (display: inline-block is set in
-   page-services.css, so this sheet arriving late moves nothing).
+   "+ $X/mo" add-on line in beside the unchanged figure, lit accent as it lands (display:
+   inline-block is set in page-services.css, so this sheet arriving late moves nothing), and the
+   care plans those add-ons come from take a brief accent tint that fades out.
    ========================================= */
 @media (prefers-reduced-motion: no-preference) {
   [data-price-mode='care'] .price__variant[data-variant='care'] small {
-    animation: price-addon 0.35s var(--ease-out) both;
+    animation: price-addon 0.3s var(--ease-out) both;
+  }
+  [data-price-mode='care'] .care-plan {
+    animation: care-plan-tint 0.6s ease-out;
   }
 }
-@keyframes price-addon { from { opacity: 0; transform: translateX(-8px); } }
+@keyframes price-addon {
+  from { opacity: 0; transform: translateX(-12px); color: var(--accent); }
+  45% { color: var(--accent); }
+}
+@keyframes care-plan-tint {
+  from { background-color: var(--accent-tint); border-color: var(--accent-dim); }
+}
 
 /* =========================================
    13. One window chrome: three 8px grey dots, the first accent-green while the window is active

@@ -95,6 +95,18 @@ export async function scrollThrough(page) {
     scrollTo(0, 0);
   });
   await page.waitForTimeout(500);
+  await settleAnimations(page);
+}
+
+/**
+ * Wait (up to 5 s) until every finite CSS animation/transition has finished, so a measurement never
+ * catches a reveal fade mid-flight on a loaded machine. Infinite ambient loops are ignored.
+ */
+export async function settleAnimations(page) {
+  await page.waitForFunction(() => document.getAnimations().every((a) => {
+    const t = a.effect && a.effect.getComputedTiming();
+    return a.playState !== 'running' || !t || t.endTime === Infinity;
+  }), null, { timeout: 5_000 }).catch(() => {});
 }
 
 // ---------------------------------------------------------------------------------------------

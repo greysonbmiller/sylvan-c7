@@ -483,3 +483,313 @@ for (const p of [...PAGES, { name: 'work', path: 'work.html' }]) {
     expect(errors).toEqual([]);
   });
 }
+
+// ---- Critique round 4: Home and Services read as one system ------------------------------------
+const HOME = './';
+const SVC = 'services.html';
+const PRICE_CARDS = { [HOME]: '.price-teaser__item', [SVC]: '#pricing .price-card' };
+const FROM = { [HOME]: '.price-teaser__from', [SVC]: '#pricing .price__from' };
+const BADGE = { [HOME]: '.price-teaser .badge', [SVC]: '#pricing .price-card .badge' };
+
+test('pricing: "from" uses the same type treatment on Home and Services', async ({ browser }) => {
+  const read = async (path) => {
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const page = await ctx.newPage();
+    await open(page, path, { settle: 0 });
+    const r = await page.locator(FROM[path]).first().evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return [cs.fontFamily, cs.fontSize, cs.fontWeight, cs.color, cs.letterSpacing].join(' / ');
+    });
+    await ctx.close();
+    return r;
+  };
+  const home = await read(HOME);
+  const svc = await read(SVC);
+  expect(svc, 'positive control: Services keeps the body (Inter) treatment').toMatch(/^Inter/);
+  expect(home).toBe(svc);
+});
+
+test('pricing: the "Most projects" badge sits in the same spot on Home and Services', async ({ browser }) => {
+  const read = async (path) => {
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const page = await ctx.newPage();
+    await open(page, path, { settle: 0 });
+    const r = await page.locator(BADGE[path]).first().evaluate((b) => {
+      const card = b.closest('.card, .price-card');
+      const br = b.getBoundingClientRect();
+      const cr = card.getBoundingClientRect();
+      return {
+        inHeading: !!b.closest('h3'),
+        centreToTop: Math.round(br.top + br.height / 2 - cr.top),
+        rightInset: Math.round(cr.right - br.right),
+      };
+    });
+    await ctx.close();
+    return r;
+  };
+  const svc = await read(SVC);
+  const home = await read(HOME);
+  expect(svc.centreToTop, 'positive control: Services badge straddles the top edge').toBeLessThanOrEqual(1);
+  expect(home.inHeading, 'Home badge is not inline in the plan name').toBe(false);
+  expect(Math.abs(home.centreToTop - svc.centreToTop)).toBeLessThanOrEqual(1);
+  expect(Math.abs(home.rightInset - svc.rightInset)).toBeLessThanOrEqual(1);
+});
+
+test('home pricing: plan names are card titles (no underline) and the whole card is the link', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await open(page, HOME);
+  const cards = page.locator('.price-teaser__item');
+  await cards.first().evaluate((li) => li.scrollIntoView({ block: 'center', behavior: 'instant' }));
+  await page.waitForTimeout(300); // sections above may render in (content-visibility) and settle
+  const r = await cards.evaluateAll((items) => items.map((li) => {
+    li.scrollIntoView({ block: 'center', behavior: 'instant' });
+    const a = li.querySelector('.price-teaser__name a');
+    const meta = li.querySelector('.card__meta').getBoundingClientRect();
+    const hit = document.elementFromPoint(meta.left + 4, meta.top + meta.height / 2);
+    return {
+      underline: getComputedStyle(a).textDecorationLine,
+      hit: hit && hit.closest('a') ? hit.closest('a').getAttribute('href') : null,
+      dbg: hit ? hit.outerHTML.slice(0, 120) : "none",
+      href: a.getAttribute('href'),
+    };
+  }));
+  expect(r.length).toBe(3);
+  for (const c of r) {
+    expect(c.underline, c.href).toBe('none');
+    expect(c.hit, `${c.href}: clicking the card body follows the plan link ${c.dbg}`).toBe(c.href);
+  }
+});
+
+test('home pricing: three priced cards, custom software as a one-line note with its link', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await open(page, HOME);
+  await expect(page.locator('.price-teaser__item')).toHaveCount(3);
+  await expect(page.locator('.price-teaser__price--text')).toHaveCount(0);
+  const prices = (await page.locator('.price-teaser__price').allTextContents()).map(norm);
+  for (const p of prices) expect(p, 'every price slot holds a price').toMatch(/^from \$\d/);
+  const note = page.locator('section[aria-labelledby="price-title"] .price-teaser__note');
+  await expect(note).toHaveCount(1);
+  await expect(note.locator('a[href="contact.html?package=custom"]')).toHaveCount(1);
+  const r = await page.evaluate(() => {
+    const grid = document.querySelector('.price-teaser').getBoundingClientRect();
+    const n = document.querySelector('.price-teaser__note');
+    const range = document.createRange();
+    range.selectNodeContents(n);
+    const lines = new Set([...range.getClientRects()].map((x) => Math.round(x.top)));
+    return { below: n.getBoundingClientRect().top >= grid.bottom - 1, lines: lines.size };
+  });
+  expect(r.below, 'the note sits under the priced cards').toBe(true);
+  expect(r.lines, 'one line at desktop width').toBe(1);
+});
+
+const NAMES = ['Websites', 'Web apps', 'Integrations', 'Instrument control', 'Data tooling', 'Care plans'];
+const VARIANTS = /Instrument-control software|Hardware (&|and) instrument control|Care (&|and) maintenance|Integrations (&|and) automation|Web apps (&|and) internal tools/;
+
+test('service names: one short name per service, identical in tabs and panel titles on Home and Services', async ({ page }) => {
+  for (const path of [HOME, SVC]) {
+    await open(page, path, { settle: 0 });
+    const tabs = (await page.locator('[data-tabs] [role="tab"]').allTextContents()).map(norm);
+    const titles = (await page.locator('[data-tabs] .tabs__panel-title').allTextContents()).map(norm);
+    expect(tabs, `${path} tabs`).toEqual(NAMES);
+    expect(titles, `${path} panel titles`).toEqual(NAMES);
+    const scope = path === HOME
+      ? 'section[aria-labelledby="svc-title"], section[aria-labelledby="price-title"]'
+      : 'main';
+    const text = await page.locator(scope).evaluateAll((els) => els.map((e) => e.textContent).join(' '));
+    expect(text.replace(/\s+/g, ' ').match(VARIANTS), `${path}: a variant name`).toBeNull();
+  }
+});
+
+test('services hero: the secondary action is the same outline button as Home', async ({ page }) => {
+  await open(page, SVC, { settle: 0 });
+  const sec = page.locator('.hero .btn-row a').nth(1);
+  await expect(sec).toHaveClass(/\bbtn\b/);
+  await expect(sec).toHaveClass(/\bbtn--outline\b/);
+  const style = (a) => `${getComputedStyle(a).borderTopWidth} ${getComputedStyle(a).borderTopColor} ${getComputedStyle(a).color}`;
+  const svcStyle = await sec.evaluate(style);
+  await open(page, HOME, { settle: 0 });
+  const homeStyle = await page.locator('.hero .btn-row a').nth(1).evaluate(style);
+  expect(svcStyle).toBe(homeStyle);
+});
+
+test('services: switching to care animates the add-on in (250–350 ms, from transparent) and briefly tints the care plans', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await open(page, SVC);
+  const btn = page.locator('[data-price-toggle] button[aria-pressed]');
+  await btn.scrollIntoViewIfNeeded();
+  await btn.click();
+  const r = await page.evaluate(() => ({
+    addon: [...document.querySelectorAll('#pricing .price__variant[data-variant="care"] small')].map((s) => s.getAnimations().map((a) => ({
+      d: a.effect.getComputedTiming().duration,
+      from: a.effect.getKeyframes()[0],
+    }))),
+    plans: [...document.querySelectorAll('#pricing .care-plan')].map((p) => p.getAnimations().map((a) => ({
+      d: a.effect.getComputedTiming().duration,
+      props: Object.keys(a.effect.getKeyframes()[0]).filter((k) => !['offset', 'easing', 'composite', 'computedOffset'].includes(k)),
+    }))),
+  }));
+  expect(r.addon.length).toBe(3);
+  for (const a of r.addon) {
+    expect(a.length, 'add-on animates').toBeGreaterThan(0);
+    expect(a[0].d >= 250 && a[0].d <= 350, `add-on ${a[0].d} ms`).toBe(true);
+    expect(a[0].from.opacity, 'starts transparent').toBe('0');
+  }
+  expect(r.plans.length).toBe(3);
+  for (const p of r.plans) {
+    expect(p.length, 'care plan highlight runs').toBeGreaterThan(0);
+    expect(p[0].d >= 500 && p[0].d <= 700, `highlight ${p[0].d} ms`).toBe(true);
+    expect(p[0].props.some((k) => /background|boxShadow|borderColor/.test(k)), p[0].props.join()).toBe(true);
+  }
+  await page.waitForTimeout(800);
+  const settled = await page.locator('#pricing .care-plan').evaluateAll((els) => els.map((e) => e.getAnimations().length));
+  expect(settled, 'highlight is brief and fades out').toEqual([0, 0, 0]);
+});
+
+test.describe('prefers-reduced-motion: reduce (care plan highlight)', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+  test('services: no care plan highlight animation', async ({ page }) => {
+    await open(page, SVC);
+    const btn = page.locator('[data-price-toggle] button[aria-pressed]');
+    await btn.scrollIntoViewIfNeeded();
+    await btn.click();
+    const named = await page.locator('#pricing .care-plan').evaluateAll((els) => els.flatMap((e) => e.getAnimations().map((a) => a.animationName).filter(Boolean)));
+    expect(named).toEqual([]);
+  });
+});
+
+for (const path of [HOME, SVC]) {
+  test(`${path === HOME ? 'index' : 'services'}: price-card hover is a clear accent-dim border and a ≤2px lift (200–300 ms)`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await open(page, path);
+    const card = page.locator(PRICE_CARDS[path]).first();
+    await card.scrollIntoViewIfNeeded();
+    await page.mouse.move(5, 5);
+    await page.waitForTimeout(350);
+    const read = () => card.evaluate((c) => {
+      const cs = getComputedStyle(c);
+      const m = new DOMMatrix(cs.transform === 'none' ? undefined : cs.transform);
+      return { border: cs.borderTopColor, ty: m.m42, dur: cs.transitionDuration, prop: cs.transitionProperty };
+    });
+    const before = await read();
+    await card.hover({ position: { x: 30, y: 30 } });
+    await page.waitForTimeout(450);
+    const after = await read();
+    expect(after.border, 'border goes to --accent-dim').toBe('rgb(0, 179, 104)');
+    expect(before.border).not.toBe(after.border);
+    expect(after.ty <= -1 && after.ty >= -2, `lift ${after.ty}px`).toBe(true);
+    const props = after.prop.split(',').map((s) => s.trim());
+    const durs = after.dur.split(',').map((s) => parseFloat(s) * (s.trim().endsWith('ms') ? 1 : 1000));
+    for (const want of ['border-color', 'transform']) {
+      const i = props.indexOf(want);
+      expect(i, `${want} transitions`).toBeGreaterThanOrEqual(0);
+      const d = durs[i % durs.length];
+      expect(d >= 200 && d <= 300, `${want} ${d} ms`).toBe(true);
+    }
+  });
+}
+
+for (const width of [320, 390, 768, 1440]) {
+  test(`services @${width}: data-tooling rows stay inside the illustration frame for the whole loop`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await open(page, SVC);
+    await expect.poll(() => page.locator('.illus--data svg').count(), { timeout: 8000 }).toBe(1);
+    const mode = await page.locator('[data-tabs]').getAttribute('data-mode');
+    if (mode === 'accordion') {
+      const b = page.locator('.tabs__acc-btn').nth(4);
+      if ((await b.getAttribute('aria-expanded')) !== 'true') await b.click();
+    } else {
+      await page.locator('#svc-tab-5').scrollIntoViewIfNeeded();
+      await page.locator('#svc-tab-5').click();
+    }
+    const ill = page.locator('.illus--data');
+    await ill.scrollIntoViewIfNeeded();
+    await expect(ill).toHaveClass(/is-on/, { timeout: 4000 });
+    const r = await ill.evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      const anims = el.getAnimations({ subtree: true });
+      anims.forEach((a) => a.pause());
+      const out = [];
+      let farRight = 0;
+      for (let t = 0; t <= 6000; t += 100) {
+        anims.forEach((a) => { a.currentTime = t; });
+        for (const row of el.querySelectorAll('.row')) {
+          if (parseFloat(getComputedStyle(row).opacity) < 0.02) continue;
+          const b = row.getBoundingClientRect();
+          farRight = Math.max(farRight, (b.right - box.left) / box.width);
+          if (b.left < box.left - 0.5 || b.right > box.right + 0.5) out.push(`t=${t} ${Math.round(b.left - box.left)}..${Math.round(b.right - box.left)} of ${Math.round(box.width)}`);
+        }
+      }
+      return { anims: anims.length, out: out.slice(0, 6), farRight };
+    });
+    expect(r.anims, 'positive control: the loop runs').toBeGreaterThan(0);
+    expect(r.farRight, 'positive control: rows travel toward the right edge').toBeGreaterThan(0.7);
+    expect(r.out).toEqual([]);
+  });
+}
+
+test('services @1440: "Every project includes" intro column sticks under the header', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await open(page, SVC);
+  const intro = page.locator('section[aria-labelledby="includes-title"] .grid--split > :first-child');
+  const navH = await page.evaluate(() => document.querySelector('.site-header').getBoundingClientRect().height);
+  const cs = await intro.evaluate((el) => ({ pos: getComputedStyle(el).position, top: parseFloat(getComputedStyle(el).top) }));
+  expect(cs.pos).toBe('sticky');
+  expect(cs.top).toBeGreaterThanOrEqual(navH);
+  // Scroll the frame's top halfway through the room the intro has to travel: it should be pinned at
+  // its sticky offset, having moved down relative to the frame, and still end inside the section.
+  const g = await page.evaluate(() => {
+    const i = document.querySelector('section[aria-labelledby="includes-title"] .grid--split > :first-child').getBoundingClientRect();
+    const f = document.querySelector('.build-frame').getBoundingClientRect();
+    return { frameTop: f.top + scrollY, travel: f.height - i.height };
+  });
+  expect(g.travel, 'positive control: the checklist is taller than the intro').toBeGreaterThan(150);
+  await page.evaluate((v) => scrollTo(0, v), g.frameTop - cs.top + g.travel / 2);
+  await page.waitForTimeout(150);
+  const r = await page.evaluate(() => {
+    const i = document.querySelector('section[aria-labelledby="includes-title"] .grid--split > :first-child').getBoundingClientRect();
+    const f = document.querySelector('.build-frame').getBoundingClientRect();
+    return { top: i.top, bottom: i.bottom, frameTop: f.top, frameBottom: f.bottom };
+  });
+  expect(Math.abs(r.top - cs.top), 'intro pinned at its sticky offset, below the header').toBeLessThanOrEqual(1);
+  expect(r.top - r.frameTop, 'intro has moved down beside the checklist').toBeGreaterThan(50);
+  expect(r.bottom).toBeLessThanOrEqual(r.frameBottom + 1);
+});
+
+test('services @390: the includes intro is not sticky on narrow screens', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await open(page, SVC, { settle: 0 });
+  const pos = await page.locator('section[aria-labelledby="includes-title"] .grid--split > :first-child').evaluate((el) => getComputedStyle(el).position);
+  expect(pos).not.toBe('sticky');
+});
+
+for (const width of [1440, 1024, 390]) {
+  test(`index @${width}: the founder card has no large empty right-hand area`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await open(page, HOME);
+    const r = await page.locator('.founder').evaluate((card) => {
+      const c = card.getBoundingClientRect();
+      const pad = parseFloat(getComputedStyle(card).paddingRight);
+      let right = 0;
+      for (const el of card.querySelectorAll('.founder__body > *')) {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        for (const rr of range.getClientRects()) right = Math.max(right, rr.right);
+      }
+      return { empty: (c.right - pad - right) / c.width, overflow: c.right > innerWidth };
+    });
+    expect(r.empty, `empty right share ${(r.empty * 100).toFixed(0)}%`).toBeLessThanOrEqual(0.25);
+    expect(r.overflow).toBe(false);
+  });
+}
+
+test('index @1440: the Square Word card title lines up with the top of its demo', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await open(page, HOME);
+  const r = await page.evaluate(() => {
+    const body = document.querySelector('.showcase__item--lab .showcase__body').getBoundingClientRect();
+    const demo = document.querySelector('.showcase__item--lab .showcase__demo').getBoundingClientRect();
+    return { gap: Math.round(body.top - demo.top), side: body.right <= demo.left };
+  });
+  expect(r.side, 'positive control: two columns').toBe(true);
+  expect(Math.abs(r.gap)).toBeLessThanOrEqual(4);
+});

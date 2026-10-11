@@ -8,7 +8,7 @@
      1. Nav indicator + keycap        5. Command palette       9. Konami burst + toast
      2. Primary button shine + press  6. Back to top, phone CTA 10. Service-panel illustrations
      3. Card spotlight border         7. Footer skyline       11. Process-stepper rail
-     4. Eyebrow decode                8. Section seams        12. Pricing odometer, Bibooks pan
+     4. Eyebrow decode                                         12. Pricing odometer, Bibooks pan
    ========================================= */
 
 /* ---- 1. Nav indicator + keycap ---------------------------------------- */
@@ -277,7 +277,8 @@ html.fx-nav .nav__link.active::after { opacity: 0; }
 .fx-top {
   position: fixed;
   right: max(var(--gutter), env(safe-area-inset-right, 0px));
-  bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  /* --fx-top-lift (js/fx-ui.js): over the footer it climbs clear of the footer's text */
+  bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px) + var(--fx-top-lift, 0px));
   z-index: calc(var(--z-sticky) + 1);
   display: grid;
   place-items: center;
@@ -336,26 +337,6 @@ html.nav-open .fx-top { visibility: hidden; opacity: 0; }
   height: var(--fx-sky-h);
   pointer-events: none;
 }
-
-/* ---- 8. Section seam: one per page, at the top of the closing CTA band -- */
-.fx-seam {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  z-index: 1;
-  width: min(37.5rem, 84%);
-  aspect-ratio: 25 / 1; /* 600 x 24 at most */
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-.fx-seam--inset { transform: translate(-50%, 0); } /* .cta-band clips overflow */
-.fx-seam svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.fx-seam__trace { stroke-dasharray: 1 1; stroke-dashoffset: 1; }
-.fx-seam__pads { opacity: 0; }
-.fx-seam__node { fill: var(--bg-deep); stroke: var(--accent); stroke-width: 1.25; opacity: 0; }
-.fx-seam.is-drawn .fx-seam__trace { stroke-dashoffset: 0; transition: stroke-dashoffset 450ms var(--ease-out) 100ms; }
-.fx-seam.is-drawn .fx-seam__node { opacity: 1; transition: opacity var(--dur-base) var(--ease-out); }
-.fx-seam.is-drawn .fx-seam__pads { opacity: 0.8; transition: opacity 300ms var(--ease-out) 450ms; }
 
 /* ---- 9. Konami: burst layer + toast ----------------------------------- */
 .fx-burst-layer {

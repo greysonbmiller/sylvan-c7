@@ -4,17 +4,22 @@
    Luminous traces grow like roots, snapped to a circuit grid (90° runs with 45° jogs, vias at the
    branch points, solder pads at the tips). One engine, several crafted layouts:
 
-   - forest   (home, canvas[data-circuit], window.__fxHero): traces grow in from the hero's edges and
-              route around the copy as if it were the chip they serve; signal pulses then travel the
-              grown traces, fine pointers energise nearby nodes and a click on empty hero space seeds
-              a burst. Nothing grows in the band under the copy (that row of traces read as a divider).
+   - forest   (home, canvas[data-circuit], window.__fxHero): from 1024 px the terminal window is the
+              chip: traces leave its top, right and bottom edges, more grow in from the hero's edges,
+              and the copy column stays dark. Signal pulses then travel the grown traces, fine
+              pointers energise nearby nodes and a click on empty hero space seeds a burst. Below
+              1024 px the copy fills the hero, so there are no traces (and no loop) at all.
    - trees    (services): a few trunks rise from the bottom edge and branch upward at 45°.
    - roots    (work): a root enters from the top and links three hub nodes, each with short feeders.
    - seedling (contact): one stem sprouts and turns toward the form's send button.
    The page layouts (js/fx-pagehero.js) grow once, in at most maxGrowMs, then stop: no loop.
 
-   Readability: every grid cell within PAD px of an avoided element (text lines, buttons, chips, the
-   terminal) is blocked, so no trace, pad or glow is ever drawn behind copy.
+   Readability: every grid cell within PAD px of an avoided element (text lines, buttons, chips) is
+   blocked, and the clear zones (48 px around the hero copy) are erased after every frame, so no
+   trace, pad, glow or pulse is ever painted near the copy.
+
+   Deterministic: the layout comes from a seeded PRNG (mulberry32), measured once the hero's entrance
+   animations have finished, so the same page at the same size grows the same traces on every load.
 
    Budget: callers start it after `load` + idle; grown traces are baked once into an offscreen layer,
    so a frame is one drawImage plus a handful of glow sprites; DPR capped at 2; paused while
@@ -23,7 +28,7 @@
    Colour: accent-green family only (blue is reserved for the About name-morph).
 
    window.SylvanCircuit.create(canvas, options) returns the live api
-   { frames, running, grown, settled, nodes, growMs, maxFrameMs, seed(clientX, clientY), rebuild() }.
+   { frames, running, grown, settled, nodes, growMs, maxFrameMs, signature, seed(clientX, clientY), rebuild() }.
    ========================================= */
 
 (function () {
@@ -55,8 +60,21 @@
   var PULSE_SPEED = 0.32;
   var GLOW_MAX = 20;     // largest glow sprite radius, px (must stay < PAD)
 
-  function rand(a, b) { return a + Math.random() * (b - a); }
-  function randInt(a, b) { return Math.floor(rand(a, b + 1)); }
+  // Seeded PRNG (mulberry32): a layout is a pure function of its seed and the measured geometry, so
+  // the same page at the same size draws the same traces on every load.
+  function mulberry32(a) {
+    return function () {
+      a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function hashStr(str) {
+    var h = 2166136261;
+    for (var k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
   function turn(dir, by) { return (dir + by + 8) % 8; }
   function isDiag(dir) { return dir % 2 === 1; }
 
@@ -92,8 +110,14 @@
     target: null,        // function () -> {x, y} in canvas px (the seedling grows toward it)
     defer: false,        // wait for `load` + idle before starting
     layoutOwner: false,  // the caller handles resizes (calls api.rebuild())
+    seed: 0,             // PRNG seed (0 = derived from kind): same seed + same size = same layout
+    clear: null,         // { boxes: [selectors], px }: a hard mask; nothing is ever painted within px of
+                         // these boxes (below 1024 px wide: a full-width band over all of them)
+    chip: null,          // selector (>= 1024 px): the element the forest serves; nothing paints under
+                         // it and the first traces leave from its top, right and bottom edges
     api: null            // object to expose the live state on
   };
+  var WIDE = window.matchMedia('(min-width: 1024px)');
 
   function create(canvas, options) {
     if (!canvas || !canvas.getContext) return null;
@@ -104,6 +128,15 @@
     var host = o.host || canvas.parentElement;
     if (!sprite) sprite = makeSprite();
 
+    var seed = o.seed || hashStr('sylvan-c7:' + o.kind);
+    var rng = mulberry32(seed);
+    function rand(a, b) { return a + rng() * (b - a); }
+    function randInt(a, b) { return Math.floor(rand(a, b + 1)); }
+    function shuffle(arr) {
+      for (var k = arr.length - 1; k > 0; k--) { var m = Math.floor(rng() * (k + 1)); var tmp = arr[k]; arr[k] = arr[m]; arr[m] = tmp; }
+      return arr;
+    }
+
     var api = o.api || {};
     api.frames = 0; api.running = false; api.grown = false; api.settled = false; api.nodes = 0; api.maxFrameMs = 0; api.growMs = 0;
     api.seed = function () { return false; };
@@ -111,6 +144,7 @@
 
     var W = 0, H = 0, dpr = 1, G = 22, cols = 0, rows = 0, ox = 0, oy = 0;
     var occ, blocked;
+    var clips = [], chipRect = null; // hard clear zones, the chip box (canvas px)
     var branches = [], nodes = [], pulses = [], flashes = [], hubs = [];
     var base = document.createElement('canvas');
     var bctx = base.getContext('2d');
@@ -170,6 +204,39 @@
         var gx = inner ? inner.getBoundingClientRect().left - cr.left + parseFloat(getComputedStyle(inner).paddingLeft || 0) - 16 : 0;
         if (gx > 0) rects.push([-G, -G, gx, H + G]);
       }
+      // Hard clear zones (painted out after every frame) and the chip. Cells are blocked a further
+      // half cell + a pad radius out, so traces route around the zones instead of being cut by them.
+      clips = [];
+      chipRect = null;
+      var c0 = canvas.getBoundingClientRect();
+      function boxOf(el) {
+        var r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0 ? [r.left - c0.left, r.top - c0.top, r.right - c0.left, r.bottom - c0.top] : null;
+      }
+      if (o.clear && o.clear.boxes && o.clear.boxes.length) {
+        var M = o.clear.px || 0;
+        var boxes = [];
+        host.querySelectorAll(o.clear.boxes.join(',')).forEach(function (el) { var b = boxOf(el); if (b) boxes.push(b); });
+        if (boxes.length && !WIDE.matches) {
+          var bt = Infinity, bb = -Infinity;
+          boxes.forEach(function (b) { bt = Math.min(bt, b[1]); bb = Math.max(bb, b[3]); });
+          clips.push([-G, bt - M, W + G, bb + M]);
+        } else {
+          boxes.forEach(function (b) { clips.push([b[0] - M, b[1] - M, b[2] + M, b[3] + M]); });
+        }
+      }
+      var extra = G / 2 + 4;
+      clips.forEach(function (c) { rects.push([c[0] - extra, c[1] - extra, c[2] + extra, c[3] + extra]); });
+      if (o.chip && WIDE.matches) {
+        var chipEl = host.querySelector(o.chip);
+        chipRect = chipEl ? boxOf(chipEl) : null;
+        if (chipRect) {
+          clips.push(chipRect.slice());
+          rects.push([chipRect[0] - 10, chipRect[1] - 10, chipRect[2] + 10, chipRect[3] + 10]);
+          // the copy column stays dark: the forest belongs to the chip's side of the hero
+          rects.push([-G, -G, chipRect[0] - 16, H + G]);
+        }
+      }
       for (var k = 0; k < rects.length; k++) {
         var r = rects[k];
         var i0 = Math.max(0, Math.ceil((r[0] - ox) / G)), i1 = Math.min(cols - 1, Math.floor((r[2] - ox) / G));
@@ -210,9 +277,9 @@
       for (var step = 0; step < b.maxLen; step++) {
         if (run <= 0) {
           if (dir !== base) { dir = base; run = isDiag(base) ? randInt(2, 4) : randInt(2, 7); }
-          else if (b.jogOnly || Math.random() < 0.5) { dir = turn(base, Math.random() < 0.5 ? 1 : -1); run = randInt(1, b.jogOnly ? 2 : 3); }
+          else if (b.jogOnly || rng() < 0.5) { dir = turn(base, rng() < 0.5 ? 1 : -1); run = randInt(1, b.jogOnly ? 2 : 3); }
           else {
-            var nb = turn(base, Math.random() < 0.5 ? 2 : -2);
+            var nb = turn(base, rng() < 0.5 ? 2 : -2);
             // never more than 90° away from where the branch set out
             if (((nb - b.heading + 8) % 8) !== 4 && ((nb - b.heading + 8) % 8) !== 3 && ((nb - b.heading + 8) % 8) !== 5) base = nb;
             dir = base; run = randInt(2, 6);
@@ -220,7 +287,7 @@
         }
         var ni = i + DX[dir], nj = j + DY[dir];
         if (!free(ni, nj, i, j)) {
-          var alt = Math.random() < 0.5 ? [turn(dir, 1), turn(dir, -1), base, turn(dir, 2), turn(dir, -2)] : [turn(dir, -1), turn(dir, 1), base, turn(dir, -2), turn(dir, 2)];
+          var alt = rng() < 0.5 ? [turn(dir, 1), turn(dir, -1), base, turn(dir, 2), turn(dir, -2)] : [turn(dir, -1), turn(dir, 1), base, turn(dir, -2), turn(dir, 2)];
           var ok = false;
           for (var a = 0; a < alt.length && !ok; a++) {
             var d2 = alt[a];
@@ -235,8 +302,8 @@
         occ[idx(i, j)] = 1;
         b.cells.push([i, j]);
         run--;
-        if (b.depth < 3 && step > 1 && step < b.maxLen - 3 && Math.random() < b.branchP - b.depth * 0.035) {
-          var by = Math.random() < 0.5 ? b.branchTurn : -b.branchTurn;
+        if (b.depth < 3 && step > 1 && step < b.maxLen - 3 && rng() < b.branchP - b.depth * 0.035) {
+          var by = rng() < 0.5 ? b.branchTurn : -b.branchTurn;
           queue.push({ parent: b, at: b.cells.length - 1, dir: turn(isDiag(dir) && b.branchTurn === 2 ? base : dir, by) });
         }
       }
@@ -323,7 +390,36 @@
     }
 
     // ---- layouts ----
+    // The chip's pins: traces leave the chip's top, right and bottom edges and run outward, so the
+    // forest reads as wiring into the one focal object instead of wallpaper. They grow first.
+    function seedPins() {
+      if (!chipRect) return;
+      var ch = chipRect, cand = [], i, j;
+      var jTop = Math.floor((ch[1] - 11 - oy) / G), jBot = Math.ceil((ch[3] + 11 - oy) / G), iRight = Math.ceil((ch[2] + 11 - ox) / G);
+      for (i = 0; i < cols; i += 2) {
+        if (px(i) < ch[0] + 20 || px(i) > ch[2] - 20) continue;
+        cand.push({ i: i, j: jTop, dir: 6, lead: [px(i), ch[1]] });
+        cand.push({ i: i, j: jBot, dir: 2, lead: [px(i), ch[3]] });
+      }
+      for (j = 0; j < rows; j += 2) {
+        if (py(j) < ch[1] + 20 || py(j) > ch[3] - 20) continue;
+        cand.push({ i: iRight, j: j, dir: 0, lead: [ch[2], py(j)] });
+      }
+      shuffle(cand);
+      var roots = [];
+      var want = Math.round(cand.length * 0.55);
+      for (var n = 0; n < cand.length && roots.length < want; n++) {
+        var c = cand[n];
+        if (!free(c.i, c.j, -1, -1)) continue;
+        occ[idx(c.i, c.j)] = 1;
+        roots.push(makeBranch(c.i, c.j, c.dir, 0, 120 + rand(0, 520), randInt(6, 16), null, c.lead));
+      }
+      var got = grow(roots, function (b) { b.branchP = 0.2; });
+      api.pins = got.filter(function (b) { return !!b.lead; }).length;
+    }
+
     function seedForest() {
+      seedPins();
       var roots = [];
       var narrow = W < 640;
       var budget = Math.round(cols * rows * (narrow ? 0.4 : 0.3) * o.density);
@@ -337,7 +433,7 @@
         cand.push({ i: i, j: rows - 1, dir: 6, lead: [px(i), H + G] });
         if (narrow || px(i) > W * 0.45) cand.push({ i: i, j: 0, dir: 2, lead: [px(i), -G] });
       }
-      cand.sort(function () { return Math.random() - 0.5; });
+      shuffle(cand);
       var used = 0;
       cand.forEach(function (c, n) {
         if (used > budget) return;
@@ -380,7 +476,7 @@
       pts.forEach(function (p, n) {
         hubs.push({ x: px(p[0]), y: py(p[1]), t: arrivals[n], baked: false });
         nodes.push({ x: px(p[0]), y: py(p[1]), kind: 'hub', e: 0, last: -1e9 });
-        var dirs = [0, 1, 2, 3, 4, 5, 6, 7].sort(function () { return Math.random() - 0.5; });
+        var dirs = shuffle([0, 1, 2, 3, 4, 5, 6, 7]);
         var made = 0;
         for (var d = 0; d < dirs.length && made < 4; d++) {
           var di = dirs[d];
@@ -445,6 +541,12 @@
         growEnd = o.maxGrowMs;
       }
       api.growMs = Math.round(growEnd);
+      // The layout's fingerprint (tests: identical on every load at the same size).
+      var sig = 2166136261;
+      branches.forEach(function (b) {
+        b.cells.forEach(function (c) { sig = Math.imul(sig ^ (c[0] * 4099 + c[1]), 16777619); });
+      });
+      api.signature = branches.length + ':' + (sig >>> 0).toString(16);
     }
 
     function burst(x, y) {
@@ -466,7 +568,7 @@
       var hub = { x: px(best[0]), y: py(best[1]), kind: 'via', e: 0, last: -1e9 };
       nodes.push(hub);
       var t0 = clock + 60;
-      var dirs = [0, 2, 4, 6, 1, 3, 5, 7].sort(function () { return Math.random() - 0.5; }).slice(0, randInt(4, 6));
+      var dirs = shuffle([0, 2, 4, 6, 1, 3, 5, 7]).slice(0, randInt(4, 6));
       var roots = dirs.map(function (d) {
         return makeBranch(best[0], best[1], d, 1, t0 + rand(0, 120), randInt(6, 16), { burst: true }, null);
       });
@@ -493,7 +595,7 @@
           if (blocked[idx(i, j)]) continue;
           // denser toward the right / lower edges, where the forest roots
           var w = Math.min(1, 0.25 + 0.75 * Math.max(i / cols, j / rows));
-          var a = (0.05 + 0.09 * w * w) * (Math.random() < 0.85 ? 1 : 1.8);
+          var a = (0.05 + 0.09 * w * w) * (rng() < 0.85 ? 1 : 1.8);
           dctx.fillStyle = 'rgba(0,217,126,' + a.toFixed(3) + ')';
           dctx.fillRect(px(i) - 0.75, py(j) - 0.75, 1.5, 1.5);
         }
@@ -670,7 +772,7 @@
         } else if (da > 0) { ctx.globalAlpha = da; ctx.drawImage(dots, 0, 0); ctx.globalAlpha = 1; }
       }
       ctx.drawImage(base, 0, 0);
-      if (!dt) return; // static frame: the baked layers only
+      if (!dt) { clearZones(); return; } // static frame: the baked layers only
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.globalCompositeOperation = 'lighter';
@@ -731,6 +833,22 @@
       }
       ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = 'source-over';
+      clearZones();
+    }
+
+    // Hard mask: whatever this frame drew (traces, pads, glows, pulses, the substrate) is erased
+    // from the clear zones, so nothing is ever painted within the clear distance of the copy.
+    function clearZones() {
+      if (!clips.length) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = '#000';
+      for (var k = 0; k < clips.length; k++) {
+        var c = clips[k];
+        ctx.fillRect(Math.floor(c[0]) - 1, Math.floor(c[1]) - 1, Math.ceil(c[2] - c[0]) + 2, Math.ceil(c[3] - c[1]) + 2);
+      }
+      ctx.globalCompositeOperation = 'source-over';
     }
 
     function frame(ts) {
@@ -744,7 +862,9 @@
       if (cost > api.maxFrameMs) api.maxFrameMs = Math.round(cost * 10) / 10;
       // Grow-once layouts: once everything has grown and the last flash has faded, the frame just
       // drawn is the final one. Stop for good (nothing changes from here on).
-      if (!o.ambient && !o.interactive && api.grown && !flashes.length && dotsMerged) {
+      // Also stop when there is nothing to animate at all (phones: the forest stays out of the copy
+      // area entirely, so the hero has no traces and needs no loop).
+      if ((!o.ambient && !o.interactive || !branches.length) && api.grown && !flashes.length && !pulses.length && dotsMerged) {
         api.settled = true;
         api.running = false;
         return;
@@ -795,6 +915,7 @@
       var t1 = performance.now();
       setTimeout(function () {
         var t2 = performance.now();
+        rng = mulberry32(seed); // every build of the same geometry is the same layout
         bakeDots();
         seedLayout();
         if (instant) {
@@ -824,7 +945,7 @@
     }
 
     function isEmptySpace(target) {
-      return !(target.closest && target.closest('a, button, input, select, textarea, label, .terminal, .hero__title, .hero__lead, .chip-list, .btn-row'));
+      return !(target.closest && target.closest('a, button, input, select, textarea, label, .terminal, .hero-window, .hero__title, .hero__lead, .chip-list, .btn-row'));
     }
 
     function settledFrame() {
@@ -832,11 +953,30 @@
       staticFrame();
     }
 
+    // The layout is measured once: wait for the host's finite entrance animations (the hero copy's
+    // short rise) so it is measured at rest, the same on every load. Capped, never blocks for long.
+    function whenAtRest(fn) {
+      var list = [];
+      try {
+        list = host.getAnimations ? host.getAnimations({ subtree: true }).filter(function (a) {
+          var t = a.effect && a.effect.getComputedTiming ? a.effect.getComputedTiming() : null;
+          return t && isFinite(t.endTime) && !(a.effect.pseudoElement) && a.playState !== 'finished';
+        }) : [];
+      } catch (e) { list = []; }
+      if (!list.length) { fn(); return; }
+      var called = false;
+      var go = function () { if (!called) { called = true; fn(); } };
+      Promise.all(list.map(function (a) { return a.finished.catch(function () {}); })).then(go);
+      setTimeout(go, 1500);
+    }
+
     function init() {
-      started = true;
-      build(reducedQuery.matches, function () {
-        if (reducedQuery.matches) staticFrame();
-        else schedule();
+      whenAtRest(function () {
+        started = true;
+        build(reducedQuery.matches, function () {
+          if (reducedQuery.matches) staticFrame();
+          else schedule();
+        });
       });
 
       api.rebuild = function () {
@@ -919,7 +1059,10 @@
     window.__fxHero = create(home, {
       kind: 'forest',
       avoidText: ['.hero__title', '.hero__lead'],
-      avoidBoxes: ['.terminal', '.btn-row .btn', '.chip-list li', '.hero__cue'],
+      avoidBoxes: ['.btn-row .btn', '.chip-list li'],
+      clear: { boxes: ['.hero__title', '.hero__lead', '.btn-row .btn', '.chip-list li'], px: 48 },
+      chip: '.hero-window',
+      density: 0.7,
       clearBelow: '.chip-list',
       gutter: true,
       dots: true,

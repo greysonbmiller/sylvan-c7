@@ -130,12 +130,6 @@
     <section class="hero" aria-labelledby="hero-title">
       <canvas class="hero__canvas" data-circuit aria-hidden="true"></canvas>
       <div class="container hero__inner">
-        <div class="terminal">
-          <span class="terminal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="terminal__prompt" aria-hidden="true">$</span>
-          <span data-typer data-typer-phrases='["build --website","build --web-app","build --integration","build --instrument-control","build --data-tooling"]'>build --website</span>
-          <span class="terminal__status" aria-hidden="true"></span>
-        </div>
         <h1 class="hero__title" id="hero-title" data-mask>Software that <em>keeps working</em>.</h1>
         <p class="lead hero__lead" data-hero-follow>I'm Greyson Miller. I build websites, web apps, integrations and instrument-control software for small businesses, labs and technical teams. Fixed quotes, plain answers, and code you own.</p>
         <div class="btn-row" data-hero-follow style="--follow-i:1">
@@ -147,8 +141,22 @@
           <li class="chip chip--check">You own everything from day one</li>
           <li class="chip chip--check">No lock-in contract</li>
         </ul>
+        <!-- The one focal object (right column from 1024 px; a compact command line below the chips on
+             narrower screens). js/fx-hero.js types the other commands once and swaps the picture. -->
+        <div class="hero-window" data-hero-follow style="--follow-i:3">
+          <div class="terminal">
+            <span class="terminal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="terminal__prompt" aria-hidden="true">$</span>
+            <span data-typer>build --website</span>
+            <span class="terminal__status" aria-hidden="true"></span>
+          </div>
+          <div class="hero-window__body" aria-hidden="true">
+            <div class="hero-window__stage">
+              <div class="hill is-current" data-hill="websites"><svg viewBox="0 0 320 170"><rect class="b lg up" x="16" y="12" width="196" height="146"/><rect class="at up" style="--d:.15s" x="28" y="24" width="172" height="42"/><rect class="af pill up" style="--d:.25s" x="40" y="35" width="88" height="8"/><rect class="m pill up" style="--d:.3s" x="40" y="50" width="58" height="5"/><rect class="s pill up" style="--d:.35s" x="28" y="76" width="116" height="6"/><rect class="s pill up" style="--d:.4s" x="28" y="88" width="84" height="6"/><rect class="s up" style="--d:.45s" x="28" y="104" width="52" height="42"/><rect class="s up" style="--d:.5s" x="88" y="104" width="52" height="42"/><rect class="s up" style="--d:.55s" x="148" y="104" width="52" height="42"/><path class="l a draw" pathLength="1" style="--d:.7s" d="M212 45h20"/><g class="up" style="--d:.6s"><rect class="b lg" x="232" y="12" width="72" height="124"/><rect class="at" x="240" y="24" width="56" height="26"/><rect class="af pill" x="246" y="33" width="32" height="6"/><rect class="s" x="240" y="58" width="56" height="18"/><rect class="s" x="240" y="82" width="56" height="18"/><rect class="s" x="240" y="106" width="56" height="18"/></g><text class="t fade" style="--d:.8s" x="268" y="160" text-anchor="middle">mobile</text></svg></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="hero__cue" aria-hidden="true"><span class="hero__cue-line"></span><svg class="hero__cue-chev" viewBox="0 0 16 10" width="16" height="10" focusable="false"><path d="M1.5 1.5 8 8l6.5-6.5"/></svg></div>
     </section>
 
     <!-- Services -->
@@ -183,7 +191,7 @@
               </div>
             </div>
             <div class="tabs__panel" data-illus="web-apps" role="tabpanel" id="svc-panel-2" aria-labelledby="svc-tab-2" tabindex="0">
-              <h3 class="tabs__panel-title">Web apps and internal tools</h3>
+              <h3 class="tabs__panel-title">Web apps</h3>
               <div class="tabs__panel-body">
                 <p>Custom web applications for work that has outgrown a spreadsheet.</p>
                 <ul class="check-list" role="list">
@@ -194,7 +202,7 @@
               </div>
             </div>
             <div class="tabs__panel" data-illus="integrations" role="tabpanel" id="svc-panel-3" aria-labelledby="svc-tab-3" tabindex="0">
-              <h3 class="tabs__panel-title">Integrations and automation</h3>
+              <h3 class="tabs__panel-title">Integrations</h3>
               <div class="tabs__panel-body">
                 <p>Connect the tools you already use, so data moves without retyping.</p>
                 <ul class="check-list" role="list">
@@ -205,7 +213,7 @@
               </div>
             </div>
             <div class="tabs__panel" data-illus="instrument" role="tabpanel" id="svc-panel-4" aria-labelledby="svc-tab-4" tabindex="0">
-              <h3 class="tabs__panel-title">Instrument-control software</h3>
+              <h3 class="tabs__panel-title">Instrument control</h3>
               <div class="tabs__panel-body">
                 <p>Software that drives physical instruments, and hardware-control systems that run unattended.</p>
                 <ul class="check-list" role="list">
@@ -366,26 +374,23 @@
 
         <ul class="price-teaser" role="list" data-glow>
           <li class="card price-teaser__item">
-            <h3 class="price-teaser__name"><a href="contact.html?package=launch">Launch</a></h3>
+            <h3 class="price-teaser__name"><a class="card__cover" href="contact.html?package=launch">Launch</a></h3>
             <div class="price-teaser__price"><span class="price-teaser__from">from</span> $2,500</div>
             <p class="card__meta">Up to 5 pages, typically 2–&#8288;3&nbsp;weeks</p>
           </li>
           <li class="card card--accent price-teaser__item">
-            <h3 class="price-teaser__name"><a href="contact.html?package=growth">Growth</a> <span class="badge">Most projects</span></h3>
+            <h3 class="price-teaser__name"><a class="card__cover" href="contact.html?package=growth">Growth</a></h3>
+            <span class="badge price-card__badge">Most projects</span>
             <div class="price-teaser__price"><span class="price-teaser__from">from</span> $5,500</div>
             <p class="card__meta">Up to 12 pages with a CMS, typically 4–&#8288;6&nbsp;weeks</p>
           </li>
           <li class="card price-teaser__item">
-            <h3 class="price-teaser__name"><a href="contact.html?package=commerce">Commerce &amp; Custom</a></h3>
+            <h3 class="price-teaser__name"><a class="card__cover" href="contact.html?package=commerce">Commerce &amp; Custom</a></h3>
             <div class="price-teaser__price"><span class="price-teaser__from">from</span> $10,000</div>
             <p class="card__meta">Stores, booking and customer portals</p>
           </li>
-          <li class="card price-teaser__item">
-            <h3 class="price-teaser__name"><a href="contact.html?package=custom">Custom software</a></h3>
-            <div class="price-teaser__price price-teaser__price--text">Scoped per project</div>
-            <p class="card__meta">A fixed quote in writing after a free call</p>
-          </li>
         </ul>
+        <p class="price-teaser__note"><a href="contact.html?package=custom">Custom software</a>: scoped per project, with a fixed quote after a free call.</p>
         <p class="home-more"><a class="link-arrow" href="services.html#pricing">See full pricing</a></p>
       </div>
     </section>

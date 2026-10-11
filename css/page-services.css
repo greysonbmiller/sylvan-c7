@@ -28,6 +28,16 @@
 
 .price-card__text { color: var(--text-body); }
 
+/* Hover: a clear accent-dim border and a 2px lift (.card's 250 ms transition), the same as the
+   Home pricing cards (page-home.css). The featured card keeps its full accent border. */
+@media (hover: hover) {
+  .svc-pricing .price-card:hover { border-color: var(--accent-dim); }
+  .svc-pricing .price-card--featured:hover { border-color: var(--accent); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .svc-pricing .price-card:hover { transform: translateY(-2px); }
+}
+
 @media (min-width: 768px) {
   .price-card--custom {
     grid-column: 1 / -1;
@@ -129,6 +139,11 @@
 .includes-moves strong { color: var(--text-primary); font-weight: 600; }
 
 /* ---- Every project includes ---- */
+/* Wide screens: the short intro column rides along under the header beside the long checklist. */
+@media (min-width: 1024px) {
+  .includes-intro { position: sticky; top: calc(var(--nav-h) + var(--space-8)); }
+}
+
 .includes-moves {
   margin-top: var(--space-6);
   color: var(--text-body);

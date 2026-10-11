@@ -1,11 +1,10 @@
 // fx-ambient (css/fx.css + js/fx-ui.js, reservations in css/site.css): footer forest-circuit skyline (green only),
-// one section seam (before the closing CTA band), pointer-lit dot-grid texture (gutters only, never behind text), brand selection + scrollbar, and the Konami "root access" easter egg.
+// no section seams, pointer-lit dot-grid texture (gutters only, never behind text), brand selection + scrollbar, and the Konami "root access" easter egg.
 // Pins existence, ARIA, no layout shift, offscreen pausing, reduced-motion static states, no-JS readability.
 import { test, expect } from '@playwright/test';
 import { LIVE_PAGES, BASE, open } from './helpers.mjs';
 
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-const SEAM_PAGES = ['./', 'services.html', 'work.html', 'about.html'];
 const toBottom = (page) => page.evaluate(() => scrollTo(0, document.scrollingElement.scrollHeight));
 
 /** Blocks fx-ui.js so a measurement shows the layout CSS reserved before the script ran. */
@@ -89,43 +88,30 @@ test.describe('footer skyline', () => {
   });
 });
 
-test.describe('section seams', () => {
+test.describe('no section seams', () => {
+  // The small circuit seam above each closing CTA band was removed (design critique): no element,
+  // no CSS, no reserved space, on any page.
   for (const p of LIVE_PAGES) {
-    test(`${p.name}: a seam only directly before the closing CTA band, nowhere else`, async ({ page }) => {
+    test(`${p.name}: no seam graphic anywhere, even after scrolling the whole page`, async ({ page }) => {
       await open(page, p.path);
-      const r = await page.evaluate(() => ({
-        bands: document.querySelectorAll('main > section + section.cta-band').length,
-        seams: [...document.querySelectorAll('[data-fx-seam]')].map((s) => s.parentElement.matches('main > section + section.cta-band')),
-      }));
-      expect(r.seams.length, 'one seam per closing CTA band').toBe(r.bands);
-      expect(r.seams.every(Boolean), 'every seam sits at the top of the CTA band').toBe(true);
-      if (SEAM_PAGES.includes(p.path)) expect(r.bands, 'positive control: this page closes on a CTA band').toBe(1);
+      await page.evaluate(async () => {
+        for (let y = 0; y < document.scrollingElement.scrollHeight; y += innerHeight * 0.8) {
+          scrollTo(0, y); await new Promise((r) => setTimeout(r, 30));
+        }
+      });
+      await page.waitForTimeout(300);
+      expect(await page.evaluate(() => document.documentElement.getAttribute('data-fx')), 'positive control: the effects layer ran').toBe('ready');
+      expect(await page.locator('[data-fx-seam], .fx-seam, [class*="fx-seam"]').count()).toBe(0);
     });
   }
 
-  for (const path of SEAM_PAGES) {
-    test(`${path}: the aria-hidden seam (<= 24px) is drawn on entering view`, async ({ page }) => {
-      await open(page, path);
-      const seams = page.locator('main [data-fx-seam]');
-      expect(await seams.count()).toBe(1);
-      const info = await page.evaluate(() => [...document.querySelectorAll('main [data-fx-seam]')].map((s) => ({
-        hidden: s.getAttribute('aria-hidden'),
-        h: s.getBoundingClientRect().height,
-        okParent: s.parentElement.matches('main > section + section.cta-band'),
-        abs: getComputedStyle(s).position,
-      })));
-      for (const i of info) {
-        expect(i.hidden).toBe('true');
-        expect(i.h).toBeGreaterThan(0);
-        expect(i.h).toBeLessThanOrEqual(24);
-        expect(i.okParent).toBe(true);
-        expect(i.abs, 'out of flow: takes no layout space').toBe('absolute');
-      }
-      const last = seams.last();
-      await last.scrollIntoViewIfNeeded();
-      await expect(last).toHaveClass(/is-drawn/, { timeout: 3000 });
-    });
-  }
+  test('no seam code or styles ship', async ({ request }) => {
+    for (const f of ['js/fx-ui.js', 'css/fx/ui.css', 'css/fx.css', 'css/site.css']) {
+      const text = await (await request.get(new URL(f, BASE).href)).text();
+      expect(text.length, `positive control: ${f} served`).toBeGreaterThan(500);
+      expect(text, f).not.toMatch(/seam/i);
+    }
+  });
 
   test('no layout shift: main height is identical with and without the script', async ({ page }) => {
     const h = () => page.evaluate(() => document.querySelector('main').getBoundingClientRect().height);
@@ -135,16 +121,6 @@ test.describe('section seams', () => {
     await page.unroute('**/js/fx-ui.js');
     await open(page, 'work.html');
     expect(Math.abs(await h() - before)).toBeLessThan(1);
-  });
-
-  test.describe('reduced motion', () => {
-    test.use({ contextOptions: { reducedMotion: 'reduce' } });
-    test('seams are drawn immediately', async ({ page }) => {
-      await open(page, 'services.html');
-      const all = await page.evaluate(() => [...document.querySelectorAll('[data-fx-seam]')].map((s) => s.classList.contains('is-drawn')));
-      expect(all.length).toBeGreaterThan(0);
-      expect(all.every(Boolean)).toBe(true);
-    });
   });
 });
 

@@ -37,7 +37,7 @@ test.describe('command palette', () => {
     await expect(input).toHaveAttribute('role', 'combobox');
     const labels = (await options(page).allTextContents()).join(' | ');
     for (const want of ['Home', 'Services', 'Work', 'About', 'Contact', 'Pricing', 'FAQ', 'Process', 'Bibooks',
-      'Square Word Calligraphy', 'Nuestra Finca', 'Copy email', 'Call']) {
+      'Square Word Calligraphy', 'Nuestra Finca', 'Bibooks ↗', 'Copy email', 'Call']) {
       expect(labels, `palette lists "${want}"`).toContain(want);
     }
   });
@@ -430,6 +430,205 @@ test.describe('clean console', () => {
       await page.keyboard.type('a');
       await page.keyboard.press('Escape');
       expect(errors).toEqual([]);
+    });
+  }
+});
+
+// ---------------------------------------------------------------------------------------------
+// Design critique round 4: palette dead ends, external + clipboard actions, footer alignment,
+// back-to-top clear of the footer text.
+
+/** Records (and cancels) clicks on mailto: and external links, so a test can see where an action went. */
+async function recordLinkClicks(page) {
+  await page.addInitScript(() => {
+    window.__clicked = [];
+    document.addEventListener('click', (e) => {
+      const a = e.target && e.target.closest && e.target.closest('a[href]');
+      if (!a || !/^(mailto:|https?:\/\/(?!127\.0\.0\.1))/.test(a.href)) return;
+      window.__clicked.push({ href: a.href, target: a.target, rel: a.rel });
+      e.preventDefault();
+    }, true);
+  });
+}
+
+async function chooseOption(page, label) {
+  const opts = options(page);
+  const texts = await opts.allTextContents();
+  const i = texts.findIndex((t) => t.includes(label));
+  expect(i, `an option "${label}" among ${JSON.stringify(texts)}`).toBeGreaterThanOrEqual(0);
+  for (let k = 0; k < i; k++) await page.keyboard.press('ArrowDown');
+  await expect(opts.nth(i)).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('Enter');
+}
+
+test.describe('command palette: no dead ends', () => {
+  test('an unknown query offers "Email me about …" (mailto with that subject) and "Start a project"', async ({ page }) => {
+    await recordLinkClicks(page);
+    await open(page, './');
+    await page.keyboard.press('Control+k');
+    await page.keyboard.type('zzqx widget');
+    const texts = (await options(page).allTextContents()).join(' | ');
+    expect(texts).toContain('Email me about');
+    expect(texts).toContain('zzqx widget');
+    expect(texts).toContain('Start a project');
+    expect(await options(page).count(), 'just the two fallbacks').toBe(2);
+    await chooseOption(page, 'Email me about');
+    await expect.poll(() => page.evaluate(() => window.__clicked.length)).toBe(1);
+    const { href } = (await page.evaluate(() => window.__clicked))[0];
+    expect(href).toMatch(/^mailto:greysonbmiller@protonmail\.com\?subject=/);
+    expect(decodeURIComponent(href.split('subject=')[1])).toContain('zzqx widget');
+  });
+
+  test('"Start a project" fallback goes to the contact page', async ({ page }) => {
+    await open(page, 'about.html');
+    await page.keyboard.press('Control+k');
+    await page.keyboard.type('qqqqq');
+    await expect(options(page).filter({ hasText: 'Start a project' })).toHaveCount(1);
+    await Promise.all([page.waitForURL(url('contact.html')), chooseOption(page, 'Start a project')]);
+  });
+
+  for (const [from, query, label, to] of [
+    ['lab/square-word-calligraphy/', 'finca', 'Nuestra Finca', 'lab/nuestra-finca/'],
+    ['lab/nuestra-finca/', 'callig', 'Square Word Calligraphy', 'lab/square-word-calligraphy/'],
+    ['./', 'finca', 'Nuestra Finca', 'lab/nuestra-finca/'],
+  ]) {
+    test(`lab entry "${label}" opens ${to} from ${from}`, async ({ page }) => {
+      await open(page, from);
+      await page.keyboard.press('Control+k');
+      await page.keyboard.type(query);
+      await Promise.all([page.waitForURL(url(to)), chooseOption(page, label)]);
+    });
+  }
+
+  test('"Bibooks ↗" opens https://bibooks.org in a new tab with rel=noopener', async ({ page }) => {
+    await recordLinkClicks(page);
+    await open(page, 'services.html');
+    await page.keyboard.press('Control+k');
+    await page.keyboard.type('bibooks');
+    await chooseOption(page, 'Bibooks ↗');
+    await expect.poll(() => page.evaluate(() => window.__clicked.length)).toBe(1);
+    const c = (await page.evaluate(() => window.__clicked))[0];
+    expect(c.href).toMatch(/^https:\/\/bibooks\.org\/?$/);
+    expect(c.target).toBe('_blank');
+    expect(c.rel).toMatch(/\bnoopener\b/);
+    expect(page.url(), 'this tab stays put').toBe(url('services.html'));
+  });
+
+  test('"Copy email" writes the address to the clipboard and confirms in a live region', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(BASE).origin });
+    await open(page, 'work.html');
+    await page.keyboard.press('Control+k');
+    await page.keyboard.type('copy email');
+    await chooseOption(page, 'Copy email');
+    const status = palette(page).locator('[aria-live="polite"]');
+    await expect(status).toContainText(/copied/i);
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('greysonbmiller@protonmail.com');
+  });
+
+  test('"Copy email" falls back to mailto when the clipboard API is unavailable', async ({ page }) => {
+    await recordLinkClicks(page);
+    await page.addInitScript(() => { Object.defineProperty(Navigator.prototype, 'clipboard', { get: () => undefined, configurable: true }); });
+    await open(page, 'work.html');
+    await page.keyboard.press('Control+k');
+    await page.keyboard.type('copy email');
+    await chooseOption(page, 'Copy email');
+    await expect.poll(() => page.evaluate(() => window.__clicked.map((c) => c.href))).toEqual(['mailto:greysonbmiller@protonmail.com']);
+  });
+});
+
+/** Text-node line boxes inside `sel` (what the eye reads as text), in viewport coordinates. */
+function textRects(sel) {
+  const out = [];
+  for (const root of document.querySelectorAll(sel)) {
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let n = w.nextNode(); n; n = w.nextNode()) {
+      if (!n.nodeValue.trim() || !n.parentElement.getClientRects().length) continue;
+      const r = document.createRange();
+      r.selectNodeContents(n);
+      for (const b of r.getClientRects()) if (b.width && b.height) out.push({ l: b.left, r: b.right, t: b.top, b: b.bottom, s: n.nodeValue.trim().slice(0, 30) });
+    }
+  }
+  return out;
+}
+
+test.describe('footer alignment', () => {
+  for (const vp of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
+    test(`${vp.width}: the bottom rule spans exactly the content container`, async ({ page }) => {
+      await page.setViewportSize(vp);
+      await open(page, './');
+      await page.addStyleTag({ content: '.fx-top, .sticky-cta, .scroll-progress, .site-header { visibility: hidden !important; }' });
+      await page.evaluate(() => scrollTo(0, document.scrollingElement.scrollHeight));
+      await page.waitForTimeout(300);
+      const m = await page.evaluate(() => {
+        const inner = document.querySelector('.site-footer__inner');
+        const cs = getComputedStyle(inner);
+        const ir = inner.getBoundingClientRect();
+        const bottom = document.querySelector('.site-footer__bottom').getBoundingClientRect();
+        return { left: ir.left + parseFloat(cs.paddingLeft), right: ir.right - parseFloat(cs.paddingRight), y: Math.round(bottom.top) };
+      });
+      // Scan one pixel row at the rule for anything not the footer background.
+      const shot = (await page.screenshot({ clip: { x: 0, y: m.y, width: vp.width, height: 1 } })).toString('base64');
+      const ext = await page.evaluate(async (b64) => {
+        const img = new Image();
+        img.src = `data:image/png;base64,${b64}`;
+        await img.decode();
+        const c = document.createElement('canvas');
+        c.width = img.width; c.height = img.height;
+        const x = c.getContext('2d');
+        x.drawImage(img, 0, 0);
+        const d = x.getImageData(0, 0, c.width, 1).data;
+        const bg = getComputedStyle(document.querySelector('.site-footer')).backgroundColor.match(/\d+/g).map(Number);
+        let first = -1, last = -1;
+        for (let i = 0; i < c.width; i++) {
+          const diff = Math.abs(d[i * 4] - bg[0]) + Math.abs(d[i * 4 + 1] - bg[1]) + Math.abs(d[i * 4 + 2] - bg[2]);
+          if (diff > 6) { if (first < 0) first = i; last = i + 1; }
+        }
+        return { first, last };
+      }, shot);
+      expect(ext.first, 'positive control: a rule is drawn on that row').toBeGreaterThanOrEqual(0);
+      expect(Math.abs(ext.first - m.left), `rule starts at the container edge (${ext.first} vs ${m.left})`).toBeLessThanOrEqual(2);
+      expect(Math.abs(ext.last - m.right), `rule ends at the container edge (${ext.last} vs ${m.right})`).toBeLessThanOrEqual(2);
+    });
+  }
+});
+
+test('footer email sits on one line inside its column at every width', async ({ page }) => {
+  for (const width of [320, 390, 768, 800, 1023, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 800 });
+    await open(page, 'about.html', { settle: 0 });
+    const r = await page.evaluate(() => {
+      const a = document.querySelector('.site-footer__contact a[href^="mailto:"]');
+      const range = document.createRange();
+      range.selectNodeContents(a);
+      return { lines: range.getClientRects().length, right: a.getBoundingClientRect().right, col: a.closest('li').getBoundingClientRect().right };
+    });
+    expect(r.lines, `${width}: one line`).toBe(1);
+    expect(r.right, `${width}: inside its column`).toBeLessThanOrEqual(r.col + 0.5);
+  }
+});
+
+test.describe('back to top never covers the footer', () => {
+  for (const vp of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 800, height: 900 }]) {
+    test(`${vp.width}: at the bottom of the page the button sits clear of footer text and above the bottom row`, async ({ page }) => {
+      await page.setViewportSize(vp);
+      for (const path of ['./', 'services.html', 'work.html']) { // long enough for the button to show
+        await open(page, path);
+        await page.evaluate(() => scrollTo(0, document.scrollingElement.scrollHeight));
+        const btn = page.locator('[data-fx-top]');
+        await expect(btn).toBeVisible();
+        await page.waitForTimeout(450);
+        const r = await page.evaluate((fn) => {
+          const rects = new Function(`return (${fn})`)()('.site-footer');
+          const b = document.querySelector('[data-fx-top]').getBoundingClientRect();
+          const row = document.querySelector('.site-footer__bottom').getBoundingClientRect();
+          const hit = rects.filter((t) => t.l < b.right && t.r > b.left && t.t < b.bottom && t.b > b.top);
+          return { hit, btnBottom: b.bottom, rowTop: row.top, n: rects.length, inView: b.top >= 0 && b.bottom <= innerHeight };
+        }, textRects.toString());
+        expect(r.n, 'positive control: footer text found').toBeGreaterThan(5);
+        expect(r.hit, `${path}: overlapping footer text`).toEqual([]);
+        expect(r.btnBottom, `${path}: stops above the footer's bottom row`).toBeLessThanOrEqual(r.rowTop);
+        expect(r.inView, `${path}: still on screen`).toBe(true);
+      }
     });
   }
 });
