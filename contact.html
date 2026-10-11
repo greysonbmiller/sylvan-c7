@@ -81,8 +81,8 @@
 
         <div class="contact-form-card reveal">
           <h2 class="contact-form-card__title" id="form-title">Or send a short message</h2>
-          <noscript><p class="form-noscript">This form needs JavaScript to send. Please email <a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a> or call <a href="tel:+16266220261">(626) 622-0261</a> instead.</p></noscript>
-          <form class="form" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate aria-labelledby="form-title">
+          <noscript><p class="form-noscript">This form sends through FormSubmit, which may ask you to confirm you are not a robot. You can also email <a href="mailto:greysonbmiller@protonmail.com">greysonbmiller@protonmail.com</a> or call <a href="tel:+16266220261">(626) 622-0261</a>.</p></noscript>
+          <form class="form" id="contactForm" action="https://formsubmit.co/greysonbmiller@protonmail.com" method="POST" aria-labelledby="form-title">
             <div class="field">
               <label class="field__label" for="f-name">Name</label>
               <input class="field__input" id="f-name" name="name" type="text" autocomplete="name" required>
@@ -112,7 +112,10 @@
               </div>
             </details>
             <input type="hidden" name="package" value="">
-            <div class="form__hp" aria-hidden="true"><label for="f-gotcha">Leave this empty</label><input id="f-gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off"></div>
+            <input type="hidden" name="_subject" value="New project inquiry: Sylvan C7 site">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_next" value="https://greysonbmiller.github.io/sylvan-c7/contact.html?sent=1">
+            <div class="form__hp" aria-hidden="true"><label for="f-honey">Leave this empty</label><input id="f-honey" type="text" name="_honey" tabindex="-1" autocomplete="off"></div>
             <div class="form__actions">
               <button class="btn btn--primary" type="submit"><span class="btn__label">Send message</span></button>
               <p class="form__note form__note--live">I reply within two business days. No mailing list.</p>

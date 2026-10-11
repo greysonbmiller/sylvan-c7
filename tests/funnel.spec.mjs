@@ -74,7 +74,7 @@ test.describe('contact form', () => {
       const form = document.querySelector('main form');
       if (!form) return null;
       const fields = [...form.querySelectorAll('input, select, textarea')]
-        .filter((f) => f.type !== 'hidden' && f.type !== 'submit' && f.type !== 'button' && f.name !== '_gotcha' && !f.closest('[aria-hidden="true"]'));
+        .filter((f) => f.type !== 'hidden' && f.type !== 'submit' && f.type !== 'button' && f.name !== '_honey' && !f.closest('[aria-hidden="true"]'));
       const required = fields.filter((f) => f.required).map((f) => `${f.tagName.toLowerCase()}:${f.type}:${f.name}`);
       const optionalOutside = fields.filter((f) => !f.required && !f.closest('details')).map((f) => f.name || f.id);
       const summary = form.querySelector('details > summary')?.textContent.trim() ?? '';

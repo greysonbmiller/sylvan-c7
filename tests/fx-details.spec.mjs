@@ -65,6 +65,9 @@ test.describe('contact: field states', () => {
   });
 
   test('mailto fallback: the submit button morphs into an "opening your email" state, status text unchanged', async ({ page }) => {
+    // FormSubmit unreachable: the form falls back to the email hand-off after the request fails.
+    let posted = 0;
+    await page.route('https://formsubmit.co/**', (r) => { posted++; return r.abort('failed'); });
     await open(page, 'contact.html');
     await page.fill('#f-name', 'Ada');
     await page.fill('#f-email', 'ada@example.com');
@@ -74,7 +77,10 @@ test.describe('contact: field states', () => {
     await expect(btn).toHaveClass(/is-handoff/);
     await expect(btn).toContainText(/Opening your email/i);
     await expect(page.locator('#formStatus')).toContainText('your message has not been sent yet');
+    expect(posted, 'the form tried FormSubmit first').toBe(1);
+    expect(await page.evaluate(() => window.__externalNav), 'the mailto: hand-off was cancelled by the test guard').toHaveLength(1);
     await expect(btn).toContainText('Send message', { timeout: 6000 });
+    await expect(btn).not.toHaveClass(/is-handoff/);
   });
 });
 

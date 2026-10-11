@@ -105,7 +105,8 @@ export function build({ check = false } = {}) {
     const want = make();
     const target = join(CSS_DIR, name);
     const have = existsSync(target) ? readFileSync(target, 'utf8') : null;
-    if (have === want) continue;
+    // Line endings don't count: with core.autocrlf a checkout rewrites the built files as CRLF.
+    if (have !== null && have.replace(/\r\n/g, '\n') === want) continue;
     stale.push(name);
     if (!check) writeFileSync(target, want);
   }

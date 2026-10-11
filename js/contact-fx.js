@@ -2,6 +2,7 @@
    Sylvan C7 — Contact page details (contact.html only, deferred)
    - .is-valid + a drawn check (decorative) on each required field once valid
    - submit button "opening your email" hand-off state for the mailto fallback
+     (on the form's "contact:handoff" event from interactions.js)
      (interactions.js owns validation and the status text; this only decorates)
    - copy-email button with a "Copied" toast (role=status)
    Validation mirrors interactions.js: non-empty, and a plausible address for email.
@@ -54,9 +55,9 @@
     var timer = 0;
     var original = null;
 
-    // interactions.js registered its submit handler first (script order), so by
-    // the time this runs the status box already says what actually happened.
-    form.addEventListener('submit', function () {
+    // interactions.js fires "contact:handoff" once it has written the "not sent
+    // yet" status: immediately with no endpoint, or after FormSubmit fails.
+    form.addEventListener('contact:handoff', function () {
       if (!status.classList.contains('is-notice')) return; // only the mailto hand-off
       var label = btn.querySelector('.btn__label');
       if (!label) return;

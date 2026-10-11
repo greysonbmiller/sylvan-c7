@@ -67,13 +67,43 @@ export function servedFiles(exts = ['.html', '.js', '.mjs', '.css']) {
   return out.map((full) => ({ rel: relative(REPO, full).split(sep).join('/'), text: readFileSync(full, 'utf8') }));
 }
 
+// Nothing a test does may leave the machine or reach the desktop. open() guards its page's context,
+// once per context (pages made with browser.newContext() are covered as soon as they go through open()):
+// - The contact form posts to FormSubmit (a real third-party mailer): every formsubmit.co request is
+//   aborted. Tests that need a response register their own page.route(), which takes precedence.
+// - Chrome hands mailto:/tel: navigations to the OS (a real email/phone window, even headless). A
+//   capture-phase click listener installed before any page script cancels every mailto:/tel: link
+//   click and records its href on window.__externalNav, so tests can assert where it would have gone.
+//   (Site code must open these via a link click, never location.href; see the guard test.)
+export const FORMSUBMIT_URLS = 'https://formsubmit.co/**';
+const guardedContexts = new WeakSet();
+export async function guardContext(context) {
+  if (guardedContexts.has(context)) return;
+  guardedContexts.add(context);
+  await context.route(FORMSUBMIT_URLS, (route) => route.abort('blockedbyclient'));
+  await context.addInitScript(() => {
+    window.__externalNav = [];
+    window.addEventListener('click', (e) => {
+      const t = e.target;
+      const a = t && t.closest ? t.closest('a[href]') : null;
+      if (!a || !/^(mailto|tel):/i.test(a.getAttribute('href') || '')) return;
+      e.preventDefault();
+      window.__externalNav.push(a.href);
+    }, true);
+  });
+}
+
 /**
  * Navigate and let reveal / load-time JS settle. The effects layer (css/fx.css + the fx scripts) is
  * fetched by js/main.js only after `load`; wait until it has run (html[data-fx] = ready | failed)
  * or, with JS off / no layer on the page, carry straight on.
  */
 export async function open(page, path, { settle = 600 } = {}) {
+  await guardContext(page.context());
   const res = await page.goto(path, { waitUntil: 'load' });
+  // Fail loudly (before the test can click anything) if the mailto:/tel: guard did not install.
+  const guarded = await page.evaluate(() => !document.documentElement.classList.contains('js') || Array.isArray(window.__externalNav));
+  if (!guarded) throw new Error('mailto:/tel: click guard missing on ' + path + ': refusing to run a test that could open the OS mail/phone app');
   await page.evaluate(() => document.fonts && document.fonts.ready.then(() => true)).catch(() => {});
   await page.waitForFunction(() => {
     const tpl = document.querySelector('template[data-fx-late]');

@@ -1,6 +1,8 @@
 // SPEC "Motion & interaction" → "ADD (contract hooks the tests rely on)".
 import { test, expect } from '@playwright/test';
-import { PROCESS_TITLES, open } from './helpers.mjs';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { PROCESS_TITLES, REPO, open } from './helpers.mjs';
 
 const norm = (s) => s.replace(/\s+/g, ' ').trim();
 
@@ -127,14 +129,193 @@ test('contact: ?package=growth still prefills (positive control)', async ({ page
 });
 
 test('contact: the mailto fallback separates body lines with CRLF', async ({ page }) => {
+  await page.route(FS_ROUTE, (r) => r.abort('failed')); // FormSubmit unreachable → mailto hand-off
   await open(page, 'contact.html');
-  await page.fill('#f-name', 'Ada');
-  await page.fill('#f-email', 'ada@example.com');
-  await page.fill('#f-message', 'A new site');
+  await fillContact(page);
   await page.locator('#contactForm [type="submit"]').click();
   const href = await page.locator('#formStatus a[href^="mailto:"]').first().getAttribute('href');
   expect(href).toContain('%0D%0A');
   expect(href.replace(/%0D%0A/g, '')).not.toContain('%0A');
+  expect(decodeURIComponent(href), 'no _-prefixed FormSubmit fields in the email body').not.toMatch(/(^|\r\n)(Honey|Subject|Template|Next):/);
+  expect(await externalNav(page), 'the hand-off went through a (cancelled) link click to the same mailto:').toEqual([href]);
+});
+
+// ---------------------------------------------------------------------------------------------
+// Contact form → FormSubmit (https://formsubmit.co). Every request is intercepted: helpers.open()
+// aborts formsubmit.co at the context level, and the tests below fulfill/abort per page.
+
+const FS_ACTION = 'https://formsubmit.co/greysonbmiller@protonmail.com';
+const FS_AJAX = 'https://formsubmit.co/ajax/greysonbmiller@protonmail.com';
+const FS_ROUTE = 'https://formsubmit.co/**';
+const FS_SUCCESS = 'Thanks, that came through.';
+const FS_NOT_SENT = 'your message has not been sent yet';
+
+/** mailto:/tel: link clicks cancelled and recorded by the helpers.open() guard (never reach the OS). */
+const externalNav = (page) => page.evaluate(() => window.__externalNav);
+
+async function fillContact(page) {
+  await page.fill('#f-name', 'Ada');
+  await page.fill('#f-email', 'ada@example.com');
+  await page.fill('#f-message', 'A new site');
+}
+
+/** Fulfil FormSubmit's AJAX endpoint with `status`/`body`, recording each request it receives. */
+async function fakeFormSubmit(page, { status = 200, body, contentType = 'application/json' }) {
+  const seen = [];
+  await page.route(FS_ROUTE, (route) => {
+    seen.push(route.request());
+    return route.fulfill({ status, contentType, headers: { 'Access-Control-Allow-Origin': '*' }, body });
+  });
+  return seen;
+}
+
+test.describe('contact form → FormSubmit', () => {
+  test('markup: posts to FormSubmit with its hidden fields, the _honey honeypot and email as reply-to', async ({ page }) => {
+    await open(page, 'contact.html');
+    const form = page.locator('#contactForm');
+    await expect(form).toHaveAttribute('action', FS_ACTION);
+    await expect(form).toHaveAttribute('method', /^post$/i);
+    const hidden = (name) => form.locator(`input[type="hidden"][name="${name}"]`);
+    await expect(hidden('_subject')).toHaveValue('New project inquiry: Sylvan C7 site');
+    await expect(hidden('_template')).toHaveValue('table');
+    await expect(hidden('_next')).toHaveValue('https://greysonbmiller.github.io/sylvan-c7/contact.html?sent=1');
+    await expect(form.locator('[name="_gotcha"]')).toHaveCount(0);
+    const honey = form.locator('.form__hp[aria-hidden="true"] input[name="_honey"]');
+    await expect(honey).toHaveCount(1);
+    await expect(honey).toHaveAttribute('tabindex', '-1');
+    await expect(honey).toHaveAttribute('autocomplete', 'off');
+    const honeyId = await honey.getAttribute('id');
+    await expect(form.locator(`.form__hp label[for="${honeyId}"]`)).toHaveCount(1);
+    await expect(form.locator('input[type="email"][name="email"]')).toHaveCount(1);
+  });
+
+  test('no Formspree placeholder is left in contact.html or js/', () => {
+    const files = ['contact.html', ...readdirSync(join(REPO, 'js')).map((f) => `js/${f}`)];
+    for (const f of files) {
+      const text = readFileSync(join(REPO, f), 'utf8');
+      expect(text, f).not.toMatch(/formspree|YOUR_FORM_ID/i);
+    }
+  });
+
+  test('success: posts the form to the AJAX endpoint as JSON, shows the thanks and resets', async ({ page }) => {
+    const seen = await fakeFormSubmit(page, { body: JSON.stringify({ success: 'true', message: 'The form was submitted successfully.' }) });
+    await open(page, 'contact.html');
+    await fillContact(page);
+    await page.locator('#contactForm [type="submit"]').click();
+    const status = page.locator('#formStatus');
+    await expect(status).toContainText(FS_SUCCESS);
+    await expect(status).toHaveClass(/is-success/);
+    expect(seen).toHaveLength(1);
+    const req = seen[0];
+    expect(req.url()).toBe(FS_AJAX);
+    expect(req.method()).toBe('POST');
+    expect(req.headers()['accept']).toBe('application/json');
+    const body = req.postData() || '';
+    for (const [k, v] of [['name', 'Ada'], ['email', 'ada@example.com'], ['message', 'A new site'], ['_subject', 'New project inquiry: Sylvan C7 site']]) {
+      expect(body, `field ${k}`).toContain(`name="${k}"\r\n\r\n${v}\r\n`);
+    }
+    await expect(page.locator('#f-name')).toHaveValue('');
+    await expect(page.locator('#f-message')).toHaveValue('');
+    await expect(page.locator('#contactForm [type="submit"]')).not.toHaveClass(/is-handoff/);
+  });
+
+  const FAILURES = [
+    { name: 'not activated yet (JSON success "false")', status: 200,
+      body: JSON.stringify({ success: 'false', message: "This form needs Activation. We've sent you an email containing an 'Activate Form' link." }) },
+    { name: 'JSON success false (boolean)', status: 200, body: JSON.stringify({ success: false }) },
+    { name: 'HTTP 500', status: 500, body: JSON.stringify({ success: 'true' }) },
+    { name: 'unparseable body', status: 200, body: '<!doctype html><p>Thanks!</p>', contentType: 'text/html' },
+  ];
+  for (const f of FAILURES) {
+    test(`${f.name}: falls back to the mailto hand-off, never claims it was sent`, async ({ page }) => {
+      const seen = await fakeFormSubmit(page, f);
+      await open(page, 'contact.html');
+      await fillContact(page);
+      await page.locator('#contactForm [type="submit"]').click();
+      const status = page.locator('#formStatus');
+      await expect(status).toContainText(FS_NOT_SENT);
+      await expect(status).toHaveClass(/is-notice/);
+      await expect(status).not.toContainText(FS_SUCCESS);
+      await expect(status.locator('a[href^="mailto:greysonbmiller@protonmail.com?"]')).toHaveCount(1);
+      expect(seen).toHaveLength(1);
+      await expect(page.locator('#f-message'), 'the visitor keeps what they typed').toHaveValue('A new site');
+      const nav = await externalNav(page);
+      expect(nav).toHaveLength(1);
+      expect(nav[0]).toMatch(/^mailto:greysonbmiller@protonmail\.com\?/);
+    });
+  }
+
+  test('network failure: falls back to the mailto hand-off', async ({ page }) => {
+    let tried = 0;
+    await page.route(FS_ROUTE, (r) => { tried++; return r.abort('internetdisconnected'); });
+    await open(page, 'contact.html');
+    await fillContact(page);
+    await page.locator('#contactForm [type="submit"]').click();
+    await expect(page.locator('#formStatus')).toContainText(FS_NOT_SENT);
+    await expect(page.locator('#formStatus')).toHaveClass(/is-notice/);
+    expect(tried).toBe(1);
+    expect(await externalNav(page)).toHaveLength(1);
+  });
+
+  test('guard: the hand-off and plain mailto:/tel: links are cancelled and recorded, the page never leaves', async ({ page }) => {
+    await page.route(FS_ROUTE, (r) => r.abort('failed'));
+    await open(page, 'contact.html');
+    expect(await externalNav(page), 'guard installed before any click').toEqual([]);
+    const before = page.url();
+    await fillContact(page);
+    await page.locator('#contactForm [type="submit"]').click();
+    await expect(page.locator('#formStatus')).toContainText(FS_NOT_SENT);
+    const handoff = await page.locator('#formStatus a[href*="?subject="]').getAttribute('href');
+    await page.locator('main a.contact-link[href^="mailto:"]').click();
+    await page.locator('main a.contact-link[href^="tel:"]').click();
+    await page.locator('#formStatus a[href*="?subject="]').click(); // "try again"
+    await page.waitForTimeout(300);
+    expect(await externalNav(page)).toEqual([handoff, 'mailto:greysonbmiller@protonmail.com', 'tel:+16266220261', handoff]);
+    expect(page.url(), 'no navigation happened').toBe(before);
+    expect(await page.evaluate(() => document.querySelectorAll('#contactForm > a').length), 'the temporary hand-off link is removed').toBe(0);
+  });
+
+  test('safety net: with no per-test route, the submit reaches the context guard and nothing leaves', async ({ page }) => {
+    const requests = [];
+    const failed = [];
+    const responses = [];
+    page.on('request', (r) => { if (r.url().startsWith('https://formsubmit.co/')) requests.push(r.url()); });
+    page.on('requestfailed', (r) => { if (r.url().startsWith('https://formsubmit.co/')) failed.push(r.failure()?.errorText); });
+    page.on('response', (r) => { if (r.url().startsWith('https://formsubmit.co/')) responses.push(r.status()); });
+    await open(page, 'contact.html');
+    await fillContact(page);
+    await page.locator('#contactForm [type="submit"]').click();
+    await expect(page.locator('#formStatus')).toContainText(FS_NOT_SENT);
+    expect(requests, 'the form did try FormSubmit (positive control)').toEqual([FS_AJAX]);
+    expect(failed, 'aborted by the context guard').toHaveLength(1);
+    expect(failed[0], 'aborted by the context guard').toMatch(/BLOCKED_BY_CLIENT/);
+    expect(responses, 'no response ever came back from formsubmit.co').toEqual([]);
+  });
+
+  test('honeypot filled: accepted quietly, no request sent', async ({ page }) => {
+    let tried = 0;
+    page.on('request', (r) => { if (r.url().startsWith('https://formsubmit.co/')) tried++; });
+    await open(page, 'contact.html');
+    await fillContact(page);
+    await page.locator('#contactForm [name="_honey"]').evaluate((el) => { el.value = 'bot'; });
+    await page.locator('#contactForm [type="submit"]').click();
+    await expect(page.locator('#formStatus')).toHaveClass(/is-success/);
+    await page.waitForTimeout(300);
+    expect(tried).toBe(0);
+  });
+
+  test('?sent=1 (FormSubmit\'s no-JS redirect back) shows the success status', async ({ page }) => {
+    await open(page, 'contact.html?sent=1');
+    const status = page.locator('#formStatus');
+    await expect(status).toContainText(FS_SUCCESS);
+    await expect(status).toHaveClass(/is-success/);
+    await expect(status).toBeVisible();
+  });
+
+  test('without ?sent=1 the status box stays empty (control)', async ({ page }) => {
+    await open(page, 'contact.html');
+    await expect(page.locator('#formStatus')).toHaveText('');
+  });
 });
 
 test('contact: required fields carry a visible marker', async ({ page }) => {
@@ -210,6 +391,15 @@ test.describe('without JavaScript', () => {
     await expect(note).toContainText('greysonbmiller@protonmail.com');
     await expect(note).toContainText('(626) 622-0261');
     expect(await note.evaluate((n) => !!(n.compareDocumentPosition(document.querySelector('#contactForm')) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
+    // The form posts straight to FormSubmit without JS, so the note must not claim it cannot send.
+    await expect(note).not.toContainText(/needs JavaScript/i);
+  });
+
+  test('contact: the form still submits natively (FormSubmit action, browser validation on)', async ({ page }) => {
+    await open(page, 'contact.html');
+    const form = page.locator('#contactForm');
+    await expect(form).toHaveAttribute('action', 'https://formsubmit.co/greysonbmiller@protonmail.com');
+    await expect(form, 'novalidate is added by JS only, so no-JS visitors get native required checks').not.toHaveAttribute('novalidate', /.*/);
   });
 });
 
