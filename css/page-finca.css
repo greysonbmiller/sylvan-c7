@@ -9,11 +9,17 @@
 .finca-intro .lead,
 #main .section-header .lead { max-width: calc(52 * var(--ch-body)); }
 
-/* ---- The walkthrough stage (poster until clicked, then the iframe) ---- */
+/* ---- The walkthrough stage (poster until clicked, then the iframe) ----
+   16:9 on desktop, but never taller than the viewport under the fixed nav, so the whole frame is
+   visible once html's scroll-padding-top (nav + space-4) has aligned it. svh is the small viewport
+   (mobile toolbars shown), so it never runs under browser chrome; vh is the fallback. */
 .finca-stage {
   position: relative;
   aspect-ratio: 16 / 9;
   width: 100%;
+  max-height: calc(100vh - var(--nav-h) - var(--space-8));
+  max-height: calc(100svh - var(--nav-h) - var(--space-8));
+  touch-action: manipulation; /* the walkthrough takes the gestures: no double-tap zoom */
   margin-top: var(--space-8);
   overflow: hidden;
   border: 1px solid var(--border-medium, var(--border-subtle));
@@ -29,8 +35,10 @@
   height: 100%;
   border: 0;
   display: block;
+  background: var(--bg-deep);
 }
 
+/* The poster is a link to app/: desktop plays it in place, phones follow it full screen. */
 .finca-poster {
   position: absolute;
   inset: 0;
@@ -47,6 +55,8 @@
   font: inherit;
   text-align: center;
   cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
   background:
     linear-gradient(180deg, rgba(6, 10, 8, 0.15) 0%, rgba(6, 10, 8, 0.55) 50%, rgba(6, 10, 8, 0.8) 100%),
     url("../img/lab-nuestra-finca.jpg") center 85% / cover no-repeat;
@@ -70,6 +80,15 @@
 }
 
 .finca-poster:hover .finca-poster__btn { box-shadow: 0 0 24px var(--accent-glow-strong); }
+
+/* Phones only (the script unhides it): what the tap will do. */
+.finca-poster__hint {
+  font-size: var(--fs-small);
+  color: var(--text-body);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+.finca-poster__hint[hidden] { display: none; }
 
 .finca-stage__noscript {
   position: absolute;
@@ -98,9 +117,35 @@ html:not(.js) .finca-poster { display: none; }
   color: var(--text-muted);
 }
 
-@media (max-width: 639.98px) {
-  .finca-stage { aspect-ratio: 3 / 4; }
+.finca-bar[hidden] { display: none; }
+
+/* Phones, narrow windows and portrait touch tablets: a tall frame, close to the visible viewport
+   (a 16:9 strip would waste most of an upright iPad). */
+@media (max-width: 639.98px) and (orientation: portrait),
+       (orientation: portrait) and (hover: none) and (pointer: coarse) {
+  .finca-stage {
+    aspect-ratio: auto;
+    height: min(calc(100vh - var(--nav-h) - var(--space-24)), 48rem);
+    height: min(calc(100svh - var(--nav-h) - var(--space-24)), 48rem);
+    max-height: none;
+  }
 }
+
+/* Short landscape (phones on their side, squat windows): the frame fills nearly all the height. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .finca-stage {
+    aspect-ratio: auto;
+    height: calc(100vh - var(--nav-h) - var(--space-6));
+    height: calc(100svh - var(--nav-h) - var(--space-6));
+    max-height: none;
+    border-radius: var(--radius-md);
+  }
+  .finca-poster { gap: var(--space-3); padding: var(--space-4); }
+}
+
+/* While it plays in the page, the fixed call bar would cover the bottom of the frame (and the
+   walkthrough's touch controls), so it steps aside. */
+body.finca-playing .sticky-cta { display: none; }
 
 /* ---- Controls ---- */
 kbd {

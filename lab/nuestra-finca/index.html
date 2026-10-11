@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script>document.documentElement.classList.add('js')</script>
   <title>Nuestra Finca: a 3D farm walkthrough in your browser | Sylvan C7</title>
-  <meta name="description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, even on an ordinary laptop.">
+  <meta name="description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, on a phone or an ordinary laptop.">
   <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/">
   <meta name="theme-color" content="#060a08">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Sylvan C7">
   <meta property="og:title" content="Nuestra Finca: walk a 3D farm in your browser | Sylvan C7">
-  <meta property="og:description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, even on an ordinary laptop.">
+  <meta property="og:description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, on a phone or an ordinary laptop.">
   <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/">
   <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg">
   <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
   <meta property="og:image:alt" content="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Nuestra Finca: walk a 3D farm in your browser | Sylvan C7">
-  <meta name="twitter:description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, even on an ordinary laptop.">
+  <meta name="twitter:description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, on a phone or an ordinary laptop.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg">
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 
@@ -81,19 +81,22 @@
           <p class="lead">A small hillside farm, rebuilt in 3D from 17 phone photos and a few tape-measure numbers. There's a kitchen, a wooden house on posts and the covered bridge between them. Walk it, or fly over the roofs.</p>
         </header>
 
-        <!-- The ~7 MB walkthrough loads only when someone clicks the poster. -->
+        <!-- The walkthrough (~6 MB; ~2 MB phone set) loads only when someone asks for it. The poster
+             is a link to app/: desktop and tablets play it here in an iframe, phones open app/
+             full screen in this tab (see the script at the end). -->
         <div class="finca-stage" id="fincaStage">
-          <button type="button" class="finca-poster" id="fincaStart" aria-label="Start the 3D walkthrough (loads about 7 MB)">
+          <a class="finca-poster" id="fincaStart" href="app/" aria-label="Start the 3D walkthrough (loads about 6 MB)">
             <span class="btn btn--primary finca-poster__btn">Start the walkthrough</span>
-          </button>
+            <span class="finca-poster__hint" id="fincaHint" hidden>Opens full screen &middot; about 2&nbsp;MB</span>
+          </a>
           <noscript>
             <p class="finca-stage__noscript">The walkthrough draws the model in your browser, so it needs JavaScript turned on.</p>
           </noscript>
         </div>
 
-        <div class="finca-bar">
-          <p>Loads about 7&nbsp;MB. Click inside to look around; <kbd>Esc</kbd> opens the menu and full screen.</p>
-          <a class="btn btn--outline btn--sm" href="app/" target="_blank" rel="noopener">Open on its own page &#8599;</a>
+        <div class="finca-bar" id="fincaBar">
+          <p>Loads about 6&nbsp;MB. Click inside to look around; <kbd>Esc</kbd> opens the menu and full screen.</p>
+          <a class="btn btn--outline btn--sm" href="app/" target="_blank" rel="noopener">Open in its own tab &#8599;</a>
         </div>
       </div>
     </section>
@@ -102,7 +105,7 @@
       <div class="container">
         <header class="section-header reveal">
           <h2 class="section-title" id="controls-title">Getting around</h2>
-          <p class="lead">Press <kbd>H</kbd> inside for this list. On a phone or tablet, drag to look and use the on-screen buttons.</p>
+          <p class="lead">Press <kbd>H</kbd> inside for this list. On a touchscreen: left-thumb stick to move, drag to look, double-tap to jump.</p>
         </header>
         <ul class="finca-keys" role="list">
           <li><kbd>W A S D</kbd><span>Walk</span></li>
@@ -217,17 +220,78 @@
     <script src="../../js/fx-illus.js"></script>
   </template>
   <script>
-    // Load the walkthrough (~7 MB) only when asked, then hand it keyboard focus.
+    // The walkthrough loads only when asked (~6 MB; phones get a ~2 MB set).
+    // Desktop and tablets: play it here, in an iframe sized to the viewport.
+    // Phones (touch only, short side under 600 px): the poster is the one action and follows its
+    // link to app/ in this tab. An iframe there is cramped, the fixed nav and call bar sit over it,
+    // and iPhone Safari cannot make an iframe full screen; app/ fills the window, rotates freely,
+    // and Back returns here. The "own tab" bar is hidden on phones.
     (function () {
+      var stage = document.getElementById('fincaStage');
       var start = document.getElementById('fincaStart');
-      if (!start) return;
-      start.addEventListener('click', function () {
+      var hint = document.getElementById('fincaHint');
+      var bar = document.getElementById('fincaBar');
+      if (!stage || !start) return;
+
+      function mq(q) { return !!(window.matchMedia && window.matchMedia(q).matches); }
+      function isPhone() {
+        return mq('(pointer: coarse)') && !mq('(any-pointer: fine)') &&
+          Math.min(window.screen.width, window.screen.height) < 600;
+      }
+
+      if (isPhone()) {
+        start.setAttribute('aria-label', 'Start the 3D walkthrough full screen (loads about 2 MB)');
+        if (hint) hint.hidden = false;
+        if (bar) bar.hidden = true;
+      }
+
+      // The page's scroll-padding keeps the stage clear of the fixed nav.
+      function align(smooth) {
+        stage.scrollIntoView({ block: 'start', behavior: smooth && !mq('(prefers-reduced-motion: reduce)') ? 'smooth' : 'auto' });
+      }
+
+      function playHere() {
         var frame = document.createElement('iframe');
         frame.src = 'app/?embed=1';
         frame.title = 'Nuestra Finca 3D walkthrough';
-        frame.setAttribute('allow', 'fullscreen');
+        // allowfullscreen alone: every browser honours it (Safari included); adding
+        // allow="fullscreen" as well only makes Chrome warn that one overrides the other.
+        frame.setAttribute('allowfullscreen', '');
         frame.addEventListener('load', function () { try { frame.focus(); } catch (e) {} });
         start.replaceWith(frame);
+        // The sticky call bar steps aside while playing (CSS keys off this class).
+        document.body.classList.add('finca-playing');
+        // A scroll reveal that has not finished leaves the stage shifted down, and scrolling to it
+        // would leave the frame that far under the nav: finish it first.
+        var rv = stage.closest('.reveal');
+        if (rv) { rv.style.transition = 'none'; rv.classList.add('is-visible'); void rv.offsetHeight; }
+        align(true);
+
+        // Rotating or resizing moves the frame (under the nav, or off the bottom): re-align once the
+        // viewport settles, unless the reader had scrolled away or the walkthrough is full screen.
+        var inView = true, wasInView = null, timer = 0;
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (es) { inView = es[es.length - 1].intersectionRatio >= 0.5; },
+            { threshold: [0, 0.5, 1] }).observe(stage);
+        }
+        function onResize() {
+          if (wasInView === null) wasInView = inView;   // judged before the layout change lands
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            if (wasInView && !document.fullscreenElement && !document.webkitFullscreenElement) align(false);
+            wasInView = null;
+          }, 150);
+        }
+        window.addEventListener('resize', onResize);
+        window.addEventListener('orientationchange', onResize);
+      }
+
+      start.addEventListener('click', function (e) {
+        // Modified clicks (new tab or window) behave like the link they are; phones follow it.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button > 0) return;
+        if (isPhone()) return;
+        e.preventDefault();
+        playHere();
       });
     })();
   </script>
