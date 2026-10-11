@@ -5,4 +5,6 @@ Everything in this `app/` folder is generated from the private nuestra-finca rep
 each time, so any hand edit here is lost on the next export. Make changes in the nuestra-finca
 repository (`build.py` for the model, `walk.html` for the viewer) and re-export.
 
-The 3D viewer uses three.js (MIT) and three-mesh-bvh (MIT), loaded from jsDelivr.
+The 3D viewer uses three.js (MIT) and three-mesh-bvh (MIT), loaded from jsDelivr. The fonts in
+`fonts/` are Geist / Geist Mono and Inter, both under the SIL Open Font License 1.1 (license texts
+alongside them).

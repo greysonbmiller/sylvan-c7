@@ -7,12 +7,10 @@
 <link rel="icon" href="data:,">
 <meta name="description" content="A first-person 3D walkthrough of Nuestra Finca, a small hillside farm rebuilt in 3D from 17 photos. Walk it, or fly over the roofs.">
 <title>Nuestra Finca — Lab | Sylvan C7</title>
-<!-- Same fonts as the Sylvan C7 site pages, loaded without blocking the first paint (the
-     system fallbacks show until they arrive) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@600;700&family=Geist+Mono:wght@500&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@600;700&family=Geist+Mono:wght@500&family=Inter:wght@400;500;600&display=swap"></noscript>
+<!-- Same fonts as the Sylvan C7 site pages, self-hosted from fonts/ (no third-party font
+     requests). font-display: swap, so the system fallbacks paint until they arrive. -->
+<link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
 <!-- import map first: Firefox ignores one that comes after any module load or modulepreload -->
 <script type="importmap">
 { "imports": {
@@ -29,6 +27,13 @@
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/PointerLockControls.js" crossorigin>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.7.3/build/index.module.js" crossorigin>
 <style>
+  /* Geist and Inter (both SIL OFL 1.1; licenses in fonts/): the site's own latin subsets */
+  @font-face { font-family: 'Geist'; font-style: normal; font-weight: 600 700; font-display: swap;
+               src: url('fonts/geist-latin-wght600-700.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 600; font-display: swap;
+               src: url('fonts/inter-latin-wght400-600.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Geist Mono'; font-style: normal; font-weight: 500; font-display: swap;
+               src: url('fonts/geist-mono-latin-500.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   /* Sylvan C7 design tokens (copied from the site's css/variables.css so this page is self-contained) */
   :root {
     --bg-deep: #060a08; --bg-primary: #0a100d; --bg-elevated: #111a15; --bg-surface: #1a2620;
