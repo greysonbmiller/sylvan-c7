@@ -48,3 +48,43 @@ test('work: SoftwareApplication JSON-LD for Bibooks authored by Greyson Miller',
   expect(isBibooks(app.url)).toBe(true);
   expect(app.author?.name).toBe('Greyson Miller');
 });
+
+// Search-engine plumbing (2026-10-19 SEO pass).
+test('every live page: all JSON-LD blocks parse', async ({ page }) => {
+  for (const p of LIVE_PAGES) {
+    await open(page, p.path, { settle: 0 });
+    for (const t of await page.locator('script[type="application/ld+json"]').allTextContents()) {
+      expect(() => JSON.parse(t), p.name).not.toThrow();
+    }
+  }
+});
+
+test('index: Search Console verification meta is present (removing it unverifies the property)', async ({ page }) => {
+  await open(page, './', { settle: 0 });
+  await expect(page.locator('head meta[name="google-site-verification"]')).toHaveAttribute('content', 'RxvDpHa2PWGxXRMoiHAR4AbgTM0faTPChtaMoKiKjrw');
+});
+
+test('index: Organization JSON-LD has a logo that resolves, and names Bibooks as its brand', async ({ page, request }) => {
+  await open(page, './', { settle: 0 });
+  const org = (await page.locator('script[type="application/ld+json"]').allTextContents()).map((t) => JSON.parse(t))
+    .find((d) => d['@id'] === 'https://greysonbmiller.github.io/sylvan-c7/#practice');
+  expect(org).toBeTruthy();
+  const logo = org.logo.replace('https://greysonbmiller.github.io/sylvan-c7/', '');
+  expect((await request.get(logo)).status()).toBe(200);
+  expect(isBibooks(org.brand.url)).toBe(true);
+});
+
+test('work: Bibooks JSON-LD links its Google Play listing', async ({ page }) => {
+  await open(page, 'work.html', { settle: 0 });
+  const app = (await page.locator('script[type="application/ld+json"]').allTextContents()).map((t) => JSON.parse(t))
+    .find((d) => d['@type'] === 'SoftwareApplication');
+  expect(app.sameAs).toContain('https://play.google.com/store/apps/details?id=org.bibooks.app');
+});
+
+test('IndexNow: exactly one key file at the site root, containing its own name', async ({ request }) => {
+  const { readdirSync, readFileSync } = await import('node:fs');
+  const keys = readdirSync('.').filter((f) => /^[0-9a-f]{32}\.txt$/.test(f));
+  expect(keys).toHaveLength(1);
+  expect(readFileSync(keys[0], 'utf8')).toBe(keys[0].replace('.txt', ''));
+  expect((await request.get(keys[0])).status()).toBe(200);
+});
