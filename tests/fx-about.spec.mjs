@@ -270,3 +270,20 @@ test.describe('without JavaScript', () => {
     expect(offsets.every((x) => Math.abs(x.o) < 0.001 && x.op !== '0'), JSON.stringify(offsets)).toBe(true);
   });
 });
+
+test('portrait: the infinite pulse/pad animations run only while the frame is on screen', async ({ page }) => {
+  await open(page, 'about.html');
+  const frame = page.locator('.about-hero .about-portrait');
+  await expect(frame).toHaveClass(/is-drawn/, { timeout: 5000 });
+  const running = () => frame.evaluate((el) =>
+    el.getAnimations({ subtree: true }).filter((a) => a.playState === 'running' && a.effect
+      && a.effect.getTiming().iterations === Infinity).length);
+  await frame.scrollIntoViewIfNeeded();
+  await expect(frame).toHaveClass(/is-live/);
+  await expect.poll(running, { timeout: 4000 }).toBeGreaterThan(0);
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await expect(frame).not.toHaveClass(/is-live/);
+  await expect.poll(running, { timeout: 4000 }).toBe(0);
+  await frame.scrollIntoViewIfNeeded();
+  await expect.poll(running, { timeout: 4000 }).toBeGreaterThan(0);
+});
