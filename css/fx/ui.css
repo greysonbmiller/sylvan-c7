@@ -404,3 +404,26 @@ html.nav-open .fx-top { visibility: hidden; opacity: 0; }
   html.has-sticky-cta .fx-toast { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
 }
 
+
+/* Windows High Contrast (forced colours): the browser drops box-shadow and replaces backgrounds with
+   Canvas, so focus rings drawn with box-shadow and states shown only by fill vanish. Restore them with
+   system colours; hide the purely decorative canvases (hero, page heroes, footer skyline), which render as noise;
+   the 404 garden is a toy people click, so it stays. */
+@media (forced-colors: active) {
+  .fx-top:focus-visible, .fx-toast__close:focus-visible, .card__cover:focus-visible,
+  .field__input:focus-visible, .field__select:focus-visible, .field__textarea:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+  .tabs__tab[aria-selected='true'], .stepper__tab[aria-selected='true'], .fx-palette__opt[aria-selected='true'],
+  .switch[aria-pressed='true'] {
+    forced-color-adjust: none;
+    color: HighlightText;
+    background: Highlight;
+    border-color: Highlight;
+  }
+  .switch { border: 1px solid ButtonText; }
+  .switch__thumb { forced-color-adjust: none; background: ButtonText; }
+  .switch[aria-pressed='true'] .switch__thumb { background: HighlightText; }
+  .hero__canvas, .fx-skyline, canvas.pagehero { display: none; }
+}

@@ -95,3 +95,11 @@
 /* Measure: the measure test reads 60ch as ~81 characters; 54ch keeps prose ≤ 75. */
 #main p { max-width: calc(54 * var(--ch-body)); }
 #main .lead { max-width: calc(50 * var(--ch-body)); }
+
+/* Forced colours (Windows High Contrast) drop the app's box-shadow focus rings: draw an outline. */
+@media (forced-colors: active) {
+  .swc-textarea:focus, .swc-select:focus, .swc-num:focus, .swc-input:focus, .swc-btn:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
