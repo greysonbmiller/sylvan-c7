@@ -329,7 +329,9 @@
       var key = IS_MAC ? '⌘K' : 'Ctrl K';
       var kbd = el('button', {
         type: 'button', 'class': 'fx-kbd', 'data-fx-kbd': '',
-        'aria-label': 'Search the site (' + (IS_MAC ? 'Command' : 'Control') + '+K)',
+        // The name repeats the keycap's visible text, so a voice-control user can say what they
+        // see (WCAG 2.5.3 Label in Name); aria-keyshortcuts announces the real shortcut.
+        'aria-label': 'Search the site (' + key + ')',
         'aria-keyshortcuts': IS_MAC ? 'Meta+K' : 'Control+K',
         'aria-haspopup': 'dialog'
       }, '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg><span aria-hidden="true"></span>');

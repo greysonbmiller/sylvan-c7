@@ -299,6 +299,12 @@ canvas {
 
 img { height: auto; }
 
+/* <picture> only chooses the file (AVIF, WebP or the JPEG/PNG fallback) and never adds a box of its
+   own, so the <img> inside lays out exactly as a direct child would: grid areas, flex items and
+   percentage sizes keep working without a picture-specific rule for each. */
+picture { display: contents; }
+picture > source { display: none; } /* never rendered, but without this they'd be grid/flex items */
+
 input,
 button,
 textarea,

@@ -21,7 +21,9 @@
   margin: calc(var(--size) * -0.1) 0 calc(var(--size) * -0.1) calc(var(--size) * -0.06);
 }
 
-.about-portrait > * { grid-area: 1 / 1; }
+/* The photo's <picture> has no box (display: contents), so its <img> is the grid item to stack. */
+.about-portrait > *,
+.about-portrait > picture > img { grid-area: 1 / 1; }
 
 .about-hero__photo {
   width: 80%;
