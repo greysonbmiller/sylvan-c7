@@ -11,6 +11,9 @@
      a form with no action fall back to an honest mailto hand-off, so the
      visitor never loses their message. Dispatches "contact:handoff" on
      the form when it does (contact-fx.js morphs the button).
+   - one request at a time (a second submit while sending is ignored), and
+     a request that has not answered within SEND_TIMEOUT_MS counts as
+     failed (aborted), so the button never spins forever
    - _honey honeypot (FormSubmit's own): filled → accepted quietly, no request
    - ?sent=1 (FormSubmit's no-JS _next redirect back) → success status
    Without JS the form posts natively to FormSubmit (its captcha, then
@@ -27,6 +30,9 @@
   var PHONE_TEL = 'tel:+16266220261';
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   var FORMSUBMIT_RE = /^(https:\/\/formsubmit\.co\/)(?!ajax\/)(.+)$/i;
+  // FormSubmit normally answers in a second or two; past this, hand the visitor their email app
+  // rather than leave them watching a spinner.
+  var SEND_TIMEOUT_MS = 20000;
 
   var CONTACT_HTML = 'email <a href="mailto:' + EMAIL + '">' + EMAIL + '</a> or call <a href="' + PHONE_TEL + '">' + PHONE_DISPLAY + '</a>';
   var SUCCESS_HTML = '<strong>Thanks, that came through.</strong><br>I reply within two business days.';
@@ -163,9 +169,13 @@
       return 'mailto:' + EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\r\n')); // RFC 6068: CRLF line breaks
     }
 
+    var sending = false;
+
     form.setAttribute('novalidate', '');
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      // Enter in a field or a double click while a request is out must not send it twice.
+      if (sending) return;
       clearStatus();
 
       var firstInvalid = validate();
@@ -192,6 +202,7 @@
         return;
       }
 
+      sending = true;
       var label = submitBtn ? submitBtn.innerHTML : '';
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -199,14 +210,24 @@
         submitBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span><span>Sending…</span>';
       }
 
-      fetch(ajaxEndpoint(endpoint), { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } })
+      var ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+      var timer = 0;
+      var request = fetch(ajaxEndpoint(endpoint), { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' }, signal: ctrl ? ctrl.signal : undefined })
         .then(function (res) {
           if (!res.ok) throw new Error('HTTP ' + res.status);
           return res.json();
         })
         .then(accepted)
-        .catch(function () { return false; }) // HTTP error, network failure or unparseable body
+        .catch(function () { return false; }); // HTTP error, network failure, timeout or unparseable body
+      // No answer in time: abort it (where the browser can) and treat it as not sent.
+      var timeout = new Promise(function (resolve) {
+        timer = setTimeout(function () { if (ctrl) ctrl.abort(); resolve(false); }, SEND_TIMEOUT_MS);
+      });
+
+      Promise.race([request, timeout])
         .then(function (sent) {
+          clearTimeout(timer);
+          sending = false;
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.removeAttribute('aria-busy');

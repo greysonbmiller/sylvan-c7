@@ -53,6 +53,26 @@ test.describe('footer skyline', () => {
     await expect(sky).toHaveAttribute('data-running', '0', { timeout: 2000 });
   });
 
+  // Safari gives a 0x0 box to content inside a content-visibility: auto section it has not rendered
+  // yet (the footer on index, work and finca), so there the canvas is reported on screen before it
+  // has a size. Reproduced in any engine by holding the canvas at 0x0 until it is in view.
+  test('grows when its first real size arrives after it is already on screen', async ({ page }) => {
+    await page.route('**/about.html', async (route) => {
+      const res = await route.fetch();
+      const body = (await res.text()).replace('</head>',
+        '<style id="zero-sky">.site-footer .fx-skyline { width: 0 !important; height: 0 !important; }</style></head>');
+      await route.fulfill({ response: res, body });
+    });
+    await open(page, 'about.html');
+    const sky = page.locator('[data-fx-skyline]');
+    await toBottom(page);
+    await page.waitForTimeout(800);
+    await expect(sky, 'guard: a 0x0 canvas cannot build its forest').not.toHaveAttribute('data-trees', /\d/);
+    await page.evaluate(() => document.getElementById('zero-sky').remove());
+    await expect(sky).toHaveAttribute('data-state', /growing|grown/);
+    await expect(sky).toHaveAttribute('data-running', '1');
+  });
+
   test('green family only (no blue trees) and ~30% sparser than one tree per 24px', async ({ page }) => {
     await open(page, 'about.html');
     const sky = page.locator('[data-fx-skyline]');
