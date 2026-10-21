@@ -11,7 +11,9 @@ document.documentElement.classList.add('js');
   'use strict';
 
   var root = document.documentElement;
-  var DESKTOP = window.matchMedia('(min-width: 1024px)');
+  // The em bound matches the CSS: with enlarged browser text the header keeps the drawer even on
+  // a wide screen (css/site.css, "Enlarged browser text"). At the default 16px, 64em = 1024px.
+  var DESKTOP = window.matchMedia('(min-width: 1024px) and (min-width: 64em)');
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   /* ---- Header: solid background once the page scrolls ---- */
