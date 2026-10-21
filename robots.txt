@@ -1,3 +1,5 @@
+# Crawlers only read robots.txt at the root of a host (greysonbmiller.github.io/robots.txt), so this
+# copy under /sylvan-c7/ is informational. The sitemap is also linked from the home page's <head>.
 User-agent: *
 Allow: /
 

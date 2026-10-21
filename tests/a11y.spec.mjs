@@ -1,7 +1,9 @@
 // SPEC "Performance & a11y" (headings, landmarks, skip link, alt text, form labels, FAQPage JSON-LD)
 // and SPEC "Motion & interaction" (content visible without JS; reduced motion = finished state, no autoplay).
 import { test, expect } from '@playwright/test';
-import { LIVE_PAGES, open, invisibleText } from './helpers.mjs';
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { LIVE_PAGES, open, invisibleText, scrollThrough } from './helpers.mjs';
 
 const norm = (s) => s.replace(/\s+/g, ' ').trim();
 
@@ -16,6 +18,26 @@ for (const p of LIVE_PAGES) {
       const skips = [];
       for (let i = 1; i < levels.length; i++) if (levels[i] > levels[i - 1] + 1) skips.push(`h${levels[i - 1]}→h${levels[i]}`);
       expect(skips).toEqual([]);
+    });
+
+    // WCAG G201: a link that opens a new tab says so to screen readers, after its visible text
+    // (so the visible label still starts the accessible name), in the site's .visually-hidden class.
+    test('every target=_blank link announces "(opens in a new tab)" via visually-hidden text', async ({ page }) => {
+      await open(page, p.path, { settle: 0 });
+      const links = page.locator('a[target="_blank"]');
+      const n = await links.count();
+      for (let i = 0; i < n; i++) {
+        const a = links.nth(i);
+        const href = await a.getAttribute('href');
+        const shown = norm(await a.evaluate((el) => {
+          const c = el.cloneNode(true);
+          c.querySelectorAll('.visually-hidden').forEach((s) => s.remove());
+          return c.textContent;
+        }));
+        expect(shown, `${href}: has visible text`).not.toBe('');
+        await expect(a, href).toHaveAccessibleName(`${shown} (opens in a new tab)`);
+        await expect(a.locator('.visually-hidden', { hasText: '(opens in a new tab)' }), href).toHaveCount(1);
+      }
     });
 
     test('header, nav, main and footer landmarks', async ({ page }) => {
@@ -136,4 +158,164 @@ test('index: the process stepper autoplays (5 s) when motion is allowed — posi
   const selected = () => root.locator('[role="tab"]').evaluateAll((ts) => ts.findIndex((t) => t.getAttribute('aria-selected') === 'true'));
   const start = await selected();
   await expect.poll(selected, { timeout: 8000 }).not.toBe(start);
+});
+
+// ---------------------------------------------------------------------------------------------
+// axe-core (devDependency): WCAG 2.2 A/AA + best-practice rules on every page, at phone and desktop
+// widths, after the late effects layer has injected its DOM and the page has been scrolled through
+// (reveals, illustrations, keycap, back-to-top all exist by then).
+// AXE_CORE_PATH may point at another axe.min.js (e.g. a scratch install) when node_modules lacks it.
+const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
+function axePath() {
+  if (process.env.AXE_CORE_PATH) return process.env.AXE_CORE_PATH;
+  try {
+    return createRequire(import.meta.url).resolve('axe-core/axe.min.js');
+  } catch {
+    throw new Error('axe-core is not installed: run `npm install` (it is a devDependency), or set AXE_CORE_PATH');
+  }
+}
+
+for (const width of [390, 1440]) {
+  for (const p of LIVE_PAGES) {
+    test(`${p.name} @${width}: axe finds no WCAG 2.2 A/AA or best-practice violations`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await open(page, p.path);
+      await scrollThrough(page);
+      // Injected over the DevTools protocol (page.evaluate of the source), not as a <script> tag: the
+      // page's CSP allows no inline script, and axe should audit the page as served, CSP included.
+      await page.evaluate(readFileSync(axePath(), 'utf8'));
+      const violations = await page.evaluate((tags) => window.axe.run(document, { runOnly: { type: 'tag', values: tags }, resultTypes: ['violations'] })
+        .then((r) => r.violations.map((v) => `${v.id} (${v.impact}): ${v.nodes.map((n) => n.target.join(' ')).slice(0, 5).join(' | ')}`)), AXE_TAGS);
+      expect(violations).toEqual([]);
+    });
+  }
+}
+
+test('links say where they go: no bare "read more" / "click here" / "learn more" accessible names', async ({ page }) => {
+  const bad = [];
+  for (const p of LIVE_PAGES) {
+    await open(page, p.path, { settle: 0 });
+    const found = await page.evaluate(() => [...document.querySelectorAll('a[href]')]
+      .map((a) => (a.getAttribute('aria-label') || a.textContent).replace(/\s+/g, ' ').trim())
+      .filter((n) => /^(read more|learn more|more|click here|here|link|details|see more)\W*$/i.test(n)));
+    for (const n of found) bad.push(`${p.name}: "${n}"`);
+  }
+  expect(bad).toEqual([]);
+});
+
+test('contact: personal-data fields declare their autocomplete purpose (WCAG 1.3.5)', async ({ page }) => {
+  await open(page, 'contact.html', { settle: 0 });
+  const ac = await page.evaluate(() => Object.fromEntries(
+    ['f-name', 'f-email', 'f-company', 'f-phone', 'f-site'].map((id) => [id, document.getElementById(id).getAttribute('autocomplete')])));
+  expect(ac).toEqual({ 'f-name': 'name', 'f-email': 'email', 'f-company': 'organization', 'f-phone': 'tel', 'f-site': 'url' });
+});
+
+// A larger default text size set in the browser (Chrome: Settings → Appearance → Font size). That
+// setting, unlike zoom, keeps the viewport width, so the phone layout has to hold 2× text. Page
+// .setFontSizes is that setting; em media queries follow it like they do in a real browser.
+test.describe('200% browser text size on phones', () => {
+  for (const width of [320, 390]) {
+    test(`${width}: header keeps the menu button on screen and never clips the CTA; footer fits`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      const cdp = await page.context().newCDPSession(page);
+      await cdp.send('Page.setFontSizes', { fontSizes: { standard: 32, fixed: 26 } });
+      for (const path of ['about.html', 'lab/square-word-calligraphy/']) {
+        await open(page, path, { settle: 200 });
+        const r = await page.evaluate(() => {
+          const iw = document.documentElement.clientWidth;
+          const cta = document.querySelector('.site-header .nav__cta');
+          const toggle = document.querySelector('.nav__toggle').getBoundingClientRect();
+          const footer = document.querySelector('.site-footer__inner');
+          const past = [...footer.querySelectorAll('a, p, li')].filter((e) => e.getBoundingClientRect().right > iw + 1)
+            .map((e) => e.textContent.trim().slice(0, 30));
+          return {
+            rootPx: parseFloat(getComputedStyle(document.documentElement).fontSize),
+            ctaClipped: cta.getClientRects().length > 0 && cta.scrollWidth > cta.clientWidth + 8,
+            toggleOnScreen: toggle.left >= 0 && toggle.right <= iw,
+            footerPast: past,
+          };
+        });
+        expect(r.rootPx, 'guard: the 2× text setting took effect').toBe(32);
+        expect(r.ctaClipped, `${path}: header CTA clipped`).toBe(false);
+        expect(r.toggleOnScreen, `${path}: menu button on screen`).toBe(true);
+        expect(r.footerPast, `${path}: footer text past the right edge`).toEqual([]);
+      }
+    });
+  }
+
+  test('default text size: the header CTA is still shown at 320 and 390 (control)', async ({ page }) => {
+    for (const width of [320, 390]) {
+      await page.setViewportSize({ width, height: 800 });
+      await open(page, 'about.html', { settle: 0 });
+      await expect(page.locator('.site-header .nav__cta'), `${width}`).toBeVisible();
+    }
+  });
+});
+
+// The same 200% setting on every page and layout (Android's system font size scales web text the same
+// way): nothing scrolls sideways and no text or control is pushed past the right edge or clipped by
+// its section. Exempt: the process stepper's tab strip (a deliberate horizontal scroller),
+// aria-hidden decoration and the generated lab tool. At 1024+ the five desktop links no longer fit, so the header uses the
+// drawer (css/site.css "Enlarged browser text"); at the default size it is unchanged (other specs).
+async function bigText(page, width) {
+  await page.setViewportSize({ width, height: 800 });
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Page.setFontSizes', { fontSizes: { standard: 32, fixed: 26 } });
+}
+function pastEdge() {
+  const iw = document.documentElement.clientWidth;
+  const out = [];
+  for (const el of document.body.querySelectorAll('*')) {
+    // #swc-app is the generated Square Word Calligraphy tool (lab/…/app/, built in its own repo).
+    if (el.closest('svg,canvas,script,style,template,[aria-hidden="true"],[hidden],[inert],.visually-hidden,.skip-link,.nav-drawer,.form__hp,[data-stepper] [role="tablist"],#swc-app')) continue;
+    const text = [...el.childNodes].some((n) => n.nodeType === 3 && n.nodeValue.trim());
+    if (!text && !el.matches('a,button,input,select,textarea,summary,img')) continue;
+    const cs = getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2 || cs.visibility !== 'visible' || cs.position === 'fixed') continue;
+    if (r.right > iw + 1 || r.left < -1) out.push(`${el.tagName.toLowerCase()}.${String(el.className).split(' ')[0]} "${el.textContent.trim().slice(0, 30)}" ${Math.round(r.left)}–${Math.round(r.right)} (viewport ${iw})`);
+  }
+  return { sw: document.scrollingElement.scrollWidth, iw, out: out.slice(0, 8) };
+}
+
+test.describe('200% browser text size: every page, every layout', () => {
+  test.describe.configure({ timeout: 120_000 });
+  for (const width of [320, 390, 1024, 1280]) {
+    test(`${width}: no sideways scroll, nothing past the right edge`, async ({ page }) => {
+      await bigText(page, width);
+      const bad = [];
+      for (const p of LIVE_PAGES) {
+        await open(page, p.path, { settle: 200 });
+        await scrollThrough(page);
+        const r = await page.evaluate(pastEdge);
+        if (r.sw > r.iw) bad.push(`${p.name}: scrollWidth ${r.sw} > ${r.iw}`);
+        for (const o of r.out) bad.push(`${p.name}: ${o}`);
+      }
+      expect(bad).toEqual([]);
+    });
+  }
+
+  for (const width of [1024, 1280]) {
+    test(`${width}: desktop header uses the menu button + drawer; keycap and CTA stay on screen; Escape returns focus`, async ({ page }) => {
+      await bigText(page, width);
+      await open(page, 'about.html');
+      const r = await page.evaluate(() => {
+        const iw = document.documentElement.clientWidth;
+        const box = (s) => { const e = document.querySelector(s); if (!e || !e.getClientRects().length) return null; const b = e.getBoundingClientRect(); return { l: b.left, r: b.right }; };
+        return { iw, links: box('.nav__links'), toggle: box('.nav__toggle'), cta: box('.site-header .nav__cta'), kbd: box('.fx-kbd') };
+      });
+      expect(r.links, 'desktop links hidden (they are in the drawer)').toBeNull();
+      for (const k of ['toggle', 'cta', 'kbd']) {
+        expect(r[k], `${k} shown`).not.toBeNull();
+        expect(r[k].r, `${k} on screen`).toBeLessThanOrEqual(r.iw);
+      }
+      await page.locator('.nav__toggle').focus();
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#navDrawer')).toBeVisible();
+      await expect(page.locator('.nav-drawer__link').first()).toBeFocused();
+      await page.keyboard.press('Escape');
+      await expect(page.locator('.nav__toggle')).toBeFocused();
+      await expect(page.locator('.nav__toggle')).toHaveAttribute('aria-expanded', 'false');
+    });
+  }
 });

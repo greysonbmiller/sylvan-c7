@@ -3,9 +3,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test"
+    "build:css": "node scripts/build-css.mjs",
+    "check:css": "node scripts/build-css.mjs --check",
+    "check:csp": "node scripts/csp.mjs --check",
+    "serve": "node tests/serve.mjs",
+    "test": "playwright test",
+    "test:lcp": "playwright test --project=lcp --no-deps",
+    "ci": "npm run check:css && npm run check:csp && playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "1.49.1"
+    "@playwright/test": "1.49.1",
+    "axe-core": "4.13.0"
   }
 }

@@ -93,10 +93,11 @@
   }
 
   /* ---------- Link previews ---------- */
+  // avif: the ~240 px thumbnail as a small AVIF (5-15 KB); src (the full-size file) is the fallback.
   var PREVIEWS = {
-    'https://bibooks.org/': { src: 'img/work-bibooks.jpg', label: 'bibooks.org' },
-    'lab/square-word-calligraphy/': { src: 'img/lab-square-word-calligraphy.png', label: 'lab / square-word-calligraphy' },
-    'lab/nuestra-finca/': { src: 'img/lab-nuestra-finca.jpg', label: 'lab / nuestra-finca' },
+    'https://bibooks.org/': { src: 'img/work-bibooks.jpg', avif: 'img/work-bibooks-400.avif 400w, img/work-bibooks-720.avif 720w', label: 'bibooks.org' },
+    'lab/square-word-calligraphy/': { src: 'img/lab-square-word-calligraphy.png', avif: 'img/lab-square-word-calligraphy-400.avif 400w, img/lab-square-word-calligraphy-700.avif 700w', label: 'lab / square-word-calligraphy' },
+    'lab/nuestra-finca/': { src: 'img/lab-nuestra-finca.jpg', avif: 'img/lab-nuestra-finca-400.avif 400w, img/lab-nuestra-finca-700.avif 700w', label: 'lab / nuestra-finca' },
   };
 
   function initPeek() {
@@ -104,7 +105,7 @@
       return PREVIEWS[a.getAttribute('href')] || PREVIEWS[a.href];
     });
     if (!links.length) return;
-    var card = null, img = null, label = null, current = null, lastX = null, hideTimer = 0;
+    var card = null, img = null, avif = null, label = null, current = null, lastX = null, hideTimer = 0;
 
     function build() {
       card = document.createElement('div');
@@ -116,9 +117,15 @@
       img.decoding = 'async';
       img.width = 236;
       img.height = 148;
+      var pic = document.createElement('picture');
+      avif = document.createElement('source');
+      avif.type = 'image/avif';
+      avif.sizes = '248px';
+      pic.appendChild(avif);
+      pic.appendChild(img);
       label = document.createElement('span');
       label.className = 'about-peek__url';
-      card.appendChild(img);
+      card.appendChild(pic);
       card.appendChild(label);
       document.body.appendChild(card);
     }
@@ -159,6 +166,7 @@
       if (!card) build();
       var data = PREVIEWS[a.getAttribute('href')] || PREVIEWS[a.href];
       if (current !== a) {
+        avif.srcset = data.avif;
         img.src = data.src;
         label.textContent = data.label;
         current = a;

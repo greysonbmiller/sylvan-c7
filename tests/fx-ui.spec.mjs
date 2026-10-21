@@ -6,7 +6,7 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { LIVE_PAGES, REPO, BASE, open, url } from './helpers.mjs';
+import { LIVE_PAGES, REPO, BASE, open, url, settleAnimations } from './helpers.mjs';
 
 const palette = (page) => page.locator('[data-fx-palette]');
 const options = (page) => palette(page).locator('[role="option"]');
@@ -39,6 +39,28 @@ test.describe('command palette', () => {
     for (const want of ['Home', 'Services', 'Work', 'About', 'Contact', 'Pricing', 'FAQ', 'Process', 'Bibooks',
       'Square Word Calligraphy', 'Nuestra Finca', 'Bibooks ↗', 'Copy email', 'Call']) {
       expect(labels, `palette lists "${want}"`).toContain(want);
+    }
+  });
+
+  test('the results list shows its options: a full list scrolls, a single match is fully visible', async ({ page }) => {
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      await open(page, './');
+      await page.keyboard.press('Control+k');
+      const list = palette(page).locator('[role="listbox"]');
+      const fit = () => list.evaluate((l) => {
+        const opt = l.querySelector('[role="option"]').getBoundingClientRect();
+        const box = l.getBoundingClientRect();
+        return { list: box.height, opt: opt.height, inside: opt.top >= box.top && opt.bottom <= box.bottom };
+      });
+      // All 15 entries: the list is several options tall (then scrolls), not a collapsed strip.
+      const all = await fit();
+      expect(all.list, `${width}: list height with every entry`).toBeGreaterThan(all.opt * 4);
+      await page.keyboard.type('pricng');
+      await expect(options(page)).toHaveCount(1);
+      const one = await fit();
+      expect(one.inside, `${width}: the single match is inside the list box (${JSON.stringify(one)})`).toBe(true);
+      await page.keyboard.press('Escape');
     }
   });
 
@@ -557,8 +579,11 @@ test.describe('footer alignment', () => {
       await page.setViewportSize(vp);
       await open(page, './');
       await page.addStyleTag({ content: '.fx-top, .sticky-cta, .scroll-progress, .site-header { visibility: hidden !important; }' });
-      await page.evaluate(() => scrollTo(0, document.scrollingElement.scrollHeight));
+      // An instant jump: a smooth scroll to the bottom can still be under way after a fixed wait on a
+      // slow machine, and then the measured row is below the viewport the screenshot clips to.
+      await page.evaluate(() => scrollTo({ top: document.scrollingElement.scrollHeight, behavior: 'instant' }));
       await page.waitForTimeout(300);
+      await settleAnimations(page);
       const m = await page.evaluate(() => {
         const inner = document.querySelector('.site-footer__inner');
         const cs = getComputedStyle(inner);

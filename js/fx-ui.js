@@ -117,7 +117,7 @@
   /* Follows a mailto: or external link the way a real <a> click would (target and rel included). */
   function follow(href, external, host) {
     var a = el('a', { href: href, hidden: '' });
-    if (external) { a.target = '_blank'; a.rel = 'noopener'; }
+    if (external) { a.target = '_blank'; a.rel = 'noopener'; a.appendChild(el('span', { 'class': 'visually-hidden' }, ' (opens in a new tab)')); }
     (host || doc.body).appendChild(a);
     a.click();
     a.remove();
@@ -329,7 +329,9 @@
       var key = IS_MAC ? '⌘K' : 'Ctrl K';
       var kbd = el('button', {
         type: 'button', 'class': 'fx-kbd', 'data-fx-kbd': '',
-        'aria-label': 'Search the site (' + (IS_MAC ? 'Command' : 'Control') + '+K)',
+        // The name repeats the keycap's visible text, so a voice-control user can say what they
+        // see (WCAG 2.5.3 Label in Name); aria-keyshortcuts announces the real shortcut.
+        'aria-label': 'Search the site (' + key + ')',
         'aria-keyshortcuts': IS_MAC ? 'Meta+K' : 'Control+K',
         'aria-haspopup': 'dialog'
       }, '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg><span aria-hidden="true"></span>');
@@ -472,6 +474,10 @@
     function req() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
     window.addEventListener('scroll', req, { passive: true });
     window.addEventListener('resize', req, { passive: true });
+    // On pages whose footer is content-visibility: auto, Safari reports empty boxes for its text
+    // until it has rendered, so a jump straight to the bottom (End key, a fling) measured nothing
+    // to avoid. Measure again as soon as the footer renders.
+    if (footer) footer.addEventListener('contentvisibilityautostatechange', function (e) { if (!e.skipped) req(); });
     update();
     btn.addEventListener('click', function (e) {
       window.scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' });
@@ -798,7 +804,7 @@
     var still = doc.createElement('canvas');
     var sctx = still.getContext('2d');
     var F = null, W = 0, H = 0, DPR = 1;
-    var state = 'idle', growStart = 0, speed = 1, clock = 0, last = 0, raf = 0, lastDraw = 0;
+    var state = 'idle', growStart = 0, speed = 1, clock = 0, last = 0, raf = 0, lastDraw = 0, idleTimer = 0;
     var visible = false, flies = [], blips = [], nextBlip = 1200, glowUntil = 0;
     var seed = opts.seed || 7;
     var self = { canvas: canvas };
@@ -826,6 +832,11 @@
       makeFlies();
       renderStill();
       paint();
+      // Safari gives a 0x0 box to anything inside a content-visibility: auto section it has not
+      // rendered yet (the footer on the home, work and finca pages), so the first real size can
+      // arrive after the canvas was already reported on screen. Start growing now in that case;
+      // no further visibility change is coming to do it.
+      if (visible) self.setVisible(true);
       return true;
     }
 
@@ -911,12 +922,21 @@
         if (state === 'grown' && clock >= nextBlip && opts.blips !== false) { spawnBlip(clock, Math.random()); nextBlip = clock + 1800 + Math.random() * 2600; }
         paint();
       }
-      raf = requestAnimationFrame(frame);
+      // While drifting, sleep until just before the next ~30 fps draw instead of waking every
+      // display frame for nothing (raf = -1 marks the pending timer). Growth/burst stay per-frame.
+      var wait = busy ? 0 : 32 - (ts - lastDraw) - 10;
+      if (wait > 4) {
+        raf = -1;
+        idleTimer = setTimeout(function () { idleTimer = 0; raf = requestAnimationFrame(frame); }, wait);
+      } else raf = requestAnimationFrame(frame);
     }
 
     function kick() {
       if (opts.isStatic || !F) return;
-      if (!raf && visible && !doc.hidden) { setRunning(true); raf = requestAnimationFrame(frame); }
+      if ((!raf || idleTimer) && visible && !doc.hidden) {
+        clearTimeout(idleTimer); idleTimer = 0;
+        setRunning(true); raf = requestAnimationFrame(frame);
+      }
     }
 
     self.resize = resize;
@@ -935,7 +955,11 @@
       for (var i = 0; i < 7; i++) spawnBlip(clock + i * 90, Math.random());
       kick();
     };
-    self.stop = function () { visible = false; if (raf) cancelAnimationFrame(raf); raf = 0; setRunning(false); };
+    self.stop = function () {
+      visible = false; clearTimeout(idleTimer); idleTimer = 0;
+      if (raf > 0) cancelAnimationFrame(raf);
+      raf = 0; setRunning(false);
+    };
     canvas.setAttribute('data-state', 'idle');
     setRunning(false);
     if (opts.isStatic) canvas.setAttribute('data-static', '1');

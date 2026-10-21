@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo=' 'sha256-Ly7GzR1qzqJVS3C+5WTYvP492vOfd8O5Xux6++OUGpY=' 'sha256-xi56qyfUlRqcNBUSvXslzgrN31J7LP4UiW+QDIBU9OI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>document.documentElement.classList.add('js')</script>
   <title>Nuestra Finca: a 3D farm walkthrough in your browser | Sylvan C7</title>
   <meta name="description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, on a phone or an ordinary laptop.">
   <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/">
   <meta name="theme-color" content="#060a08">
+  <meta name="color-scheme" content="dark">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Sylvan C7">
@@ -18,41 +21,64 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="900">
   <meta property="og:image:alt" content="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside.">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Nuestra Finca: walk a 3D farm in your browser | Sylvan C7">
   <meta name="twitter:description" content="Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, on a phone or an ordinary laptop.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg">
+  <meta name="twitter:image:alt" content="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside.">
+  <!-- sizes="32x32" (not "any") keeps browsers that understand SVG icons on favicon.svg -->
+  <link rel="icon" href="../../favicon.ico" sizes="32x32">
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Nuestra Finca",
-  "url": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/",
-  "description": "A 3D walkthrough of a small hillside farm, rebuilt from 17 phone photos and a few measurements. Walk or fly through it in a web browser, on a computer or a phone.",
-  "applicationCategory": "MultimediaApplication",
-  "operatingSystem": "Any (runs in a web browser)",
-  "isAccessibleForFree": true,
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "image": "https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg",
-  "author": {
-    "@type": "Person",
-    "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson",
-    "name": "Greyson Miller",
-    "url": "https://greysonbmiller.github.io/sylvan-c7/about.html"
-  }
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#webpage",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/",
+      "name": "Nuestra Finca: a 3D farm walkthrough in your browser | Sylvan C7",
+      "description": "Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, on a phone or an ordinary laptop.",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#website" },
+      "breadcrumb": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#breadcrumb" },
+      "mainEntity": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#app" }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#app",
+      "name": "Nuestra Finca",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/",
+      "description": "A 3D walkthrough of a small hillside farm, rebuilt from 17 phone photos and a few measurements. Walk or fly through it in a web browser, on a computer or a phone.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in a web browser)",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "image": "https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg",
+      "author": { "@type": "Person", "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson", "name": "Greyson Miller", "url": "https://greysonbmiller.github.io/sylvan-c7/about.html" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://greysonbmiller.github.io/sylvan-c7/" },
+        { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://greysonbmiller.github.io/sylvan-c7/work.html" },
+        { "@type": "ListItem", "position": 3, "name": "Nuestra Finca", "item": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/" }
+      ]
+    }
+  ]
 }
   </script>
 
   <link rel="preload" href="../../fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- LCP poster: one of these two matches (same queries as css/page-finca.css), never both -->
-  <link rel="preload" href="../../img/lab-nuestra-finca-720.jpg" as="image" fetchpriority="high" media="(max-width: 440px) and (max-resolution: 1.5dppx)">
-  <link rel="preload" href="../../img/lab-nuestra-finca.jpg" as="image" fetchpriority="high" media="not all and (max-width: 440px) and (max-resolution: 1.5dppx)">
+  <!-- LCP poster: one of these two matches (same queries as css/page-finca.css), never both. AVIF
+       only: a browser without it skips these (type) and fetches the WebP/JPEG the CSS picks. -->
+  <link rel="preload" href="../../img/lab-nuestra-finca-700.avif" as="image" type="image/avif" fetchpriority="high" media="(max-width: 440px) and (max-resolution: 1.5dppx)">
+  <link rel="preload" href="../../img/lab-nuestra-finca-1200.avif" as="image" type="image/avif" fetchpriority="high" media="not all and (max-width: 440px) and (max-resolution: 1.5dppx)">
   <link rel="stylesheet" href="../../css/site.min.css">
   <link rel="stylesheet" href="../../css/page-finca.min.css">
 </head>
@@ -109,7 +135,9 @@
              is a link to app/: desktop and tablets play it here in an iframe, phones open app/
              full screen in this tab (see the script at the end). -->
         <div class="finca-stage" id="fincaStage">
-          <a class="finca-poster" id="fincaStart" href="app/" aria-label="Start the 3D walkthrough (loads about 6 MB)">
+          <!-- No aria-label: the link's name is its visible words, so what a voice-control user sees
+               is what they can say (WCAG 2.5.3 Label in Name). The size note below describes it. -->
+          <a class="finca-poster" id="fincaStart" href="app/" aria-describedby="fincaNote">
             <span class="btn btn--primary finca-poster__btn">Start the walkthrough</span>
             <span class="finca-poster__hint" id="fincaHint" hidden>Opens full screen &middot; about 2&nbsp;MB</span>
           </a>
@@ -119,8 +147,8 @@
         </div>
 
         <div class="finca-bar" id="fincaBar">
-          <p>Loads about 6&nbsp;MB. Click inside to look around; <kbd>Esc</kbd> opens the menu and full screen.</p>
-          <a class="btn btn--outline btn--sm" href="app/" target="_blank" rel="noopener">Open in its own tab &#8599;</a>
+          <p id="fincaNote">Loads about 6&nbsp;MB. Click inside to look around; <kbd>Esc</kbd> opens the menu and full screen.</p>
+          <a class="btn btn--outline btn--sm" href="app/" target="_blank" rel="noopener">Open in its own tab &#8599;<span class="visually-hidden"> (opens in a new tab)</span></a>
         </div>
       </div>
     </section>
@@ -178,11 +206,11 @@
         <ul class="finca-credits" role="list">
           <li>
             <h3 class="finca-credits__name">Blender</h3>
-            <p>The model is built and its lighting calculated in <a href="https://www.blender.org/" target="_blank" rel="noopener noreferrer">Blender</a>, driven entirely by script.</p>
+            <p>The model is built and its lighting calculated in <a href="https://www.blender.org/" target="_blank" rel="noopener noreferrer">Blender<span class="visually-hidden"> (opens in a new tab)</span></a>, driven entirely by script.</p>
           </li>
           <li>
             <h3 class="finca-credits__name">three.js and three-mesh-bvh</h3>
-            <p>The walkthrough draws the model with <a href="https://threejs.org/" target="_blank" rel="noopener noreferrer">three.js</a> and handles collisions with <a href="https://github.com/gkjohnson/three-mesh-bvh" target="_blank" rel="noopener noreferrer">three-mesh-bvh</a>, both under the MIT license.</p>
+            <p>The walkthrough draws the model with <a href="https://threejs.org/" target="_blank" rel="noopener noreferrer">three.js<span class="visually-hidden"> (opens in a new tab)</span></a> and handles collisions with <a href="https://github.com/gkjohnson/three-mesh-bvh" target="_blank" rel="noopener noreferrer">three-mesh-bvh<span class="visually-hidden"> (opens in a new tab)</span></a>, both under the MIT license.</p>
           </li>
         </ul>
         <p class="finca-note">This is my own experiment, not client work. The model is approximate: sizes come from photos and a few measurements, and the furniture is placed by eye.</p>
@@ -202,7 +230,7 @@
       <div>
         <a class="nav__brand" href="../../index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
         <p class="site-footer__tagline">Software that keeps working. Websites, web apps, integrations and instrument-control software.</p>
-        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks</a></p>
+        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks<span class="visually-hidden"> (opens in a new tab)</span></a></p>
       </div>
       <nav aria-label="Footer">
         <p class="site-footer__heading">Pages</p>
@@ -264,7 +292,8 @@
       }
 
       if (isPhone()) {
-        start.setAttribute('aria-label', 'Start the 3D walkthrough full screen (loads about 2 MB)');
+        // The visible hint carries the phone size; the desktop note (in the hidden bar) no longer applies.
+        start.removeAttribute('aria-describedby');
         if (hint) hint.hidden = false;
         if (bar) bar.hidden = true;
       }
@@ -319,5 +348,7 @@
       });
     })();
   </script>
+  <!-- Prefetch same-site pages on hover/pointerdown (Chromium), so the next page is near-instant. Not prerender: the effects and canvases should not run on a page nobody opened. -->
+  <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/sylvan-c7/*"},{"not":{"selector_matches":"[target=_blank], [download]"}},{"not":{"href_matches":"/sylvan-c7/lab/*/app/*"}}]},"eagerness":"moderate"}]}</script>
 </body>
 </html>

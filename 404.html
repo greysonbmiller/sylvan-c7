@@ -3,22 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo=' 'sha256-xi56qyfUlRqcNBUSvXslzgrN31J7LP4UiW+QDIBU9OI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>document.documentElement.classList.add('js')</script>
   <title>Page not found | Sylvan C7</title>
   <meta name="description" content="This page doesn't exist. Head back to the Sylvan C7 home page or get in touch.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#060a08">
+  <meta name="color-scheme" content="dark">
+  <!-- sizes="32x32" (not "any") keeps browsers that understand SVG icons on favicon.svg -->
+  <link rel="icon" href="/sylvan-c7/favicon.ico" sizes="32x32">
   <link rel="icon" href="/sylvan-c7/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/sylvan-c7/apple-touch-icon.png">
+  <link rel="manifest" href="/sylvan-c7/site.webmanifest">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Sylvan C7">
   <meta property="og:title" content="Page not found | Sylvan C7">
   <meta property="og:description" content="This page doesn't exist. Head back to the Sylvan C7 home page or get in touch.">
   <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Page not found | Sylvan C7">
   <meta name="twitter:description" content="This page doesn't exist. Head back to the Sylvan C7 home page or get in touch.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta name="twitter:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
 
   <!-- GitHub Pages serves this file for ANY missing path under /sylvan-c7/ (e.g. /sylvan-c7/a/b/c),
        so every URL here is root-absolute. A <base href> was not used: it would also re-target the
@@ -105,7 +117,7 @@
       <div>
         <a class="nav__brand" href="/sylvan-c7/index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
         <p class="site-footer__tagline">Software that keeps working. Websites, web apps, integrations and instrument-control software.</p>
-        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks</a></p>
+        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks<span class="visually-hidden"> (opens in a new tab)</span></a></p>
       </div>
       <nav aria-label="Footer">
         <p class="site-footer__heading">Pages</p>
@@ -141,5 +153,7 @@
     <script src="/sylvan-c7/js/fx-ui.js"></script>
     <script src="/sylvan-c7/js/fx-illus.js"></script>
   </template>
+  <!-- Prefetch same-site pages on hover/pointerdown (Chromium), so the next page is near-instant. Not prerender: the effects and canvases should not run on a page nobody opened. -->
+  <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/sylvan-c7/*"},{"not":{"selector_matches":"[target=_blank], [download]"}},{"not":{"href_matches":"/sylvan-c7/lab/*/app/*"}}]},"eagerness":"moderate"}]}</script>
 </body>
 </html>

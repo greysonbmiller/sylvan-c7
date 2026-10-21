@@ -38,6 +38,14 @@ const TYPES = {
   '.txt': 'text/plain; charset=utf-8',
 };
 
+// GitHub Pages' own caching header. Not no-store: with no-store Chromium sometimes downloads the same
+// image twice in one page load (two of its loaders race and may not share a no-store response), which
+// never happens on the real site. How often depends on the machine's speed, so the 500 KB page-weight
+// budget (tests/perf.spec.mjs) passed or failed by luck: 1 load in 4 here, every time on macOS CI.
+// Every test still loads cold: each runs in a fresh browser context with an empty cache. When viewing
+// the site with `npm run serve` after editing a file, hard-reload (Ctrl/Cmd+Shift+R), as with Pages.
+const CACHE_CONTROL = 'max-age=600';
+
 const fail = (code) => Object.assign(new Error(String(code)), { code });
 
 createServer(async (req, res) => {
@@ -60,7 +68,7 @@ createServer(async (req, res) => {
       file = join(file, 'index.html');
     }
     const body = await readFile(file);
-    res.writeHead(200, { 'content-type': TYPES[extname(file).toLowerCase()] || 'application/octet-stream', 'cache-control': 'no-store' });
+    res.writeHead(200, { 'content-type': TYPES[extname(file).toLowerCase()] || 'application/octet-stream', 'cache-control': CACHE_CONTROL });
     res.end(body);
   } catch (e) {
     res.writeHead(e.code === 403 ? 403 : 404, { 'content-type': 'text/plain' });

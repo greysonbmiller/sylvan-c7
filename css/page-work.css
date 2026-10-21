@@ -135,6 +135,9 @@
 /* Measure: the measure test reads 60ch as ~81 characters; 54ch keeps prose ≤ 75. */
 #main p { max-width: calc(54 * var(--ch-body)); }
 #main .lead { max-width: calc(50 * var(--ch-body)); }
+/* The pledge is lead-size (--fs-lead) text, so it gets the lead measure: 54ch at 21px is ~76 characters,
+   held under 75 only while the blockquote's own --measure (resolved at the 18px body size) is narrower. */
+#main .work-pledge p { max-width: calc(50 * var(--ch-body)); }
 
 /* ---- Project rows: text and media start on the same line. From 1024 up the media column
    sticks under the header while the (taller) text scrolls past it, so no empty hole opens
@@ -222,6 +225,13 @@ main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 400px
   main > section[aria-labelledby="first-title"] { contain-intrinsic-size: auto 590px; }
   main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 355px; }
   .site-footer { contain-intrinsic-size: auto 515px; }
+}
+
+/* Not in Safari (WebKit flashes default link colours as a skipped section first renders): see
+   css/page-home.css. Only WebKit implements hanging-punctuation. */
+@supports (hanging-punctuation: first) {
+  main > section:not(.hero):not(#bibooks),
+  .site-footer { content-visibility: visible; }
 }
 
 @media (min-width: 1024px) {

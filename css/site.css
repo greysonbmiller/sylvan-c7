@@ -51,10 +51,14 @@
    from 320 to 1440 px. Ascent/descent are the web fonts' (Inter 0.969/0.241 em, Geist 1.005/0.295 em)
    divided by size-adjust, because Chrome scales the overrides by it. Geist Mono's fallback has the
    same 0.6 em advance, so mono widths and its ch are identical. Measures are in --ch-body/--ch-head
-   (below), never ch, which would follow whichever font is on screen. */
+   (below), never ch, which would follow whichever font is on screen.
+   local() matches a font's exact installed name, with no aliasing, so each list names every face
+   with Arial's widths: Arial (Windows, macOS), Helvetica (macOS), Liberation Sans (most Linux
+   distributions) and Arimo (ChromeOS). Without the last two a Linux visitor got no fallback face
+   at all, and the hero jumped when the web fonts arrived. */
 @font-face {
   font-family: 'Inter Fallback'; /* Inter 400 */
-  src: local('Arial'), local('ArialMT'), local('Helvetica');
+  src: local('Arial'), local('ArialMT'), local('Helvetica'), local('Liberation Sans'), local('LiberationSans'), local('Arimo'), local('Arimo-Regular');
   font-weight: 100 450;
   size-adjust: 106.9%;
   ascent-override: 90.62%;
@@ -63,7 +67,7 @@
 }
 @font-face {
   font-family: 'Inter Fallback'; /* Inter 500: regular glyphs, Inter 500 widths */
-  src: local('Arial'), local('ArialMT'), local('Helvetica');
+  src: local('Arial'), local('ArialMT'), local('Helvetica'), local('Liberation Sans'), local('LiberationSans'), local('Arimo'), local('Arimo-Regular');
   font-weight: 451 550;
   size-adjust: 108.5%;
   ascent-override: 89.29%;
@@ -72,7 +76,7 @@
 }
 @font-face {
   font-family: 'Inter Fallback'; /* Inter 600 */
-  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold');
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold'), local('Arimo-Bold');
   font-weight: 551 900;
   size-adjust: 101.35%;
   ascent-override: 95.58%;
@@ -81,7 +85,7 @@
 }
 @font-face {
   font-family: 'Geist Fallback'; /* Geist 600 (and 500, which renders as 600) */
-  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold');
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold'), local('Arimo-Bold');
   font-weight: 100 650;
   size-adjust: 100.15%;
   ascent-override: 100.34%;
@@ -90,7 +94,7 @@
 }
 @font-face {
   font-family: 'Geist Fallback'; /* Geist 700 */
-  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold');
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold'), local('Arimo-Bold');
   font-weight: 651 900;
   size-adjust: 102.2%;
   ascent-override: 98.33%;
@@ -113,6 +117,15 @@
   size-adjust: 99.66%;
   ascent-override: 100.83%;
   descent-override: 29.59%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist Mono Fallback Liberation'; /* Linux, ChromeOS: 1229/2048 em advance */
+  src: local('Liberation Mono'), local('LiberationMono'), local('Cousine'), local('Cousine-Regular');
+  font-weight: 100 900;
+  size-adjust: 99.98%;
+  ascent-override: 100.5%;
+  descent-override: 29.49%;
   line-gap-override: 0%;
 }
 
@@ -163,7 +176,7 @@
   /* ---- Font families ---- */
   --font-heading: 'Geist', 'Geist Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
   --font-body:    'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
-  --font-mono:    'Geist Mono', 'Geist Mono Fallback', 'Geist Mono Fallback Menlo', ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  --font-mono:    'Geist Mono', 'Geist Mono Fallback', 'Geist Mono Fallback Menlo', 'Geist Mono Fallback Liberation', ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
   --font-display: var(--font-heading); /* alias (lab app.css) */
 
   /* ---- Type scale (fluid) ---- */
@@ -298,6 +311,12 @@ canvas {
 }
 
 img { height: auto; }
+
+/* <picture> only chooses the file (AVIF, WebP or the JPEG/PNG fallback) and never adds a box of its
+   own, so the <img> inside lays out exactly as a direct child would: grid areas, flex items and
+   percentage sizes keep working without a picture-specific rule for each. */
+picture { display: contents; }
+picture > source { display: none; } /* never rendered, but without this they'd be grid/flex items */
 
 input,
 button,
@@ -638,13 +657,6 @@ html.nav-open .site-header {
 
 .nav__brand:hover { color: var(--text-strong); }
 
-.nav__logo {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  color: var(--accent);
-}
-
 .nav__brand-accent { color: var(--accent); }
 
 .nav__links {
@@ -708,6 +720,15 @@ html.nav-open .site-header {
   border: 0 !important;
 }
 html.nav-open .site-header .nav__cta { visibility: hidden; }
+
+/* A larger text size set in the browser (up to 200%) makes the brand, the CTA and the menu button
+   too wide for a phone's header row: the CTA got clipped to "a pr" and, at 320px, the menu button
+   was pushed off screen. em media queries follow that setting (px ones don't), and 20em is 320px at
+   the default 16px, so this only kicks in once the text is bigger than the header was designed
+   for. The menu has its own "Start a project", so nothing is lost. */
+@media (max-width: 19.99em) {
+  .site-header .nav__cta { display: none; }
+}
 
 /* Menu toggle (hamburger → X) */
 .nav__toggle {
@@ -912,6 +933,14 @@ html.nav-open { overflow: hidden; }
 /* The email address never breaks mid-word; the column is wide enough for it from 320px up. */
 .site-footer__contact a[href^='mailto:'] { white-space: nowrap; }
 
+/* ...at the default text size. With a larger text size set in the browser (up to 200%), the
+   address alone is wider than a phone screen, and the one-column footer grew to fit it, pushing
+   the whole page sideways. On phones, let it wrap only when it can't fit (WCAG 1.4.4 / 1.4.10). */
+@media (max-width: 767.98px) {
+  .site-footer__inner > * { min-width: 0; }
+  .site-footer__contact a[href^='mailto:'] { white-space: normal; overflow-wrap: anywhere; }
+}
+
 .site-footer__bottom {
   position: relative;
   display: flex;
@@ -1045,8 +1074,6 @@ html.nav-open { overflow: hidden; }
 .btn[disabled],
 .btn[aria-disabled='true'] { opacity: 0.6; cursor: not-allowed; }
 
-.btn__icon { width: 1.125em; height: 1.125em; flex-shrink: 0; }
-
 .btn-row {
   display: flex;
   flex-wrap: wrap;
@@ -1059,8 +1086,6 @@ html.nav-open { overflow: hidden; }
   .btn-row { flex-direction: column; align-items: stretch; width: 100%; justify-self: stretch; }
   .btn-row > .btn { width: 100%; }
 }
-
-.btn-row--center { justify-content: center; }
 
 /* =========================================
    Chips / pills / badges
@@ -1144,24 +1169,9 @@ html.nav-open { overflow: hidden; }
 
 .card > * { margin: 0; }
 
-.card__icon {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  color: var(--accent);
-  background: var(--accent-tint);
-  border: 1px solid rgba(0, 217, 126, 0.2);
-  border-radius: var(--radius-md);
-}
-
-.card__icon svg { width: 22px; height: 22px; }
-
 .card__title { font-size: var(--fs-h4); color: var(--text-primary); }
 .card__text { color: var(--text-body); }
 .card__meta { font-size: var(--fs-small); color: var(--text-muted); }
-.card__link { margin-top: auto; padding-top: var(--space-2); }
 
 /* Whole card is the link target (put .card__cover on the one <a>) */
 .card__cover::before {
@@ -1172,7 +1182,6 @@ html.nav-open { overflow: hidden; }
   z-index: 1;
 }
 
-.card--link:hover,
 .card:has(.card__cover:hover) {
   border-color: var(--border-strong);
   transform: translateY(-2px);
@@ -1203,52 +1212,8 @@ html.nav-open { overflow: hidden; }
 [data-glow-item] { position: relative; isolation: isolate; }
 
 /* =========================================
-   Lists: promises + check list
+   Lists: check list
    ========================================= */
-.promise-list {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: var(--space-4);
-}
-
-@media (min-width: 768px) {
-  .promise-list--row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
-}
-
-.promise {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-4);
-  align-items: start;
-  max-width: none;
-}
-
-.promise__icon {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  border-radius: var(--radius-full);
-  background: var(--accent-tint);
-  border: 1px solid rgba(0, 217, 126, 0.3);
-  color: var(--accent);
-}
-
-.promise__icon svg { width: 20px; height: 20px; }
-
-.promise__title {
-  font-family: var(--font-heading);
-  font-size: var(--fs-h4);
-  font-weight: 600;
-  line-height: var(--lh-heading);
-  color: var(--text-primary);
-  margin-bottom: var(--space-1);
-}
-
-.promise__text { color: var(--text-body); }
-
 .check-list {
   list-style: none;
   padding: 0;
@@ -1328,24 +1293,13 @@ html.nav-open { overflow: hidden; }
 
 .hero__title--page { font-size: var(--fs-h1); line-height: var(--lh-heading); max-width: calc(22 * var(--ch-head)); }
 
-.hero__title em,
-.text-gradient {
+.hero__title em {
   font-style: normal;
   color: var(--accent);
 }
 
 
 .hero__lead { max-width: var(--measure-lead); }
-
-.hero--split .hero__inner { align-items: center; }
-
-@media (min-width: 1024px) {
-  .hero--split .hero__inner {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    column-gap: var(--space-16);
-  }
-  .hero--split .hero__aside { grid-column: 2; grid-row: 1 / span 6; }
-}
 
 /* Typed terminal line */
 .terminal {
@@ -1680,51 +1634,6 @@ html:not(.js) .stepper__panel { grid-area: auto; }
 }
 
 /* =========================================
-   Accordion (<details>) — FAQ
-   ========================================= */
-.accordion {
-  display: grid;
-  gap: var(--space-3);
-}
-
-.accordion__item {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  transition: border-color var(--dur-fast) ease;
-}
-
-.accordion__item[open] { border-color: var(--border-medium); }
-
-.accordion__summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  min-height: 56px;
-  padding: var(--space-4) var(--space-5);
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: var(--fs-h4);
-  line-height: 1.35;
-  color: var(--text-primary);
-  cursor: pointer;
-  list-style: none;
-  border-radius: var(--radius-lg);
-}
-
-.accordion__summary::-webkit-details-marker { display: none; }
-.accordion__summary:hover { color: var(--text-strong); }
-
-.accordion__body {
-  padding: 0 var(--space-5) var(--space-5);
-  color: var(--text-body);
-}
-
-.accordion__body > * { max-width: var(--measure-lead); }
-.accordion__body > * + * { margin-top: var(--space-3); }
-
-/* =========================================
    Pricing: toggle switch, price cards
    ========================================= */
 .price-toggle {
@@ -1818,8 +1727,6 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
 
 .price-card__cta { margin-top: auto; }
 
-.price-card__fine { font-size: var(--fs-small); color: var(--text-muted); }
-
 /* The price: both variants live in one grid cell → the box is always as wide
    and tall as the larger one, so toggling never moves anything. */
 .price {
@@ -1850,8 +1757,7 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
   font-variant-numeric: tabular-nums;
 }
 
-.price__variant small,
-.price__per {
+.price__variant small {
   font-family: var(--font-body);
   font-size: var(--fs-small);
   font-weight: 500;
@@ -1865,61 +1771,10 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
 
 /* Show/hide whole blocks per mode (e.g. a care-plan note). They keep their
    space in both modes (visibility, not display) so toggling never shifts
-   layout. To swap two blocks in ONE spot, wrap them in .price-swap. */
+   layout. */
 [data-price-show='care'] { visibility: hidden; }
 [data-price-mode='care'] [data-price-show='care'] { visibility: visible; }
 [data-price-mode='care'] [data-price-show='project'] { visibility: hidden; }
-.price-swap { display: grid; }
-.price-swap > * { grid-area: 1 / 1; }
-
-/* =========================================
-   Founder strip
-   ========================================= */
-.founder {
-  display: grid;
-  gap: var(--space-6);
-  align-items: center;
-  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
-}
-
-.founder__photo {
-  width: 112px;
-  height: 112px;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid var(--border-medium);
-  box-shadow: 0 0 0 6px var(--accent-tint);
-}
-
-.founder__body { display: grid; gap: var(--space-2); }
-.founder__body > * { margin: 0; }
-
-.founder__name {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: var(--fs-h3);
-  line-height: var(--lh-heading);
-  color: var(--text-strong);
-}
-
-.founder__role {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: var(--fs-label);
-  letter-spacing: var(--tracking-mono);
-  color: var(--accent);
-}
-
-.founder__text { color: var(--text-body); }
-
-@media (min-width: 640px) {
-  .founder { grid-template-columns: auto 1fr; gap: var(--space-8); }
-  .founder__photo { width: 144px; height: 144px; }
-}
 
 /* =========================================
    CTA band
@@ -1964,21 +1819,11 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
 
 .frame img { width: 100%; }
 
+
 /* =========================================
-   Form
+   Form fields (shared: the contact form and the home lab demo; the rest of the
+   form, its status box and the contact links are in css/page-contact.css)
    ========================================= */
-.form { display: grid; gap: var(--space-5); }
-
-.form__grid {
-  display: grid;
-  gap: var(--space-5);
-}
-
-@media (min-width: 640px) {
-  .form__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .form__grid .field--full { grid-column: 1 / -1; }
-}
-
 .field { display: grid; gap: var(--space-2); }
 
 .field__label {
@@ -1986,23 +1831,6 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
   font-weight: 600;
   color: var(--text-primary);
 }
-
-.field__req { color: var(--text-muted); font-weight: 400; }
-
-/* Required fields are marked visually from the markup's own [required]
-   attribute. The input already announces "required" to screen readers, so the
-   generated word has empty alt text (the plain declaration is the fallback
-   for engines without content alt text). */
-.field:has(> :is(input, textarea, select)[required]) > .field__label::after {
-  content: 'required';
-  content: 'required' / '';
-  margin-left: var(--space-2);
-  font-size: var(--fs-label);
-  font-weight: 400;
-  color: var(--text-muted);
-}
-
-.field__hint { font-size: var(--fs-small); color: var(--text-muted); }
 
 .field__input,
 .field__select,
@@ -2046,154 +1874,6 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow-strong);
 }
-
-.field__error {
-  display: none;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--error);
-}
-
-.field__error::before { content: '!'; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--error); color: var(--bg-deep); font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
-
-.field.is-invalid .field__error { display: flex; }
-
-.field.is-invalid .field__input,
-.field.is-invalid .field__select,
-.field.is-invalid .field__textarea { border-color: var(--error); }
-
-/* While invalid, the focus ring is the error colour (still a clear 3px ring). */
-.field.is-invalid .field__input:focus-visible,
-.field.is-invalid .field__select:focus-visible,
-.field.is-invalid .field__textarea:focus-visible {
-  border-color: var(--error);
-  box-shadow: 0 0 0 3px var(--error-ring);
-}
-
-.form__optional {
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  background: var(--bg-elevated);
-}
-
-.form__optional > summary {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  min-height: 52px;
-  padding: var(--space-3) var(--space-5);
-  font-weight: 600;
-  color: var(--text-primary);
-  cursor: pointer;
-  list-style: none;
-  border-radius: var(--radius-lg);
-}
-
-.form__optional > summary::-webkit-details-marker { display: none; }
-
-/* Plus / minus drawn with two centred bars, not a glyph: a font's "+" sits
-   on its own baseline and never centres exactly in the circle. */
-.form__optional > summary::before {
-  content: '';
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px solid var(--border-strong);
-  color: var(--accent);
-  background:
-    linear-gradient(currentColor, currentColor) center / 10px 2px no-repeat,
-    linear-gradient(currentColor, currentColor) center / 2px 10px no-repeat;
-  flex-shrink: 0;
-}
-
-.form__optional[open] > summary::before {
-  background:
-    linear-gradient(currentColor, currentColor) center / 10px 2px no-repeat;
-}
-
-.form__optional > .form__grid { padding: var(--space-2) var(--space-5) var(--space-6); }
-
-/* Honeypot: off-screen, never focusable by people */
-.form__hp {
-  position: absolute !important;
-  left: -10000px !important;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
-.form__actions { display: grid; gap: var(--space-3); justify-items: start; }
-
-@media (max-width: 479.98px) {
-  .form__actions { justify-items: stretch; }
-  .form__actions .btn { width: 100%; }
-}
-
-.form__note { font-size: var(--fs-small); color: var(--text-muted); }
-
-.form-status {
-  display: none;
-  padding: var(--space-4) var(--space-5);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-medium);
-  font-size: var(--fs-small);
-  color: var(--text-primary);
-}
-
-.form-status.is-visible { display: block; }
-.form-status.is-success { border-color: var(--accent); background: var(--accent-tint); }
-.form-status.is-error { border-color: var(--error); background: var(--error-bg); }
-.form-status.is-notice { border-color: var(--notice); background: var(--notice-bg); }
-
-/* Shown only without JavaScript (contact.html <noscript>), above the form. */
-.form-noscript {
-  max-width: none;
-  padding: var(--space-4) var(--space-5);
-  font-size: 1rem;
-  color: var(--text-primary);
-  border: 1px solid var(--notice);
-  background: var(--notice-bg);
-  border-radius: var(--radius-md);
-}
-
-.spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(3, 19, 11, 0.3);
-  border-top-color: var(--text-on-accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Contact tap targets (email / phone) */
-.contact-links { list-style: none; padding: 0; display: grid; gap: var(--space-3); }
-
-.contact-link {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  min-height: 64px;
-  padding: var(--space-3) var(--space-5);
-  color: var(--text-strong);
-  text-decoration: none !important;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  overflow-wrap: anywhere;
-  transition: border-color var(--dur-fast) ease;
-}
-
-.contact-link:hover { color: var(--text-strong); border-color: var(--accent); }
-.contact-link__icon { width: 22px; height: 22px; flex-shrink: 0; color: var(--accent); }
-.contact-link__label { display: block; font-size: var(--fs-label); color: var(--text-muted); font-family: var(--font-mono); letter-spacing: var(--tracking-mono); }
-.contact-link__value { display: block; font-weight: 600; }
-/* The address never breaks mid-word: its only break point is the <wbr> before "@". */
-.contact-link__value--email { overflow-wrap: normal; word-break: normal; }
-
 /* =========================================
    Mobile sticky CTA bar
    ========================================= */
@@ -2225,101 +1905,6 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
 @media (min-width: 768px) {
   .sticky-cta { display: none; }
 }
-
-/* =========================================
-   Lab mini-demo ([data-swc-mini])
-   ========================================= */
-.swc-mini {
-  display: grid;
-  gap: var(--space-4);
-  padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
-}
-
-.swc-mini > * { margin: 0; }
-
-.swc-mini__input {
-  font-family: var(--font-mono);
-  font-weight: 500;
-}
-
-/* Output box: fixed aspect ratio reserves the space before anything loads */
-.swc-mini__out {
-  position: relative;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 2 / 1;
-  width: 100%;
-  overflow: hidden;
-  background: #fbf8f1; /* SWC paper */
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-medium);
-}
-
-.swc-mini[data-swc-style='jade'] .swc-mini__out { background: #0a100d; }
-
-.swc-mini__out > svg {
-  grid-area: 1 / 1;
-  width: 100%;
-  height: 100%;
-}
-
-.swc-mini__placeholder {
-  grid-area: 1 / 1;
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: var(--fs-small);
-  color: #4d4a42; /* 8:1 on the paper */
-  text-align: center;
-  padding: var(--space-4);
-}
-
-.swc-mini.is-ready .swc-mini__placeholder,
-.swc-mini.is-empty .swc-mini__placeholder { display: none; }
-
-/* Cleared input: a hint instead of the "Loading…" line (swc-mini.js adds it). */
-.swc-mini__empty {
-  grid-area: 1 / 1;
-  display: none;
-  padding: var(--space-4);
-  font-size: var(--fs-small);
-  color: #4d4a42; /* 8:1 on the paper */
-  text-align: center;
-}
-.swc-mini.is-empty .swc-mini__empty { display: block; }
-
-/* Static picture: shown only when the live demo can't run. */
-.swc-mini__fallback {
-  grid-area: 1 / 1;
-  display: none;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.swc-mini__error { display: none; font-size: var(--fs-small); color: var(--text-body); }
-.swc-mini.is-error .swc-mini__error { display: block; }
-
-/* No JS, the module blocked / unsupported, or the engine failed: never a dead
-   "Loading…" box with an input that does nothing. Show the static picture
-   and the link to the full lab instead. swc-mini.js adds .is-mounted. */
-.swc-mini:not(.is-mounted) .field,
-.swc-mini.is-error .field,
-.swc-mini:not(.is-mounted) .swc-mini__placeholder,
-.swc-mini.is-error .swc-mini__placeholder,
-.swc-mini.is-error .swc-mini__empty,
-.swc-mini.is-error .swc-mini__out > svg { display: none; }
-.swc-mini:not(.is-mounted) .swc-mini__fallback,
-.swc-mini.is-error .swc-mini__fallback,
-.swc-mini:not(.is-mounted) .swc-mini__error { display: block; }
-.swc-mini__caption { font-size: var(--fs-small); color: var(--text-muted); }
-
-@media (max-width: 479.98px) {
-  .terminal__dots { display: none; }
-}
-
 
 /* =========================================
    Sylvan C7 — Motion
@@ -2409,24 +1994,6 @@ html:not(.js) .price-toggle { display: none; } /* no JS: show project prices onl
 html:not(.js) .scroll-progress { display: none; }
 
 /* ---- Small utilities ---- */
-@keyframes pulse-dot {
-  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow-strong); }
-  50% { box-shadow: 0 0 0 6px transparent; }
-}
-
-.status-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  flex-shrink: 0;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .status-dot { animation: pulse-dot 2.4s ease-in-out infinite; }
-}
-
 /* Footer line linking the owner's own product (Bibooks) from every page. */
 .site-footer__also { margin-top: var(--space-3); font-size: var(--fs-small); color: var(--text-muted); max-width: calc(32 * var(--ch-body)); }
 .site-footer__also a { color: var(--text-body); text-decoration: underline; text-underline-offset: 3px; }
@@ -2618,62 +2185,6 @@ html.js .stepper__list { position: relative; padding-top: 46px; }
 /* ---- Pricing odometer anchor ---- */
 .price__value { position: relative; }
 
-/* ---- "Every project includes" build frame (static markup, services) ---- */
-.build-frame {
-  position: relative;
-  overflow: hidden;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-}
-.build-frame .browser-bar { position: static; }
-.build-frame .includes-list {
-  margin: 0;
-  background: none;
-  border: 0;
-  border-radius: 0;
-}
-.build-frame__foot {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
-  border-top: 1px solid var(--border-subtle);
-  background: var(--bg-primary);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: var(--tracking-mono);
-}
-.build-frame__label { color: var(--text-muted); }
-.build-frame__status { margin-left: auto; color: var(--accent); }
-.build-frame__ring { display: inline-flex; flex: 0 0 auto; }
-.build-frame__ring svg { width: 36px; height: 36px; transform: rotate(-90deg); fill: none; stroke-width: 3; }
-.build-frame__ring .ring-track { stroke: var(--border-medium); }
-.build-frame__ring .ring-fill { stroke: var(--accent); stroke-dasharray: 100; stroke-dashoffset: 0; stroke-linecap: round; }
-.build-frame__ring .ring-check { stroke: var(--accent-bright); stroke-dasharray: 1; stroke-linecap: round; stroke-linejoin: round; transform: rotate(90deg); transform-origin: 18px 18px; }
-
-.includes-list > li:nth-child(1) { --i: 0; }
-.includes-list > li:nth-child(2) { --i: 1; }
-.includes-list > li:nth-child(3) { --i: 2; }
-.includes-list > li:nth-child(4) { --i: 3; }
-.includes-list > li:nth-child(5) { --i: 4; }
-.includes-list > li:nth-child(6) { --i: 5; }
-.includes-list > li:nth-child(7) { --i: 6; }
-.includes-list > li:nth-child(8) { --i: 7; }
-
-@media (prefers-reduced-motion: no-preference) {
-  html.js .build-frame .includes-list > li::before {
-    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 160ms), opacity 0.3s ease calc(var(--i) * 160ms);
-  }
-  html.js .build-frame:not(.is-done) .includes-list > li::before { transform: scale(0); opacity: 0; }
-  html.js .build-frame .ring-fill { transition: stroke-dashoffset 1.3s var(--ease-out) 0.4s; }
-  html.js .build-frame:not(.is-done) .ring-fill { stroke-dashoffset: 100; }
-  html.js .build-frame .ring-check { transition: stroke-dashoffset 0.5s var(--ease-out) 1.6s; }
-  html.js .build-frame:not(.is-done) .ring-check { stroke-dashoffset: 1; }
-}
-
 /* ---- Browser-chrome frames around screenshots (static markup) ---- */
 .frame--browser,
 html.js .showcase__item--bibooks .showcase__media { position: relative; padding-top: 36px; }
@@ -2726,4 +2237,78 @@ html.js .showcase__item--bibooks .showcase__media { position: relative; padding-
   border: 1.5px solid var(--accent);
   border-top-width: 3px;
   border-radius: 2px;
+}
+
+
+/* =========================================
+   Sylvan C7 — Enlarged browser text (WCAG 1.4.4 / 1.4.10)
+   A larger text size set in the browser or the phone's system font setting (Android scales
+   web text with it) keeps the viewport width but makes 1rem bigger: at 200% the layouts that
+   fit at 16px overflowed sideways or clipped (nowrap buttons, prices and links widened their
+   one-column grids; the five desktop links no longer fit beside the CTA).
+   em media queries follow that setting and px ones don't, so each clause below pairs one of
+   the site's px layout steps with the same width in em (1em = 16px by default):
+   "(min-width: 1024px) and (max-width: 63.99em)" means "the desktop layout is in use, but the
+   text is bigger than it was designed for". At the default size no clause can match (each
+   em bound sits just under its px bound), so nothing here changes the default rendering.
+   The same list is repeated in css/page-contact.css for its page-only rule.
+   ========================================= */
+@media (max-width: 19.99em), (min-width: 480px) and (max-width: 29.99em), (min-width: 768px) and (max-width: 47.99em), (min-width: 1024px) and (max-width: 63.99em) {
+  /* A word longer than its column (a heading word, an address) breaks instead of widening the
+     column, which would push the whole page sideways. */
+  body { overflow-wrap: anywhere; }
+  h1, h2, h3, h4, h5, h6 { overflow-wrap: anywhere; } /* they opt out of mid-word breaks above */
+  /* 404: the garden canvas keeps the pixel width it was first drawn at; don't let it set the column. */
+  .not-found__grid > *,
+  .fx-garden__canvas { min-width: 0; max-width: 100%; }
+  /* Buttons, arrow links and prices may wrap rather than force their column wider than the
+     screen. */
+  .btn { white-space: normal; text-align: center; max-width: 100%; }
+  .link-arrow { white-space: normal; }
+  .price__variant { white-space: normal; }
+  .price-toggle { flex-wrap: wrap; max-width: 100%; }
+  .price-toggle__label { white-space: normal; }
+  .badge { white-space: normal; }
+  .price-card__badge { max-width: calc(100% - 2 * var(--space-5)); } /* pinned to the card's right edge */
+  .terminal { white-space: normal; } /* the hero's typed command wraps instead of being cut off */
+  .terminal > [data-typer] { min-width: 0; }
+  .terminal .typer__text { white-space: pre-wrap !important; } /* js/components.js sets pre inline */
+  /* The illustration's address bar is decoration: let it shrink away instead of setting a width. */
+  .browser-bar__url { flex-basis: 0; }
+}
+
+/* The desktop layout with enlarged text: the links can't fit in one row beside the CTA, so the
+   header works as it does below 1024px: hamburger + drawer (js/main.js's DESKTOP query
+   carries the same em bound, so the drawer isn't closed as if the screen were wide). */
+@media (min-width: 1024px) and (max-width: 63.99em) {
+  html.js .nav__links { display: none; }
+  html.js .nav__toggle { display: inline-grid; }
+  html.js .nav-drawer { display: flex; }
+  html.js .nav-overlay { display: block; }
+  html.js .fx-nav-ind { display: none; } /* the sliding underline belongs to the hidden links */
+  /* No JS: the drawer can't open, so the links take a scrollable second row (as below 1024px). */
+  html:not(.js) .site-header { height: auto; }
+  html:not(.js) .nav { flex-wrap: wrap; padding-block: var(--space-2); }
+  html:not(.js) .nav__links { order: 3; width: 100%; overflow-x: auto; margin-inline: calc(-1 * var(--space-3)); }
+}
+
+/* ── Print ── Paper is light: swap the dark tokens for black-on-white, drop chrome/effects, keep content. */
+@media print {
+  :root {
+    --bg-deep: #fff; --bg-primary: #fff; --bg-elevated: #fff; --bg-surface: #fff;
+    --text-strong: #000; --text-primary: #000; --text-body: #111; --text-muted: #333; --text-faint: #444;
+    --text-secondary: #222; --text-tertiary: #333; --accent: #04532f; --accent-bright: #04532f; --accent-dim: #04532f;
+    --border-subtle: #bbb; --border-medium: #999; --border-strong: #666;
+  }
+  @page { margin: 1.6cm 1.4cm; }
+  html, body { background: #fff !important; color: #111 !important; }
+  *, *::before, *::after { content-visibility: visible !important; box-shadow: none !important; text-shadow: none !important; animation: none !important; transition: none !important; }
+  .site-header, .nav-drawer, .nav__cta, .skip-link, .sticky-cta, .scroll-progress, .fx-top, .fx-kbd, .fx-palette,
+  canvas, svg[aria-hidden="true"], [class*="__canvas"], [class*="fx-pulse"] { display: none !important; }
+  .reveal, [class*="reveal"] { opacity: 1 !important; transform: none !important; }
+  main a[href^="http"]:not(.btn)::after { content: " (" attr(href) ")"; font-size: .85em; word-break: break-all; }
+  .card, figure, pre, blockquote, table, li, img, .terminal { break-inside: avoid; }
+  h1, h2, h3, h4 { break-after: avoid; }
+  img { max-width: 100% !important; }
+  .btn--primary { background: #fff !important; color: #000 !important; border: 1px solid #000 !important; }
 }

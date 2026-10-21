@@ -1,5 +1,5 @@
 # GitHub Pages (legacy Jekyll build). The site is plain static HTML; this only keeps
-# test tooling and generated-app READMEs from being published.
+# test tooling, repo docs and generated-app READMEs from being published.
 exclude:
   - package.json
   - package-lock.json
@@ -9,5 +9,8 @@ exclude:
   - test-results
   - playwright-report
   - scripts
+  - README.md
+  - .github
+  - .gitattributes
   - lab/square-word-calligraphy/app/README.md
   - lab/nuestra-finca/app/README.md

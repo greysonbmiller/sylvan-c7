@@ -3,12 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo=' 'sha256-xi56qyfUlRqcNBUSvXslzgrN31J7LP4UiW+QDIBU9OI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>document.documentElement.classList.add('js')</script>
   <title>Services and Pricing | Sylvan C7</title>
   <meta name="description" content="Websites from $2,500 on fixed packages, plus custom web apps, integrations, instrument-control software and data tooling, quoted in writing after a free call.">
   <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/services.html">
   <meta name="theme-color" content="#060a08">
+  <meta name="color-scheme" content="dark">
+  <!-- sizes="32x32" (not "any") keeps browsers that understand SVG icons on favicon.svg -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Sylvan C7">
@@ -16,10 +23,15 @@
   <meta property="og:description" content="Websites from $2,500 on fixed packages, plus custom web apps, integrations, instrument-control software and data tooling, quoted in writing after a free call.">
   <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/services.html">
   <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Services and pricing: websites and custom software that keeps working">
   <meta name="twitter:description" content="Websites from $2,500 on fixed packages, plus custom web apps, integrations, instrument-control software and data tooling, quoted in writing after a free call.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta name="twitter:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
 
   <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
@@ -27,52 +39,72 @@
   <link rel="stylesheet" href="css/page-services.min.css">
 
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How is custom software priced?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Scoped per project, with a fixed quote in writing after a free call. Larger builds can be split into paid phases, starting small so you see working code before committing further." }
-      },
-      {
-        "@type": "Question",
-        "name": "How does payment work?",
-        "acceptedAnswer": { "@type": "Answer", "text": "A deposit books your slot and the balance is due at launch. Larger projects are split into milestones, agreed in the quote." }
-      },
-      {
-        "@type": "Question",
-        "name": "How long does a project take?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Launch sites typically take 2–3 weeks, Growth sites 4–6 weeks, and Commerce & Custom builds 8–12 weeks. How quickly content and feedback come back affects the timeline too." }
-      },
-      {
-        "@type": "Question",
-        "name": "What do you need from me to start?",
-        "acceptedAnswer": { "@type": "Answer", "text": "A rough idea of what you offer, who it’s for, and any branding, photos or copy you already have. If content isn’t ready, I can help; the sooner it’s ready, the faster things move." }
-      },
-      {
-        "@type": "Question",
-        "name": "What if the design isn’t right?",
-        "acceptedAnswer": { "@type": "Answer", "text": "You approve the design before anything is coded. Launch includes one round of revisions and Growth two; for Commerce & Custom and custom software, revision rounds are scoped with the project." }
-      },
-      {
-        "@type": "Question",
-        "name": "Who owns it, and where is it hosted?",
-        "acceptedAnswer": { "@type": "Answer", "text": "You own everything from day one: code, domain, hosting and accounts, all in your name. Host it anywhere you like. A care plan can cover hosting, but it’s never required." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I edit the site without a developer?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Growth and Commerce & Custom sites include a CMS as standard, and I walk you through it before launch. On a Launch site, a CMS is a paid add-on." }
-      },
-      {
-        "@type": "Question",
-        "name": "What about accessibility?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Every project gets semantic, accessible HTML with readable contrast and keyboard navigation, which you can check yourself with WAVE or axe. It isn’t a substitute for a legal accessibility audit." }
-      }
-    ]
-  }
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FAQPage",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/services.html#webpage",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/services.html",
+      "name": "Services and Pricing | Sylvan C7",
+      "description": "Websites from $2,500 on fixed packages, plus custom web apps, integrations, instrument-control software and data tooling, quoted in writing after a free call.",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#website" },
+      "breadcrumb": { "@id": "https://greysonbmiller.github.io/sylvan-c7/services.html#breadcrumb" },
+      "about": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice" },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How is custom software priced?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Scoped per project, with a fixed quote in writing after a free call. Larger builds can be split into paid phases, starting small so you see working code before committing further." }
+        },
+        {
+          "@type": "Question",
+          "name": "How does payment work?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A deposit books your slot and the balance is due at launch. Larger projects are split into milestones, agreed in the quote." }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does a project take?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Launch sites typically take 2–3 weeks, Growth sites 4–6 weeks, and Commerce & Custom builds 8–12 weeks. How quickly content and feedback come back affects the timeline too." }
+        },
+        {
+          "@type": "Question",
+          "name": "What do you need from me to start?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A rough idea of what you offer, who it’s for, and any branding, photos or copy you already have. If content isn’t ready, I can help; the sooner it’s ready, the faster things move." }
+        },
+        {
+          "@type": "Question",
+          "name": "What if the design isn’t right?",
+          "acceptedAnswer": { "@type": "Answer", "text": "You approve the design before anything is coded. Launch includes one round of revisions and Growth two; for Commerce & Custom and custom software, revision rounds are scoped with the project." }
+        },
+        {
+          "@type": "Question",
+          "name": "Who owns it, and where is it hosted?",
+          "acceptedAnswer": { "@type": "Answer", "text": "You own everything from day one: code, domain, hosting and accounts, all in your name. Host it anywhere you like. A care plan can cover hosting, but it’s never required." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I edit the site without a developer?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Growth and Commerce & Custom sites include a CMS as standard, and I walk you through it before launch. On a Launch site, a CMS is a paid add-on." }
+        },
+        {
+          "@type": "Question",
+          "name": "What about accessibility?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Every project gets semantic, accessible HTML with readable contrast and keyboard navigation, which you can check yourself with WAVE or axe. It isn’t a substitute for a legal accessibility audit." }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/services.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://greysonbmiller.github.io/sylvan-c7/" },
+        { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://greysonbmiller.github.io/sylvan-c7/services.html" }
+      ]
+    }
+  ]
+}
   </script>
 </head>
 <body>
@@ -414,7 +446,7 @@
       <div>
         <a class="nav__brand" href="index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
         <p class="site-footer__tagline">Software that keeps working. Websites, web apps, integrations and instrument-control software.</p>
-        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks</a></p>
+        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks<span class="visually-hidden"> (opens in a new tab)</span></a></p>
       </div>
       <nav aria-label="Footer">
         <p class="site-footer__heading">Pages</p>
@@ -455,8 +487,10 @@
     <link rel="stylesheet" href="css/fx.css">
     <script src="js/fx-ui.js"></script>
     <script src="js/fx-illus.js"></script>
-    <script src="js/particles.js"></script>
+    <script src="js/particles.js" data-media="(min-width: 1024px)"></script>
     <script src="js/fx-pagehero.js"></script>
   </template>
+  <!-- Prefetch same-site pages on hover/pointerdown (Chromium), so the next page is near-instant. Not prerender: the effects and canvases should not run on a page nobody opened. -->
+  <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/sylvan-c7/*"},{"not":{"selector_matches":"[target=_blank], [download]"}},{"not":{"href_matches":"/sylvan-c7/lab/*/app/*"}}]},"eagerness":"moderate"}]}</script>
 </body>
 </html>

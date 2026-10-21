@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo=' 'sha256-xi56qyfUlRqcNBUSvXslzgrN31J7LP4UiW+QDIBU9OI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>document.documentElement.classList.add('js')</script>
   <title>Work: Bibooks, the lab and how I run a project | Sylvan C7</title>
   <meta name="description" content="Sylvan C7 is a new one-person practice with no client work published yet. Here is a live product and two lab experiments I built and run solo, how a project runs, and standards you can check yourself.">
   <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/work.html">
   <meta name="theme-color" content="#060a08">
+  <meta name="color-scheme" content="dark">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Sylvan C7">
@@ -15,11 +18,20 @@
   <meta property="og:description" content="Sylvan C7 is a new one-person practice with no client work published yet. Here is a live product and two lab experiments I built and run solo, how a project runs, and standards you can check yourself.">
   <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/work.html">
   <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Work: a live product and two lab experiments, built solo | Sylvan C7">
   <meta name="twitter:description" content="Sylvan C7 is a new one-person practice with no client work published yet. Here is a live product and two lab experiments I built and run solo, how a project runs, and standards you can check yourself.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta name="twitter:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
+  <!-- sizes="32x32" (not "any") keeps browsers that understand SVG icons on favicon.svg -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
 
   <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
@@ -28,34 +40,62 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Bibooks",
-  "alternateName": "Bibooks.org",
-  "url": "https://bibooks.org/",
-  "sameAs": [
-    "https://play.google.com/store/apps/details?id=org.bibooks.app"
-  ],
-  "description": "Bilingual audiobooks for language learners: read and listen to bilingual books, or turn any text into your own bilingual audiobook. Every sentence is read aloud in the language you are learning and one you know, highlighted as it is spoken, in any pair of 49 languages.",
-  "applicationCategory": "EducationalApplication",
-  "operatingSystem": "Web, Android",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "author": {
-    "@type": "Person",
-    "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson",
-    "name": "Greyson Miller",
-    "url": "https://greysonbmiller.github.io/sylvan-c7/about.html"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice",
-    "name": "Sylvan C7",
-    "url": "https://greysonbmiller.github.io/sylvan-c7/"
-  },
-  "image": "https://greysonbmiller.github.io/sylvan-c7/img/work-bibooks.jpg"
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#webpage",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/work.html",
+      "name": "Work: Bibooks, the lab and how I run a project | Sylvan C7",
+      "description": "Sylvan C7 is a new one-person practice with no client work published yet. Here is a live product and two lab experiments I built and run solo, how a project runs, and standards you can check yourself.",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#website" },
+      "breadcrumb": { "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#breadcrumb" },
+      "about": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice" },
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": { "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#bibooks" }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/#app" }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#app" }
+          }
+        ]
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#bibooks",
+      "name": "Bibooks",
+      "alternateName": "Bibooks.org",
+      "url": "https://bibooks.org/",
+      "sameAs": ["https://play.google.com/store/apps/details?id=org.bibooks.app"],
+      "description": "Bilingual audiobooks for language learners: read and listen to bilingual books, or turn any text into your own bilingual audiobook. Every sentence is read aloud in the language you are learning and one you know, highlighted as it is spoken, in any pair of 49 languages.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web, Android",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson", "name": "Greyson Miller", "url": "https://greysonbmiller.github.io/sylvan-c7/about.html" },
+      "publisher": { "@type": "Organization", "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice", "name": "Sylvan C7", "url": "https://greysonbmiller.github.io/sylvan-c7/" },
+      "image": "https://greysonbmiller.github.io/sylvan-c7/img/work-bibooks.jpg"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://greysonbmiller.github.io/sylvan-c7/" },
+        { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://greysonbmiller.github.io/sylvan-c7/work.html" }
+      ]
+    }
+  ]
 }
   </script>
 </head>
@@ -117,13 +157,17 @@
       <div class="container work-case reveal">
         <figure class="frame frame--browser work-case__media" data-pan="img/work-bibooks-tall.jpg">
           <div class="browser-bar" aria-hidden="true"><span class="browser-bar__dots"><i></i><i></i><i></i></span><span class="browser-bar__url">bibooks.org</span></div>
-          <img src="img/work-bibooks.jpg" srcset="img/work-bibooks-400.jpg 400w, img/work-bibooks-600.jpg 600w, img/work-bibooks.jpg 1200w, img/work-bibooks@2x.jpg 2400w" sizes="(min-width: 1024px) 670px, calc(100vw - 32px)" width="1200" height="750" alt="Bibooks home page: 'Turn any book into a bilingual audiobook' with a Spanish–English read-along demo." fetchpriority="high" decoding="async">
+          <picture>
+            <source type="image/avif" srcset="img/work-bibooks-400.avif 400w, img/work-bibooks-720.avif 720w, img/work-bibooks-1000.avif 1000w, img/work-bibooks-1400.avif 1400w" sizes="(min-width: 1264px) 670px, (min-width: 1024px) calc(58.4vw - 67px), calc(95vw - 14px)">
+            <source type="image/webp" srcset="img/work-bibooks-400.webp 400w, img/work-bibooks-720.webp 720w, img/work-bibooks-1000.webp 1000w, img/work-bibooks-1400.webp 1400w" sizes="(min-width: 1264px) 670px, (min-width: 1024px) calc(58.4vw - 67px), calc(95vw - 14px)">
+            <img src="img/work-bibooks.jpg" srcset="img/work-bibooks-400.jpg 400w, img/work-bibooks-600.jpg 600w, img/work-bibooks.jpg 1200w, img/work-bibooks@2x.jpg 2400w" sizes="(min-width: 1264px) 670px, (min-width: 1024px) calc(58.4vw - 67px), calc(95vw - 14px)" width="1200" height="750" alt="Bibooks home page: 'Turn any book into a bilingual audiobook' with a Spanish–English read-along demo." fetchpriority="high" decoding="async">
+          </picture>
         </figure>
         <div class="work-case__body">
           <span class="eyebrow">My product</span>
           <h2 class="section-title" id="bibooks-title">Bibooks: bilingual audiobooks</h2>
           <p class="lead">Turns any text into a sentence-by-sentence bilingual audiobook with read-along highlighting, in any pair of 49 languages.</p>
-          <p>I built <a href="https://bibooks.org" target="_blank" rel="noopener">the Bibooks bilingual audiobook app</a> to make the learning material I couldn't find: stories at my level, read aloud in two languages. I designed it and I run all of it, from the job pipeline to billing. Its public library is free to read and listen to without an account, on the web or with the <a href="https://play.google.com/store/apps/details?id=org.bibooks.app" target="_blank" rel="noopener">Bibooks Android app on Google Play</a>.</p>
+          <p>I built <a href="https://bibooks.org" target="_blank" rel="noopener">the Bibooks bilingual audiobook app<span class="visually-hidden"> (opens in a new tab)</span></a> to make the learning material I couldn't find: stories at my level, read aloud in two languages. I designed it and I run all of it, from the job pipeline to billing. Its public library is free to read and listen to without an account, on the web or with the <a href="https://play.google.com/store/apps/details?id=org.bibooks.app" target="_blank" rel="noopener">Bibooks Android app on Google Play<span class="visually-hidden"> (opens in a new tab)</span></a>.</p>
           <h3 class="work-case__subtitle">What it shows</h3>
           <ul class="check-list" role="list">
             <li>A full product shipped solo: web app, payments, 49 interface languages.</li>
@@ -139,7 +183,7 @@
             <li class="chip">Docker</li>
           </ul>
           <div class="btn-row">
-            <a class="btn btn--outline" href="https://bibooks.org" target="_blank" rel="noopener">Open bibooks.org</a>
+            <a class="btn btn--outline" href="https://bibooks.org" target="_blank" rel="noopener">Open bibooks.org<span class="visually-hidden"> (opens in a new tab)</span></a>
           </div>
         </div>
       </div>
@@ -150,7 +194,11 @@
       <div class="container work-case work-case--flip reveal">
         <figure class="frame frame--browser work-case__media">
           <div class="browser-bar" aria-hidden="true"><span class="browser-bar__dots"><i></i><i></i><i></i></span><span class="browser-bar__url">sylvan-c7/lab</span></div>
-          <img src="img/lab-square-word-calligraphy.png" width="1200" height="900" alt="The words Square Word Calligraphy written as three square blocks that look like Chinese characters." loading="lazy" decoding="async">
+          <picture>
+            <source type="image/avif" srcset="img/lab-square-word-calligraphy-400.avif 400w, img/lab-square-word-calligraphy-700.avif 700w, img/lab-square-word-calligraphy-1000.avif 1000w, img/lab-square-word-calligraphy-1200.avif 1200w" sizes="(min-width: 1264px) 670px, (min-width: 1024px) calc(58.4vw - 67px), calc(95vw - 14px)">
+            <source type="image/webp" srcset="img/lab-square-word-calligraphy-400.webp 400w, img/lab-square-word-calligraphy-700.webp 700w, img/lab-square-word-calligraphy-1000.webp 1000w, img/lab-square-word-calligraphy-1200.webp 1200w" sizes="(min-width: 1264px) 670px, (min-width: 1024px) calc(58.4vw - 67px), calc(95vw - 14px)">
+            <img src="img/lab-square-word-calligraphy.png" width="1200" height="900" alt="The words Square Word Calligraphy written as three square blocks that look like Chinese characters." loading="lazy" decoding="async">
+          </picture>
         </figure>
         <div class="work-case__body">
           <span class="eyebrow">From the lab</span>
@@ -167,7 +215,11 @@
         <article class="card work-mini" aria-labelledby="finca-title">
           <figure class="frame frame--browser work-mini__frame">
             <div class="browser-bar" aria-hidden="true"><span class="browser-bar__dots"><i></i><i></i><i></i></span><span class="browser-bar__url">sylvan-c7/lab</span></div>
-            <img class="work-mini__media" src="img/lab-nuestra-finca.jpg" width="1200" height="900" alt="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside" loading="lazy" decoding="async">
+            <picture>
+              <source type="image/avif" srcset="img/lab-nuestra-finca-400.avif 400w, img/lab-nuestra-finca-700.avif 700w, img/lab-nuestra-finca-1000.avif 1000w, img/lab-nuestra-finca-1200.avif 1200w" sizes="(min-width: 1264px) 646px, (min-width: 1024px) calc(58.4vw - 92px), (min-width: 640px) calc(38vw - 33px), calc(95vw - 48px)">
+              <source type="image/webp" srcset="img/lab-nuestra-finca-400.webp 400w, img/lab-nuestra-finca-700.webp 700w, img/lab-nuestra-finca-1000.webp 1000w, img/lab-nuestra-finca-1200.webp 1200w" sizes="(min-width: 1264px) 646px, (min-width: 1024px) calc(58.4vw - 92px), (min-width: 640px) calc(38vw - 33px), calc(95vw - 48px)">
+              <img class="work-mini__media" src="img/lab-nuestra-finca.jpg" width="1200" height="900" alt="A 3D model of a farm: a wooden kitchen with solar panels joined by a covered bridge to a wooden house raised on posts, on a green hillside" loading="lazy" decoding="async">
+            </picture>
           </figure>
           <div class="work-mini__body">
             <span class="eyebrow">Also from the lab</span>
@@ -286,7 +338,7 @@
       <div>
         <a class="nav__brand" href="index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
         <p class="site-footer__tagline">Software that keeps working. Websites, web apps, integrations and instrument-control software.</p>
-        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks</a></p>
+        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks<span class="visually-hidden"> (opens in a new tab)</span></a></p>
       </div>
       <nav aria-label="Footer">
         <p class="site-footer__heading">Pages</p>
@@ -326,8 +378,10 @@
     <link rel="stylesheet" href="css/fx.css">
     <script src="js/fx-ui.js"></script>
     <script src="js/fx-illus.js"></script>
-    <script src="js/particles.js"></script>
+    <script src="js/particles.js" data-media="(min-width: 1024px)"></script>
     <script src="js/fx-pagehero.js"></script>
   </template>
+  <!-- Prefetch same-site pages on hover/pointerdown (Chromium), so the next page is near-instant. Not prerender: the effects and canvases should not run on a page nobody opened. -->
+  <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/sylvan-c7/*"},{"not":{"selector_matches":"[target=_blank], [download]"}},{"not":{"href_matches":"/sylvan-c7/lab/*/app/*"}}]},"eagerness":"moderate"}]}</script>
 </body>
 </html>

@@ -1,0 +1,4 @@
+# Check out text files with LF line endings on every OS (Windows Git defaults to CRLF). The CSS build
+# check and several tests compare file contents, and the published site should not depend on which
+# machine last committed. Binary files (images, fonts) are detected and left alone.
+* text=auto eol=lf

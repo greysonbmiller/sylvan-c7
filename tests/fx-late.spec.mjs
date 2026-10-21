@@ -56,9 +56,13 @@ for (const p of LIVE_PAGES) {
             }));
             await open(pg, p.path);
             await pg.evaluate(() => document.fonts.ready);
+            // Content inside a closed <details> (the contact form's optional fields, the FAQ answers) is
+            // not rendered, and Chrome reports whatever box it last had or none: on Windows CI the same
+            // closed .form__grid measured 579x325 in one run and 0x0 in the other. Nothing there is on
+            // screen to move; it is laid out fresh when opened.
             return await pg.evaluate(() => ({
               fx: document.documentElement.getAttribute('data-fx'),
-              els: [...document.body.querySelectorAll('*')].filter((e) => !e.closest('svg,canvas,template,script,link,style,[data-swc-mini] .swc-mini__out'))
+              els: [...document.body.querySelectorAll('*')].filter((e) => !e.closest('svg,canvas,template,script,link,style,[data-swc-mini] .swc-mini__out,details:not([open]) > :not(summary)'))
                 .map((e) => {
                   const r = e.getBoundingClientRect();
                   return `${e.tagName}.${typeof e.className === 'string' ? e.className.split(' ')[0] : ''} ${Math.round(r.left)},${Math.round(r.top + scrollY)} ${Math.round(r.width)}x${Math.round(r.height)}`;

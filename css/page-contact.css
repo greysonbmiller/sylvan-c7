@@ -2,6 +2,194 @@
    Sylvan C7 — Contact page (page-specific only)
    ========================================= */
 
+/* =========================================
+   Form
+   Only this page uses it, so it lives here rather than in site.css: the
+   other pages no longer download it before their first paint.
+   ========================================= */
+.form { display: grid; gap: var(--space-5); }
+
+.form__grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .form__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Required fields are marked visually from the markup's own [required]
+   attribute. The input already announces "required" to screen readers, so the
+   generated word has empty alt text (the plain declaration is the fallback
+   for engines without content alt text). */
+.field:has(> :is(input, textarea, select)[required]) > .field__label::after {
+  content: 'required';
+  content: 'required' / '';
+  margin-left: var(--space-2);
+  font-size: var(--fs-label);
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.field__error {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--error);
+}
+
+.field__error::before { content: '!'; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--error); color: var(--bg-deep); font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+
+.field.is-invalid .field__error { display: flex; }
+
+.field.is-invalid .field__input,
+.field.is-invalid .field__select,
+.field.is-invalid .field__textarea { border-color: var(--error); }
+
+/* While invalid, the focus ring is the error colour (still a clear 3px ring). */
+.field.is-invalid .field__input:focus-visible,
+.field.is-invalid .field__select:focus-visible,
+.field.is-invalid .field__textarea:focus-visible {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px var(--error-ring);
+}
+
+.form__optional {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+}
+
+.form__optional > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 52px;
+  padding: var(--space-3) var(--space-5);
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--radius-lg);
+}
+
+.form__optional > summary::-webkit-details-marker { display: none; }
+
+/* Plus / minus drawn with two centred bars, not a glyph: a font's "+" sits
+   on its own baseline and never centres exactly in the circle. */
+.form__optional > summary::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  color: var(--accent);
+  background:
+    linear-gradient(currentColor, currentColor) center / 10px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 2px 10px no-repeat;
+  flex-shrink: 0;
+}
+
+.form__optional[open] > summary::before {
+  background:
+    linear-gradient(currentColor, currentColor) center / 10px 2px no-repeat;
+}
+
+.form__optional > .form__grid { padding: var(--space-2) var(--space-5) var(--space-6); }
+
+/* Honeypot: off-screen, never focusable by people */
+.form__hp {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form__actions { display: grid; gap: var(--space-3); justify-items: start; }
+
+@media (max-width: 479.98px) {
+  .form__actions { justify-items: stretch; }
+  .form__actions .btn { width: 100%; }
+}
+
+.form__note { font-size: var(--fs-small); color: var(--text-muted); }
+
+.form-status {
+  display: none;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-medium);
+  font-size: var(--fs-small);
+  color: var(--text-primary);
+}
+
+.form-status.is-visible { display: block; }
+.form-status.is-success { border-color: var(--accent); background: var(--accent-tint); }
+.form-status.is-error { border-color: var(--error); background: var(--error-bg); }
+.form-status.is-notice { border-color: var(--notice); background: var(--notice-bg); }
+
+/* No-JS return from FormSubmit (_next → contact.html?sent=1#sent): the same success wording as
+   js/interactions.js, inside the <noscript> above the form, shown only while it is the URL's target. */
+.form-sent:target { display: block; margin-bottom: var(--space-4); }
+
+/* Shown only without JavaScript (contact.html <noscript>), above the form. */
+.form-noscript {
+  max-width: none;
+  padding: var(--space-4) var(--space-5);
+  font-size: 1rem;
+  color: var(--text-primary);
+  border: 1px solid var(--notice);
+  background: var(--notice-bg);
+  border-radius: var(--radius-md);
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(3, 19, 11, 0.3);
+  border-top-color: var(--text-on-accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Contact tap targets (email / phone) */
+.contact-links { list-style: none; padding: 0; display: grid; gap: var(--space-3); }
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 64px;
+  padding: var(--space-3) var(--space-5);
+  color: var(--text-strong);
+  text-decoration: none !important;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow-wrap: anywhere;
+  transition: border-color var(--dur-fast) ease;
+}
+
+.contact-link:hover { color: var(--text-strong); border-color: var(--accent); }
+.contact-link__icon { width: 22px; height: 22px; flex-shrink: 0; color: var(--accent); }
+.contact-link__label { display: block; font-size: var(--fs-label); color: var(--text-muted); font-family: var(--font-mono); letter-spacing: var(--tracking-mono); }
+.contact-link__value { display: block; font-weight: 600; }
+/* The address never breaks mid-word: its only break point is the <wbr> before "@". */
+.contact-link__value--email { overflow-wrap: normal; word-break: normal; }
+
+/* ...unless the browser's text size is enlarged so far that "@protonmail.com" alone is wider than
+   the card (see "Enlarged browser text" at the end of css/site.css for this media query list):
+   then it may break anywhere rather than push the page sideways. Never matches at the default size. */
+@media (max-width: 19.99em), (min-width: 480px) and (max-width: 29.99em), (min-width: 768px) and (max-width: 47.99em), (min-width: 1024px) and (max-width: 63.99em) {
+  .contact-link__value--email { overflow-wrap: anywhere; }
+  .contact-intro > * { max-width: 100%; }
+}
+
 /* Intro + tap targets first (above the form on phones), form beside it on desktop */
 .contact-main { padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem); }
 

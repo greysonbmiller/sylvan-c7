@@ -4,7 +4,7 @@ import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const REPO = fileURLToPath(new URL('..', import.meta.url));
-export const ORIGIN = 'http://127.0.0.1:4180';
+export const ORIGIN = `http://127.0.0.1:${process.env.PW_PORT || 4180}`; // must match playwright.config.mjs
 export const BASE = `${ORIGIN}/sylvan-c7/`;
 export const PROD = 'https://greysonbmiller.github.io/sylvan-c7/';
 
@@ -105,7 +105,7 @@ export async function open(page, path, { settle = 600 } = {}) {
   const guarded = await page.evaluate(() => !document.documentElement.classList.contains('js') || Array.isArray(window.__externalNav));
   if (!guarded) throw new Error('mailto:/tel: click guard missing on ' + path + ': refusing to run a test that could open the OS mail/phone app');
   await page.evaluate(() => document.fonts && document.fonts.ready.then(() => true)).catch(() => {});
-  await page.waitForFunction(() => {
+  await waitUntil(page, () => {
     const tpl = document.querySelector('template[data-fx-late]');
     const state = document.documentElement.getAttribute('data-fx');
     return !tpl || !document.documentElement.classList.contains('js') || state === 'ready' || state === 'failed';
@@ -133,10 +133,26 @@ export async function scrollThrough(page) {
  * catches a reveal fade mid-flight on a loaded machine. Infinite ambient loops are ignored.
  */
 export async function settleAnimations(page) {
-  await page.waitForFunction(() => document.getAnimations().every((a) => {
+  await waitUntil(page, () => document.getAnimations().every((a) => {
     const t = a.effect && a.effect.getComputedTiming();
     return a.playState !== 'running' || !t || t.endTime === Infinity;
   }), null, { timeout: 5_000 }).catch(() => {});
+}
+
+/**
+ * page.waitForFunction without eval. Playwright's waitForFunction runs its predicate through eval()
+ * inside the page, and every page's Content-Security-Policy refuses eval (no 'unsafe-eval'), so it
+ * throws EvalError (and logs a CSP violation). This polls the same self-contained function through
+ * page.evaluate, which CSP does not govern. Resolves with the first truthy result; rejects on timeout.
+ */
+export async function waitUntil(page, fn, arg = null, { timeout = 5_000, interval = 50 } = {}) {
+  const end = Date.now() + timeout;
+  for (;;) {
+    const v = await page.evaluate(fn, arg);
+    if (v) return v;
+    if (Date.now() >= end) throw new Error(`waitUntil: still falsy after ${timeout} ms`);
+    await new Promise((r) => setTimeout(r, interval));
+  }
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -151,7 +167,8 @@ export async function settleAnimations(page) {
 export function countMainWords(excludeOptions) {
   const main = document.querySelector('main');
   if (!main) return -1;
-  const skip = 'script,style,noscript,template,svg,[aria-hidden="true"]' + (excludeOptions ? ',option' : '');
+  // Screen-reader-only text (e.g. a link's hidden "(opens in a new tab)") isn't visible reading.
+  const skip = 'script,style,noscript,template,svg,[aria-hidden="true"],.visually-hidden,.sr-only' + (excludeOptions ? ',option' : '');
   const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
   const parts = [];
   for (let n = walker.nextNode(); n; n = walker.nextNode()) {

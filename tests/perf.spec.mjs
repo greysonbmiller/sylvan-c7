@@ -69,7 +69,7 @@ function trackHeroOpacity() {
 }
 
 async function measureOnce(browser, path) {
-  const context = await browser.newContext({ baseURL: BASE, viewport: { width: 412, height: 823 }, channel: 'chrome' });
+  const context = await browser.newContext({ baseURL: BASE, viewport: { width: 412, height: 823 } });
   try {
     const page = await context.newPage();
     await page.addInitScript(trackHeroOpacity);

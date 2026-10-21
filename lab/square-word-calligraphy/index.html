@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo=' 'sha256-c21L2n7sqhV1cAtfZcag32RwLRjkR+mnSEMLf7BksjM=' 'sha256-xi56qyfUlRqcNBUSvXslzgrN31J7LP4UiW+QDIBU9OI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>document.documentElement.classList.add('js')</script>
   <title>Square Word Calligraphy: a free in-browser tool | Sylvan C7</title>
   <meta name="description" content="Type English and get square blocks that look like Chinese characters but read as English, after Xu Bing's 1994 Square Word Calligraphy. A free in-browser tool with SVG and PNG export, built solo by Greyson Miller.">
   <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/">
   <meta name="theme-color" content="#060a08">
+  <meta name="color-scheme" content="dark">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Sylvan C7">
@@ -18,33 +21,55 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="900">
   <meta property="og:image:alt" content="The words Square Word Calligraphy written as three square blocks that look like Chinese characters.">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Square Word Calligraphy: write English as square blocks | Sylvan C7">
   <meta name="twitter:description" content="Type English and get square blocks that look like Chinese characters but read as English, after Xu Bing's 1994 Square Word Calligraphy. A free in-browser tool with SVG and PNG export, built solo by Greyson Miller.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/img/lab-square-word-calligraphy.png">
+  <meta name="twitter:image:alt" content="The words Square Word Calligraphy written as three square blocks that look like Chinese characters.">
+  <!-- sizes="32x32" (not "any") keeps browsers that understand SVG icons on favicon.svg -->
+  <link rel="icon" href="../../favicon.ico" sizes="32x32">
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Square Word Calligraphy",
-  "url": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/",
-  "description": "Type English and get square blocks that look like Chinese characters but read as English, after Xu Bing's 1994 Square Word Calligraphy. A free in-browser tool with SVG and PNG export.",
-  "applicationCategory": "DesignApplication",
-  "operatingSystem": "Any (runs in a web browser)",
-  "isAccessibleForFree": true,
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "image": "https://greysonbmiller.github.io/sylvan-c7/img/lab-square-word-calligraphy.png",
-  "author": {
-    "@type": "Person",
-    "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson",
-    "name": "Greyson Miller",
-    "url": "https://greysonbmiller.github.io/sylvan-c7/about.html"
-  }
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/#webpage",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/",
+      "name": "Square Word Calligraphy: a free in-browser tool | Sylvan C7",
+      "description": "Type English and get square blocks that look like Chinese characters but read as English, after Xu Bing's 1994 Square Word Calligraphy. A free in-browser tool with SVG and PNG export, built solo by Greyson Miller.",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#website" },
+      "breadcrumb": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/#breadcrumb" },
+      "mainEntity": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/#app" }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/#app",
+      "name": "Square Word Calligraphy",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/",
+      "description": "Type English and get square blocks that look like Chinese characters but read as English, after Xu Bing's 1994 Square Word Calligraphy. A free in-browser tool with SVG and PNG export.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Any (runs in a web browser)",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "image": "https://greysonbmiller.github.io/sylvan-c7/img/lab-square-word-calligraphy.png",
+      "author": { "@type": "Person", "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson", "name": "Greyson Miller", "url": "https://greysonbmiller.github.io/sylvan-c7/about.html" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://greysonbmiller.github.io/sylvan-c7/" },
+        { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://greysonbmiller.github.io/sylvan-c7/work.html" },
+        { "@type": "ListItem", "position": 3, "name": "Square Word Calligraphy", "item": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/" }
+      ]
+    }
+  ]
 }
   </script>
 
@@ -155,21 +180,21 @@
             <h3 class="swc-credits__name">Xu Bing</h3>
             <p>Invented Square Word Calligraphy (英文方块字) in 1994 and taught it through his
             <em>Square Word Calligraphy Classroom</em>.
-            <a href="https://www.xubing.com/en/database/writing/306" target="_blank" rel="noopener noreferrer">Read his own account</a>.</p>
+            <a href="https://www.xubing.com/en/database/writing/306" target="_blank" rel="noopener noreferrer">Read his own account<span class="visually-hidden"> (opens in a new tab)</span></a>.</p>
           </li>
           <li>
             <h3 class="swc-credits__name">David B. Kelley</h3>
             <p>Revised the alphabet in 2012, replacing eleven letters with more Chinese-looking forms.
             His version, documented on
-            <a href="https://www.omniglot.com/conscripts/swc.htm" target="_blank" rel="noopener noreferrer">Omniglot</a>,
+            <a href="https://www.omniglot.com/conscripts/swc.htm" target="_blank" rel="noopener noreferrer">Omniglot<span class="visually-hidden"> (opens in a new tab)</span></a>,
             is the one this tool draws.</p>
           </li>
           <li>
             <h3 class="swc-credits__name">Fonts: LXGW WenKai and Noto Serif SC</h3>
             <p>The brush style uses
-            <a href="https://github.com/lxgw/LxgwWenKai" target="_blank" rel="noopener noreferrer">LXGW WenKai</a>
+            <a href="https://github.com/lxgw/LxgwWenKai" target="_blank" rel="noopener noreferrer">LXGW WenKai<span class="visually-hidden"> (opens in a new tab)</span></a>
             and the print styles use
-            <a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener noreferrer">Noto Serif SC</a>,
+            <a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener noreferrer">Noto Serif SC<span class="visually-hidden"> (opens in a new tab)</span></a>,
             both cut down to the characters the alphabet needs and used under the SIL Open Font
             License: <a href="app/fonts/LXGWWenKai-OFL.txt">LXGW WenKai license</a>,
             <a href="app/fonts/NotoSerifSC-OFL.txt">Noto Serif SC license</a>.</p>
@@ -193,7 +218,7 @@
       <div>
         <a class="nav__brand" href="../../index.html">Sylvan <span class="nav__brand-accent">C7</span></a>
         <p class="site-footer__tagline">Software that keeps working. Websites, web apps, integrations and instrument-control software.</p>
-        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks</a></p>
+        <p class="site-footer__also">Also built by me: <a href="https://bibooks.org" target="_blank" rel="noopener">Bibooks, bilingual audiobooks<span class="visually-hidden"> (opens in a new tab)</span></a></p>
       </div>
       <nav aria-label="Footer">
         <p class="site-footer__heading">Pages</p>
@@ -248,5 +273,7 @@
       console.error(err);
     }
   </script>
+  <!-- Prefetch same-site pages on hover/pointerdown (Chromium), so the next page is near-instant. Not prerender: the effects and canvases should not run on a page nobody opened. -->
+  <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/sylvan-c7/*"},{"not":{"selector_matches":"[target=_blank], [download]"}},{"not":{"href_matches":"/sylvan-c7/lab/*/app/*"}}]},"eagerness":"moderate"}]}</script>
 </body>
 </html>
