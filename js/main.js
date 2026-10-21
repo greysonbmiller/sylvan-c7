@@ -157,7 +157,10 @@ document.documentElement.classList.add('js');
      it never competes with the hero for bandwidth or main-thread time (LCP). The stylesheet is
      applied before any effect script runs, so nothing is ever injected unstyled; if it fails, the
      effects are skipped. Everything the first paint needs (reserved space, pre-JS states) is in the
-     render-blocking site/page CSS. html[data-fx] reports the state: loading | ready | failed. */
+     render-blocking site/page CSS. html[data-fx] reports the state: loading | ready | failed.
+     A script with data-media="<media query>" is fetched only when that query matches at this
+     moment (the page heroes' circuit engine draws nothing on phones, so phones never download it);
+     the script that uses it fetches it later itself if the window grows into the query. */
   function loadEffects() {
     var tpl = document.querySelector('template[data-fx-late]');
     if (!tpl || root.hasAttribute('data-fx')) return;
@@ -178,7 +181,10 @@ document.documentElement.classList.add('js');
     });
     Promise.all(sheets).then(function () {
       // Scripts run in their listed order (async = false); a missing one does not stop the others.
-      return Promise.all(items.filter(function (n) { return n.tagName === 'SCRIPT'; }).map(function (n) {
+      return Promise.all(items.filter(function (n) {
+        var media = n.getAttribute('data-media');
+        return n.tagName === 'SCRIPT' && (!media || window.matchMedia(media).matches);
+      }).map(function (n) {
         var s = document.createElement('script');
         if (n.type) s.type = n.type;
         s.async = false;

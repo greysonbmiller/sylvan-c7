@@ -17,14 +17,32 @@
   'use strict';
 
   var host = document.querySelector('[data-pagehero]');
-  if (!host || !window.SylvanCircuit) return;
+  if (!host) return;
   var kind = host.getAttribute('data-pagehero');
   var wide = window.matchMedia('(min-width: 1024px)');
   var GAP = 40, MIN_W = 240;
   var COPY = '.eyebrow, h1, .hero__lead, .btn-row';
 
   var api = window.__fxPageHero = { kind: kind, frames: 0, running: false, grown: false, settled: false, growMs: 0 };
-  var canvas = null, engine = null;
+  var canvas = null, engine = null, loading = false;
+
+  // The engine (js/particles.js) is listed with data-media="(min-width: 1024px)", so js/main.js only
+  // fetches it on wide screens. A window that starts narrow and later grows past 1024 px fetches it
+  // here, once, from beside this script.
+  var engineSrc = (function () {
+    var s = document.currentScript || document.querySelector('script[src*="fx-pagehero.js"]');
+    return s ? s.src.replace(/fx-pagehero\.js(?:[?#].*)?$/, 'particles.js') : '';
+  })();
+  function withEngine(fn) {
+    if (window.SylvanCircuit) { fn(); return; }
+    if (loading || !engineSrc) return;
+    loading = true;
+    var s = document.createElement('script');
+    s.src = engineSrc;
+    s.onload = function () { loading = false; if (window.SylvanCircuit) fn(); };
+    s.onerror = function () { loading = false; };
+    document.body.appendChild(s);
+  }
 
   // trees / roots: start the canvas right of the copy. Returns false when there is no room.
   function place() {
@@ -50,6 +68,7 @@
 
   function start() {
     if (canvas || !wide.matches) return;
+    if (!window.SylvanCircuit) { withEngine(start); return; }
     canvas = document.createElement('canvas');
     canvas.className = 'pagehero pagehero--' + kind;
     canvas.setAttribute('aria-hidden', 'true');
