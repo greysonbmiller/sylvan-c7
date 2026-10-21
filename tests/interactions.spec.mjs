@@ -2,7 +2,7 @@
 import { test, expect } from '@playwright/test';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { PROCESS_TITLES, REPO, open } from './helpers.mjs';
+import { PROCESS_TITLES, REPO, open, settleAnimations } from './helpers.mjs';
 
 const norm = (s) => s.replace(/\s+/g, ' ').trim();
 
@@ -79,11 +79,16 @@ test('services: [data-price-toggle] flips aria-pressed and the displayed prices'
   await button.scrollIntoViewIfNeeded();
   await button.click();
   await expect(button).toHaveAttribute('aria-pressed', before === 'true' ? 'false' : 'true');
+  // The variants swap by `visibility`, which (like every property) carries a 0.01ms transition under
+  // reduced motion. A transition starts on the browser's next frame and reads as its start value until
+  // then, and a click can resolve before that frame: let the swap finish before reading the text.
+  await settleAnimations(page);
   const textAfter = norm(await pricing.innerText());
   expect(textAfter).not.toBe(textBefore);
   expect(`${textBefore} ${textAfter}`).toMatch(/\$2,500 \+ \$99\/mo/);
   await button.click();
   await expect(button).toHaveAttribute('aria-pressed', before);
+  await settleAnimations(page);
   expect(norm(await pricing.innerText())).toBe(textBefore);
 });
 
@@ -346,6 +351,11 @@ test('390px: Tab and Shift+Tab stay inside the toggle + open mobile drawer', asy
   const toggle = page.locator('.nav__toggle');
   await toggle.click();
   await expect(page.locator('#navDrawer')).toHaveClass(/is-open/);
+  // The drawer leaves `visibility: hidden` through a (0.01ms, reduced-motion) transition that starts on
+  // the next frame; until it has run, its links are not focusable yet. Wait for the open drawer to be
+  // rendered visible before tabbing.
+  await settleAnimations(page);
+  await expect(page.locator('#navDrawer')).toBeVisible();
   const inTrap = () => page.evaluate(() => {
     const a = document.activeElement;
     return a === document.querySelector('.nav__toggle') || !!a.closest('#navDrawer');

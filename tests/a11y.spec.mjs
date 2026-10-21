@@ -125,7 +125,7 @@ test.describe('without JavaScript', () => {
 });
 
 test.describe('prefers-reduced-motion: reduce', () => {
-  // reducedMotion is not a first-class test.use fixture in 1.49; it must go through contextOptions.
+  // Through contextOptions, which every Playwright version honours (1.49 had no reducedMotion fixture).
   test.use({ contextOptions: { reducedMotion: 'reduce' } });
 
   for (const p of LIVE_PAGES) {

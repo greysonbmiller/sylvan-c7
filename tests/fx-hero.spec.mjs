@@ -401,17 +401,27 @@ test.describe('fx-hero window (motion allowed)', () => {
 
     // Segment the log: each change = a run of partial states ending on a full command.
     const changes = [];
-    let start = null;
+    let start = null, run = [];
     for (const e of log.events) {
       if (COMMANDS.includes(e.text)) {
-        if (start !== null) { changes.push({ start, end: e.t, text: e.text }); start = null; }
-      } else if (start === null) start = e.t;
+        if (start !== null) { run.push(e); changes.push({ start, end: e.t, text: e.text, run }); start = null; run = []; }
+      } else {
+        if (start === null) start = e.t;
+        run.push(e);
+      }
     }
     expect(changes.map((c) => c.text)).toEqual([...COMMANDS.slice(1), COMMANDS[0]]);
     let prevSettle = log.load;
     for (const c of changes) {
       expect(c.start - prevSettle, `hold before typing "${c.text}"`).toBeGreaterThanOrEqual(4000);
-      expect(c.end - c.start, `half-typed "${c.text}" no longer than typing it`).toBeLessThanOrEqual(c.text.length * 70 + 400);
+      // Typed once, one keystroke at a time: '' (fresh prompt), then each prefix, then the command.
+      // Timing is checked per keystroke, not as a wall-clock total: on a CPU-starved runner (macOS CI,
+      // Chromium 156) every 48 ms setTimeout lands late, so a whole command legitimately takes longer
+      // there, while a stall (the typer pausing half-typed) shows up as one long gap.
+      expect(c.run.map((e) => e.text), `"${c.text}" typed once, one character per step`)
+        .toEqual(Array.from({ length: c.text.length + 1 }, (_, i) => c.text.slice(0, i)));
+      const gaps = c.run.slice(1).map((e, i) => e.t - c.run[i].t);
+      expect(Math.max(...gaps), `half-typed "${c.text}" never stalls between keystrokes`).toBeLessThanOrEqual(400);
       prevSettle = c.end;
     }
     // While typing, the window is active: the first chrome dot is accent green.
