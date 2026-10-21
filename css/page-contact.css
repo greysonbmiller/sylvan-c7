@@ -131,6 +131,10 @@
 .form-status.is-error { border-color: var(--error); background: var(--error-bg); }
 .form-status.is-notice { border-color: var(--notice); background: var(--notice-bg); }
 
+/* No-JS return from FormSubmit (_next → contact.html?sent=1#sent): the same success wording as
+   js/interactions.js, inside the <noscript> above the form, shown only while it is the URL's target. */
+.form-sent:target { display: block; margin-bottom: var(--space-4); }
+
 /* Shown only without JavaScript (contact.html <noscript>), above the form. */
 .form-noscript {
   max-width: none;

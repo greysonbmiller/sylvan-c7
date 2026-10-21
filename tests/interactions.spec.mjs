@@ -178,7 +178,7 @@ test.describe('contact form → FormSubmit', () => {
     const hidden = (name) => form.locator(`input[type="hidden"][name="${name}"]`);
     await expect(hidden('_subject')).toHaveValue('New project inquiry: Sylvan C7 site');
     await expect(hidden('_template')).toHaveValue('table');
-    await expect(hidden('_next')).toHaveValue('https://greysonbmiller.github.io/sylvan-c7/contact.html?sent=1');
+    await expect(hidden('_next')).toHaveValue('https://greysonbmiller.github.io/sylvan-c7/contact.html?sent=1#sent');
     await expect(form.locator('[name="_gotcha"]')).toHaveCount(0);
     const honey = form.locator('.form__hp[aria-hidden="true"] input[name="_honey"]');
     await expect(honey).toHaveCount(1);
@@ -312,6 +312,16 @@ test.describe('contact form → FormSubmit', () => {
     await expect(status).toBeVisible();
   });
 
+  test('the real return URL (?sent=1#sent) behaves the same with JS: one success status, no static copy', async ({ page }) => {
+    await open(page, 'contact.html?sent=1#sent');
+    const status = page.locator('#formStatus');
+    await expect(status).toContainText(FS_SUCCESS);
+    await expect(status).toHaveClass(/is-success/);
+    await expect(status).toBeVisible();
+    // The no-JS copy lives in <noscript>, which is inert text when scripts run.
+    await expect(page.locator('#sent')).toHaveCount(0);
+  });
+
   test('without ?sent=1 the status box stays empty (control)', async ({ page }) => {
     await open(page, 'contact.html');
     await expect(page.locator('#formStatus')).toHaveText('');
@@ -393,6 +403,18 @@ test.describe('without JavaScript', () => {
     expect(await note.evaluate((n) => !!(n.compareDocumentPosition(document.querySelector('#contactForm')) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
     // The form posts straight to FormSubmit without JS, so the note must not claim it cannot send.
     await expect(note).not.toContainText(/needs JavaScript/i);
+  });
+
+  test('contact: FormSubmit\'s return (?sent=1#sent) shows the success message, worded as the JS one', async ({ page }) => {
+    await open(page, 'contact.html?sent=1#sent');
+    const sent = page.locator('#sent');
+    await expect(sent).toBeVisible();
+    const js = readFileSync(join(REPO, 'js/interactions.js'), 'utf8').match(/var SUCCESS_HTML = '([^']+)'/)[1];
+    expect(norm(await sent.evaluate((n) => n.innerHTML))).toBe(js);
+    await expect(page.locator('#formStatus')).toHaveText('');
+    // Control: an ordinary visit (no fragment) shows no confirmation.
+    await open(page, 'contact.html');
+    await expect(page.locator('#sent')).toBeHidden();
   });
 
   test('contact: the form still submits natively (FormSubmit action, browser validation on)', async ({ page }) => {
