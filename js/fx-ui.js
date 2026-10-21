@@ -826,6 +826,11 @@
       makeFlies();
       renderStill();
       paint();
+      // Safari gives a 0x0 box to anything inside a content-visibility: auto section it has not
+      // rendered yet (the footer on the home, work and finca pages), so the first real size can
+      // arrive after the canvas was already reported on screen. Start growing now in that case;
+      // no further visibility change is coming to do it.
+      if (visible) self.setVisible(true);
       return true;
     }
 
