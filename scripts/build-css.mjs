@@ -10,8 +10,8 @@
 //
 // Usage: node scripts/build-css.mjs          write every .min.css
 //        node scripts/build-css.mjs --check  exit 1 if any .min.css is missing or stale
-import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { readdirSync, readFileSync, writeFileSync, existsSync, realpathSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const CSS_DIR = fileURLToPath(new URL('../css/', import.meta.url));
@@ -113,7 +113,11 @@ export function build({ check = false } = {}) {
   return stale;
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+// Run directly (not imported by the tests)? Compare real paths: argv[1] keeps any symlink in the path
+// it was given and the case the shell typed, import.meta.url has neither, and a mismatch would make
+// --check silently do nothing.
+const real = (p) => { const r = realpathSync.native(resolve(p)); return process.platform === 'win32' ? r.toLowerCase() : r; };
+if (process.argv[1] && real(process.argv[1]) === real(fileURLToPath(import.meta.url))) {
   const check = process.argv.includes('--check');
   const stale = build({ check });
   if (check && stale.length) {
