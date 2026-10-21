@@ -13,7 +13,8 @@ npx playwright install chromium         # the browser the tests use (add --with-
 npm test                                # run every test (starts its own local server)
 ```
 
-- **View the site locally:** `npm run serve`, then open http://127.0.0.1:4180/sylvan-c7/.
+- **View the site locally:** `npm run serve`, then open http://127.0.0.1:4180/sylvan-c7/. It caches
+  like GitHub Pages (10 minutes), so hard-reload (Ctrl/Cmd+Shift+R) after editing a file.
 - **CSS:** edit the sources (`css/site.css`, `css/page-*.css`, `css/fx/*.css`), then run
   `npm run build:css` to rebuild the `.min.css` files and `css/fx.css`. Never edit those by hand;
   `npm run check:css` and the tests fail if they are out of date.
