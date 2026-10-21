@@ -65,9 +65,10 @@ export function pages() {
   return out.sort();
 }
 
-// Script types the browser runs (classic, module, import map); anything else (application/ld+json)
-// is a data block the browser never executes, so CSP never checks it.
-const RUNS = /^(|text\/javascript|application\/javascript|module|importmap)$/i;
+// Script types CSP checks: the ones the browser runs (classic, module, import map) plus speculation
+// rules (the hover-prefetch block every live page carries; Chromium allows it only by hash). Anything
+// else (application/ld+json) is a data block the browser never executes, so CSP never checks it.
+const RUNS = /^(|text\/javascript|application\/javascript|module|importmap|speculationrules)$/i;
 
 /** The inline scripts of a page that CSP must allow, as the browser sees their text. */
 export function inlineScripts(html) {
