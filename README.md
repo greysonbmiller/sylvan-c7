@@ -18,7 +18,10 @@ npm test                                # run every test (starts its own local s
 - **CSS:** edit the sources (`css/site.css`, `css/page-*.css`, `css/fx/*.css`), then run
   `npm run build:css` to rebuild the `.min.css` files and `css/fx.css`. Never edit those by hand;
   `npm run check:css` and the tests fail if they are out of date.
-- **Before pushing:** `npm run ci` runs the CSS check and the whole suite, exactly as CI does.
+- **Inline scripts:** every page carries a Content-Security-Policy that lists the hash of each inline
+  `<script>`. After adding or editing one, run `node scripts/csp.mjs` to rewrite the policies;
+  `npm run check:csp` and `tests/security.spec.mjs` fail until you do.
+- **Before pushing:** `npm run ci` runs the CSS and CSP checks and the whole suite, exactly as CI does.
 - **Run part of the suite:** `npx playwright test tests/seo.spec.mjs`, or `npm run test:lcp` to
   re-measure only the throttled-4G load times.
 - **Options** (environment variables): `PW_PORT` sets the test server's port (default 4180);
