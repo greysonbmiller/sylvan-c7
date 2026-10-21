@@ -228,3 +228,71 @@ test.describe('200% browser text size on phones', () => {
     }
   });
 });
+
+// The same 200% setting on every page and layout (Android's system font size scales web text the same
+// way): nothing scrolls sideways and no text or control is pushed past the right edge or clipped by
+// its section. Exempt: the process stepper's tab strip (a deliberate horizontal scroller),
+// aria-hidden decoration and the generated lab tool. At 1024+ the five desktop links no longer fit, so the header uses the
+// drawer (css/site.css "Enlarged browser text"); at the default size it is unchanged (other specs).
+async function bigText(page, width) {
+  await page.setViewportSize({ width, height: 800 });
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Page.setFontSizes', { fontSizes: { standard: 32, fixed: 26 } });
+}
+function pastEdge() {
+  const iw = document.documentElement.clientWidth;
+  const out = [];
+  for (const el of document.body.querySelectorAll('*')) {
+    // #swc-app is the generated Square Word Calligraphy tool (lab/…/app/, built in its own repo).
+    if (el.closest('svg,canvas,script,style,template,[aria-hidden="true"],[hidden],[inert],.visually-hidden,.skip-link,.nav-drawer,.form__hp,[data-stepper] [role="tablist"],#swc-app')) continue;
+    const text = [...el.childNodes].some((n) => n.nodeType === 3 && n.nodeValue.trim());
+    if (!text && !el.matches('a,button,input,select,textarea,summary,img')) continue;
+    const cs = getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2 || cs.visibility !== 'visible' || cs.position === 'fixed') continue;
+    if (r.right > iw + 1 || r.left < -1) out.push(`${el.tagName.toLowerCase()}.${String(el.className).split(' ')[0]} "${el.textContent.trim().slice(0, 30)}" ${Math.round(r.left)}–${Math.round(r.right)} (viewport ${iw})`);
+  }
+  return { sw: document.scrollingElement.scrollWidth, iw, out: out.slice(0, 8) };
+}
+
+test.describe('200% browser text size: every page, every layout', () => {
+  test.describe.configure({ timeout: 120_000 });
+  for (const width of [320, 390, 1024, 1280]) {
+    test(`${width}: no sideways scroll, nothing past the right edge`, async ({ page }) => {
+      await bigText(page, width);
+      const bad = [];
+      for (const p of LIVE_PAGES) {
+        await open(page, p.path, { settle: 200 });
+        await scrollThrough(page);
+        const r = await page.evaluate(pastEdge);
+        if (r.sw > r.iw) bad.push(`${p.name}: scrollWidth ${r.sw} > ${r.iw}`);
+        for (const o of r.out) bad.push(`${p.name}: ${o}`);
+      }
+      expect(bad).toEqual([]);
+    });
+  }
+
+  for (const width of [1024, 1280]) {
+    test(`${width}: desktop header uses the menu button + drawer; keycap and CTA stay on screen; Escape returns focus`, async ({ page }) => {
+      await bigText(page, width);
+      await open(page, 'about.html');
+      const r = await page.evaluate(() => {
+        const iw = document.documentElement.clientWidth;
+        const box = (s) => { const e = document.querySelector(s); if (!e || !e.getClientRects().length) return null; const b = e.getBoundingClientRect(); return { l: b.left, r: b.right }; };
+        return { iw, links: box('.nav__links'), toggle: box('.nav__toggle'), cta: box('.site-header .nav__cta'), kbd: box('.fx-kbd') };
+      });
+      expect(r.links, 'desktop links hidden (they are in the drawer)').toBeNull();
+      for (const k of ['toggle', 'cta', 'kbd']) {
+        expect(r[k], `${k} shown`).not.toBeNull();
+        expect(r[k].r, `${k} on screen`).toBeLessThanOrEqual(r.iw);
+      }
+      await page.locator('.nav__toggle').focus();
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#navDrawer')).toBeVisible();
+      await expect(page.locator('.nav-drawer__link').first()).toBeFocused();
+      await page.keyboard.press('Escape');
+      await expect(page.locator('.nav__toggle')).toBeFocused();
+      await expect(page.locator('.nav__toggle')).toHaveAttribute('aria-expanded', 'false');
+    });
+  }
+});
