@@ -2291,3 +2291,24 @@ html.js .showcase__item--bibooks .showcase__media { position: relative; padding-
   html:not(.js) .nav { flex-wrap: wrap; padding-block: var(--space-2); }
   html:not(.js) .nav__links { order: 3; width: 100%; overflow-x: auto; margin-inline: calc(-1 * var(--space-3)); }
 }
+
+/* ── Print ── Paper is light: swap the dark tokens for black-on-white, drop chrome/effects, keep content. */
+@media print {
+  :root {
+    --bg-deep: #fff; --bg-primary: #fff; --bg-elevated: #fff; --bg-surface: #fff;
+    --text-strong: #000; --text-primary: #000; --text-body: #111; --text-muted: #333; --text-faint: #444;
+    --text-secondary: #222; --text-tertiary: #333; --accent: #04532f; --accent-bright: #04532f; --accent-dim: #04532f;
+    --border-subtle: #bbb; --border-medium: #999; --border-strong: #666;
+  }
+  @page { margin: 1.6cm 1.4cm; }
+  html, body { background: #fff !important; color: #111 !important; }
+  *, *::before, *::after { content-visibility: visible !important; box-shadow: none !important; text-shadow: none !important; animation: none !important; transition: none !important; }
+  .site-header, .nav-drawer, .nav__cta, .skip-link, .sticky-cta, .scroll-progress, .fx-top, .fx-kbd, .fx-palette,
+  canvas, svg[aria-hidden="true"], [class*="__canvas"], [class*="fx-pulse"] { display: none !important; }
+  .reveal, [class*="reveal"] { opacity: 1 !important; transform: none !important; }
+  main a[href^="http"]:not(.btn)::after { content: " (" attr(href) ")"; font-size: .85em; word-break: break-all; }
+  .card, figure, pre, blockquote, table, li, img, .terminal { break-inside: avoid; }
+  h1, h2, h3, h4 { break-after: avoid; }
+  img { max-width: 100% !important; }
+  .btn--primary { background: #fff !important; color: #000 !important; border: 1px solid #000 !important; }
+}
