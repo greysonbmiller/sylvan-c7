@@ -224,6 +224,13 @@ main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 400px
   .site-footer { contain-intrinsic-size: auto 515px; }
 }
 
+/* Not in Safari (WebKit flashes default link colours as a skipped section first renders): see
+   css/page-home.css. Only WebKit implements hanging-punctuation. */
+@supports (hanging-punctuation: first) {
+  main > section:not(.hero):not(#bibooks),
+  .site-footer { content-visibility: visible; }
+}
+
 @media (min-width: 1024px) {
   main > section[aria-labelledby="lab-title"] { contain-intrinsic-size: auto 1250px; }
   main > section[aria-labelledby="process-title"] { contain-intrinsic-size: auto 820px; }

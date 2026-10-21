@@ -579,3 +579,13 @@ main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 420px
   main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 400px; }
   .site-footer { contain-intrinsic-size: auto 515px; }
 }
+
+/* Not in Safari. When WebKit first renders a skipped section it starts each colour transition from
+   the browser's default styles, so links flash default blue (and window dots start transparent)
+   as the section scrolls in. Safari was never the LCP target this budget is tuned for, so it renders
+   every section as usual. hanging-punctuation is the feature test: only WebKit implements it (since
+   Safari 10); Chrome and Firefox skip this block and keep content-visibility: auto. */
+@supports (hanging-punctuation: first) {
+  main > section:not(.hero),
+  .site-footer { content-visibility: visible; }
+}
