@@ -3,7 +3,7 @@
 // toggle (real prices never change; only the care add-on slides in), the build frame's live page-weight
 // figure, browser-chrome screenshot frames with the lazily loaded tall Bibooks pan, and Work row layout.
 import { test, expect } from '@playwright/test';
-import { open } from './helpers.mjs';
+import { open, waitUntil } from './helpers.mjs';
 
 const KEYS = ['websites', 'web-apps', 'integrations', 'instrument', 'data', 'care'];
 const PAGES = [{ name: 'index', path: './' }, { name: 'services', path: 'services.html' }];
@@ -137,7 +137,7 @@ test('services: the price toggle never shows a wrong number (sampled every frame
   await btn.click();
   await page.waitForTimeout(400);
   await btn.click();
-  await page.waitForFunction(() => window.__done === true);
+  await waitUntil(page, () => window.__done === true, null, { timeout: 30_000 });
   const r = await page.evaluate(() => ({ samples: [...window.__samples], added: window.__added, odo: window.__odo }));
   expect(r.samples.sort(), 'every frame shows exactly one of the two real price sets').toEqual([care, project].sort());
   expect(r.odo, 'no odometer overlay or masked price, ever').toBe(0);
