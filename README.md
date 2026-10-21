@@ -5,7 +5,8 @@ framework. GitHub Pages publishes the `main` branch as it is.
 
 ## Development
 
-You need Node.js 18 or newer. Commands work the same on Linux, macOS and Windows.
+You need Node.js 20 or newer (Playwright 1.64 requires it). Commands work the same on Linux, macOS
+and Windows.
 
 ```sh
 npm ci                                  # install the test tools
