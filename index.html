@@ -266,7 +266,11 @@
     <section class="section section--tight section--flush-top" aria-labelledby="founder-title">
       <div class="container">
         <div class="founder reveal">
-          <img class="founder__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" width="144" height="144" alt="Greyson Miller" loading="lazy" decoding="async">
+          <picture>
+            <source type="image/avif" srcset="img/greyson-miller-192.avif 192w, img/greyson-miller-288.avif 288w, img/greyson-miller-384.avif 384w, img/greyson-miller-576.avif 576w" sizes="(min-width: 640px) 144px, 112px">
+            <source type="image/webp" srcset="img/greyson-miller-192.webp 192w, img/greyson-miller-288.webp 288w, img/greyson-miller-384.webp 384w, img/greyson-miller-576.webp 576w" sizes="(min-width: 640px) 144px, 112px">
+            <img class="founder__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" width="144" height="144" alt="Greyson Miller" loading="lazy" decoding="async">
+          </picture>
           <div class="founder__body">
             <h2 class="founder__name" id="founder-title">Greyson Miller</h2>
             <div class="founder__role">Software engineer, founder of Sylvan C7</div>
@@ -332,7 +336,11 @@
         <div class="showcase">
           <article class="showcase__item showcase__item--bibooks" aria-labelledby="bibooks-title">
             <figure class="frame showcase__media">
-              <img src="img/work-bibooks.jpg" srcset="img/work-bibooks-600.jpg 600w, img/work-bibooks.jpg 1200w, img/work-bibooks@2x.jpg 2400w" sizes="(min-width: 1024px) 640px, calc(100vw - 72px)" width="1200" height="750" alt="Bibooks home page: 'Turn any book into a bilingual audiobook' with a Spanish–English read-along demo." loading="lazy" decoding="async">
+              <picture>
+                <source type="image/avif" srcset="img/work-bibooks-400.avif 400w, img/work-bibooks-720.avif 720w, img/work-bibooks-1000.avif 1000w, img/work-bibooks-1400.avif 1400w" sizes="(min-width: 1264px) 634px, (min-width: 1024px) calc(56.6vw - 80px), calc(92vw - 45px)">
+                <source type="image/webp" srcset="img/work-bibooks-400.webp 400w, img/work-bibooks-720.webp 720w, img/work-bibooks-1000.webp 1000w, img/work-bibooks-1400.webp 1400w" sizes="(min-width: 1264px) 634px, (min-width: 1024px) calc(56.6vw - 80px), calc(92vw - 45px)">
+                <img src="img/work-bibooks.jpg" srcset="img/work-bibooks-600.jpg 600w, img/work-bibooks.jpg 1200w, img/work-bibooks@2x.jpg 2400w" sizes="(min-width: 1264px) 634px, (min-width: 1024px) calc(56.6vw - 80px), calc(92vw - 45px)" width="1200" height="750" alt="Bibooks home page: 'Turn any book into a bilingual audiobook' with a Spanish–English read-along demo." loading="lazy" decoding="async">
+              </picture>
             </figure>
             <div class="showcase__body">
               <h3 class="showcase__title" id="bibooks-title">Bibooks: bilingual audiobooks</h3>
@@ -364,7 +372,11 @@
                 <input class="field__input swc-mini__input" id="swc-input" type="text" value="hello" maxlength="24" autocomplete="off" autocapitalize="off" spellcheck="false">
               </div>
               <div class="swc-mini__out" aria-live="polite">
-                <img class="swc-mini__fallback" src="img/lab-square-word-calligraphy.png" width="1200" height="900" alt="The words Square Word Calligraphy written as three square blocks that look like Chinese characters." loading="lazy" decoding="async">
+                <picture>
+                  <source type="image/avif" srcset="img/lab-square-word-calligraphy-400.avif 400w, img/lab-square-word-calligraphy-700.avif 700w, img/lab-square-word-calligraphy-1000.avif 1000w, img/lab-square-word-calligraphy-1200.avif 1200w" sizes="(min-width: 1264px) 634px, (min-width: 1024px) calc(56.6vw - 80px), calc(92vw - 45px)">
+                  <source type="image/webp" srcset="img/lab-square-word-calligraphy-400.webp 400w, img/lab-square-word-calligraphy-700.webp 700w, img/lab-square-word-calligraphy-1000.webp 1000w, img/lab-square-word-calligraphy-1200.webp 1200w" sizes="(min-width: 1264px) 634px, (min-width: 1024px) calc(56.6vw - 80px), calc(92vw - 45px)">
+                  <img class="swc-mini__fallback" src="img/lab-square-word-calligraphy.png" width="1200" height="900" alt="The words Square Word Calligraphy written as three square blocks that look like Chinese characters." loading="lazy" decoding="async">
+                </picture>
                 <span class="swc-mini__placeholder" aria-hidden="true">Loading the calligraphy engine…</span>
               </div>
               <p class="swc-mini__error">The demo couldn't load here. <a href="lab/square-word-calligraphy/">Open the full lab</a>.</p>

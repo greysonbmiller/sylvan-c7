@@ -50,9 +50,10 @@
 
   <link rel="preload" href="../../fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- LCP poster: one of these two matches (same queries as css/page-finca.css), never both -->
-  <link rel="preload" href="../../img/lab-nuestra-finca-720.jpg" as="image" fetchpriority="high" media="(max-width: 440px) and (max-resolution: 1.5dppx)">
-  <link rel="preload" href="../../img/lab-nuestra-finca.jpg" as="image" fetchpriority="high" media="not all and (max-width: 440px) and (max-resolution: 1.5dppx)">
+  <!-- LCP poster: one of these two matches (same queries as css/page-finca.css), never both. AVIF
+       only: a browser without it skips these (type) and fetches the WebP/JPEG the CSS picks. -->
+  <link rel="preload" href="../../img/lab-nuestra-finca-700.avif" as="image" type="image/avif" fetchpriority="high" media="(max-width: 440px) and (max-resolution: 1.5dppx)">
+  <link rel="preload" href="../../img/lab-nuestra-finca-1200.avif" as="image" type="image/avif" fetchpriority="high" media="not all and (max-width: 440px) and (max-resolution: 1.5dppx)">
   <link rel="stylesheet" href="../../css/site.min.css">
   <link rel="stylesheet" href="../../css/page-finca.min.css">
 </head>

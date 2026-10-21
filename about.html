@@ -99,7 +99,11 @@
     <section class="hero about-hero" aria-labelledby="hero-title">
       <div class="container hero__inner about-hero__inner">
         <div class="about-portrait">
-          <img class="about-hero__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" width="192" height="192" alt="Greyson Miller" fetchpriority="high" decoding="async">
+          <picture>
+            <source type="image/avif" srcset="img/greyson-miller-192.avif 192w, img/greyson-miller-288.avif 288w, img/greyson-miller-384.avif 384w, img/greyson-miller-576.avif 576w" sizes="(min-width: 768px) 192px, 136px">
+            <source type="image/webp" srcset="img/greyson-miller-192.webp 192w, img/greyson-miller-288.webp 288w, img/greyson-miller-384.webp 384w, img/greyson-miller-576.webp 576w" sizes="(min-width: 768px) 192px, 136px">
+            <img class="about-hero__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" width="192" height="192" alt="Greyson Miller" fetchpriority="high" decoding="async">
+          </picture>
           <svg class="about-portrait__trace" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
             <path class="apt-ring" pathLength="1" d="M120 14A106 106 0 0 1 120 226A106 106 0 0 1 120 14"/>
             <path class="apt-bus" pathLength="1" d="M169.8 26.4L174 18.5A115 115 0 0 1 228.1 80.7"/>
