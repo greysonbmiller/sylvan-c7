@@ -109,11 +109,10 @@
              is a link to app/: desktop and tablets play it here in an iframe, phones open app/
              full screen in this tab (see the script at the end). -->
         <div class="finca-stage" id="fincaStage">
-          <!-- No aria-label: the link's name is its visible words plus a hidden size note, so what a
-               voice-control user sees is what they can say (WCAG 2.5.3 Label in Name). -->
-          <a class="finca-poster" id="fincaStart" href="app/">
+          <!-- No aria-label: the link's name is its visible words, so what a voice-control user sees
+               is what they can say (WCAG 2.5.3 Label in Name). The size note below describes it. -->
+          <a class="finca-poster" id="fincaStart" href="app/" aria-describedby="fincaNote">
             <span class="btn btn--primary finca-poster__btn">Start the walkthrough</span>
-            <span class="visually-hidden" id="fincaSize"> (3D, loads about 6&nbsp;MB)</span>
             <span class="finca-poster__hint" id="fincaHint" hidden>Opens full screen &middot; about 2&nbsp;MB</span>
           </a>
           <noscript>
@@ -122,7 +121,7 @@
         </div>
 
         <div class="finca-bar" id="fincaBar">
-          <p>Loads about 6&nbsp;MB. Click inside to look around; <kbd>Esc</kbd> opens the menu and full screen.</p>
+          <p id="fincaNote">Loads about 6&nbsp;MB. Click inside to look around; <kbd>Esc</kbd> opens the menu and full screen.</p>
           <a class="btn btn--outline btn--sm" href="app/" target="_blank" rel="noopener">Open in its own tab &#8599;</a>
         </div>
       </div>
@@ -267,9 +266,8 @@
       }
 
       if (isPhone()) {
-        // The visible hint now carries the phone size, so the hidden desktop note goes.
-        var size = document.getElementById('fincaSize');
-        if (size) size.remove();
+        // The visible hint carries the phone size; the desktop note (in the hidden bar) no longer applies.
+        start.removeAttribute('aria-describedby');
         if (hint) hint.hidden = false;
         if (bar) bar.hidden = true;
       }
