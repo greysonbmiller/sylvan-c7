@@ -472,6 +472,10 @@
     function req() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
     window.addEventListener('scroll', req, { passive: true });
     window.addEventListener('resize', req, { passive: true });
+    // On pages whose footer is content-visibility: auto, Safari reports empty boxes for its text
+    // until it has rendered, so a jump straight to the bottom (End key, a fling) measured nothing
+    // to avoid. Measure again as soon as the footer renders.
+    if (footer) footer.addEventListener('contentvisibilityautostatechange', function (e) { if (!e.skipped) req(); });
     update();
     btn.addEventListener('click', function (e) {
       window.scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' });
