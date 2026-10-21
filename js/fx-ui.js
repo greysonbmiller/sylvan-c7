@@ -474,6 +474,10 @@
     function req() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
     window.addEventListener('scroll', req, { passive: true });
     window.addEventListener('resize', req, { passive: true });
+    // On pages whose footer is content-visibility: auto, Safari reports empty boxes for its text
+    // until it has rendered, so a jump straight to the bottom (End key, a fling) measured nothing
+    // to avoid. Measure again as soon as the footer renders.
+    if (footer) footer.addEventListener('contentvisibilityautostatechange', function (e) { if (!e.skipped) req(); });
     update();
     btn.addEventListener('click', function (e) {
       window.scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' });
@@ -828,6 +832,11 @@
       makeFlies();
       renderStill();
       paint();
+      // Safari gives a 0x0 box to anything inside a content-visibility: auto section it has not
+      // rendered yet (the footer on the home, work and finca pages), so the first real size can
+      // arrive after the canvas was already reported on screen. Start growing now in that case;
+      // no further visibility change is coming to do it.
+      if (visible) self.setVisible(true);
       return true;
     }
 
