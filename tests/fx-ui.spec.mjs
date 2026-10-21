@@ -6,7 +6,7 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { LIVE_PAGES, REPO, BASE, open, url } from './helpers.mjs';
+import { LIVE_PAGES, REPO, BASE, open, url, settleAnimations } from './helpers.mjs';
 
 const palette = (page) => page.locator('[data-fx-palette]');
 const options = (page) => palette(page).locator('[role="option"]');
@@ -557,8 +557,11 @@ test.describe('footer alignment', () => {
       await page.setViewportSize(vp);
       await open(page, './');
       await page.addStyleTag({ content: '.fx-top, .sticky-cta, .scroll-progress, .site-header { visibility: hidden !important; }' });
-      await page.evaluate(() => scrollTo(0, document.scrollingElement.scrollHeight));
+      // An instant jump: a smooth scroll to the bottom can still be under way after a fixed wait on a
+      // slow machine, and then the measured row is below the viewport the screenshot clips to.
+      await page.evaluate(() => scrollTo({ top: document.scrollingElement.scrollHeight, behavior: 'instant' }));
       await page.waitForTimeout(300);
+      await settleAnimations(page);
       const m = await page.evaluate(() => {
         const inner = document.querySelector('.site-footer__inner');
         const cs = getComputedStyle(inner);
