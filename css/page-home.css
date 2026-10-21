@@ -3,6 +3,153 @@
    Loaded after the shared CSS; uses foundation tokens.
    ========================================= */
 
+/* =========================================
+   Founder strip
+   Only this page uses it, so it lives here rather than in site.css: the
+   other pages no longer download it before their first paint.
+   ========================================= */
+.founder {
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+}
+
+.founder__photo {
+  width: 112px;
+  height: 112px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--border-medium);
+  box-shadow: 0 0 0 6px var(--accent-tint);
+}
+
+.founder__body { display: grid; gap: var(--space-2); }
+.founder__body > * { margin: 0; }
+
+.founder__name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-heading);
+  color: var(--text-strong);
+}
+
+.founder__role {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-mono);
+  color: var(--accent);
+}
+
+.founder__text { color: var(--text-body); }
+
+@media (min-width: 640px) {
+  .founder { grid-template-columns: auto 1fr; gap: var(--space-8); }
+  .founder__photo { width: 144px; height: 144px; }
+}
+
+/* =========================================
+   Lab mini-demo ([data-swc-mini])
+   Only this page uses it, so it lives here rather than in site.css: the
+   other pages no longer download it before their first paint.
+   ========================================= */
+.swc-mini {
+  display: grid;
+  gap: var(--space-4);
+  padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+}
+
+.swc-mini > * { margin: 0; }
+
+.swc-mini__input {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+/* Output box: fixed aspect ratio reserves the space before anything loads */
+.swc-mini__out {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 2 / 1;
+  width: 100%;
+  overflow: hidden;
+  background: #fbf8f1; /* SWC paper */
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-medium);
+}
+
+.swc-mini[data-swc-style='jade'] .swc-mini__out { background: #0a100d; }
+
+.swc-mini__out > svg {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+}
+
+.swc-mini__placeholder {
+  grid-area: 1 / 1;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--fs-small);
+  color: #4d4a42; /* 8:1 on the paper */
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.swc-mini.is-ready .swc-mini__placeholder,
+.swc-mini.is-empty .swc-mini__placeholder { display: none; }
+
+/* Cleared input: a hint instead of the "Loading…" line (swc-mini.js adds it). */
+.swc-mini__empty {
+  grid-area: 1 / 1;
+  display: none;
+  padding: var(--space-4);
+  font-size: var(--fs-small);
+  color: #4d4a42; /* 8:1 on the paper */
+  text-align: center;
+}
+.swc-mini.is-empty .swc-mini__empty { display: block; }
+
+/* Static picture: shown only when the live demo can't run. */
+.swc-mini__fallback {
+  grid-area: 1 / 1;
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.swc-mini__error { display: none; font-size: var(--fs-small); color: var(--text-body); }
+.swc-mini.is-error .swc-mini__error { display: block; }
+
+/* No JS, the module blocked / unsupported, or the engine failed: never a dead
+   "Loading…" box with an input that does nothing. Show the static picture
+   and the link to the full lab instead. swc-mini.js adds .is-mounted. */
+.swc-mini:not(.is-mounted) .field,
+.swc-mini.is-error .field,
+.swc-mini:not(.is-mounted) .swc-mini__placeholder,
+.swc-mini.is-error .swc-mini__placeholder,
+.swc-mini.is-error .swc-mini__empty,
+.swc-mini.is-error .swc-mini__out > svg { display: none; }
+.swc-mini:not(.is-mounted) .swc-mini__fallback,
+.swc-mini.is-error .swc-mini__fallback,
+.swc-mini:not(.is-mounted) .swc-mini__error { display: block; }
+.swc-mini__caption { font-size: var(--fs-small); color: var(--text-muted); }
+
+@media (max-width: 479.98px) {
+  .terminal__dots { display: none; }
+}
+
 /* "More" links under a section */
 .home-more { margin: var(--space-8) 0 0; }
 

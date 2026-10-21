@@ -2,6 +2,113 @@
    Sylvan C7 — services.html (page-specific only)
    ========================================= */
 
+/* =========================================
+   Accordion (<details>) — FAQ
+   Only this page uses it, so it lives here rather than in site.css: the
+   other pages no longer download it before their first paint.
+   ========================================= */
+.accordion {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.accordion__item {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--dur-fast) ease;
+}
+
+.accordion__item[open] { border-color: var(--border-medium); }
+
+.accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 56px;
+  padding: var(--space-4) var(--space-5);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--fs-h4);
+  line-height: 1.35;
+  color: var(--text-primary);
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--radius-lg);
+}
+
+.accordion__summary::-webkit-details-marker { display: none; }
+.accordion__summary:hover { color: var(--text-strong); }
+
+.accordion__body {
+  padding: 0 var(--space-5) var(--space-5);
+  color: var(--text-body);
+}
+
+.accordion__body > * { max-width: var(--measure-lead); }
+.accordion__body > * + * { margin-top: var(--space-3); }
+
+/* =========================================
+   "Every project includes" build frame (static markup; css/fx.css and
+   js/fx-illus.js animate it). Its first-paint rules live here, not in
+   site.css, for the same reason as the accordion above.
+   ========================================= */
+.build-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+.build-frame .browser-bar { position: static; }
+.build-frame .includes-list {
+  margin: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+.build-frame__foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-mono);
+}
+.build-frame__label { color: var(--text-muted); }
+.build-frame__status { margin-left: auto; color: var(--accent); }
+.build-frame__ring { display: inline-flex; flex: 0 0 auto; }
+.build-frame__ring svg { width: 36px; height: 36px; transform: rotate(-90deg); fill: none; stroke-width: 3; }
+.build-frame__ring .ring-track { stroke: var(--border-medium); }
+.build-frame__ring .ring-fill { stroke: var(--accent); stroke-dasharray: 100; stroke-dashoffset: 0; stroke-linecap: round; }
+.build-frame__ring .ring-check { stroke: var(--accent-bright); stroke-dasharray: 1; stroke-linecap: round; stroke-linejoin: round; transform: rotate(90deg); transform-origin: 18px 18px; }
+
+.includes-list > li:nth-child(1) { --i: 0; }
+.includes-list > li:nth-child(2) { --i: 1; }
+.includes-list > li:nth-child(3) { --i: 2; }
+.includes-list > li:nth-child(4) { --i: 3; }
+.includes-list > li:nth-child(5) { --i: 4; }
+.includes-list > li:nth-child(6) { --i: 5; }
+.includes-list > li:nth-child(7) { --i: 6; }
+.includes-list > li:nth-child(8) { --i: 7; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js .build-frame .includes-list > li::before {
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 160ms), opacity 0.3s ease calc(var(--i) * 160ms);
+  }
+  html.js .build-frame:not(.is-done) .includes-list > li::before { transform: scale(0); opacity: 0; }
+  html.js .build-frame .ring-fill { transition: stroke-dashoffset 1.3s var(--ease-out) 0.4s; }
+  html.js .build-frame:not(.is-done) .ring-fill { stroke-dashoffset: 100; }
+  html.js .build-frame .ring-check { transition: stroke-dashoffset 0.5s var(--ease-out) 1.6s; }
+  html.js .build-frame:not(.is-done) .ring-check { stroke-dashoffset: 1; }
+}
+
 /* ---- Services tabs: keep the panel body to a readable measure ---- */
 .svc-tabs .tabs__panel-body > p { max-width: var(--measure-lead); color: var(--text-body); }
 
