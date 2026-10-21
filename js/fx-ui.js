@@ -117,7 +117,7 @@
   /* Follows a mailto: or external link the way a real <a> click would (target and rel included). */
   function follow(href, external, host) {
     var a = el('a', { href: href, hidden: '' });
-    if (external) { a.target = '_blank'; a.rel = 'noopener'; }
+    if (external) { a.target = '_blank'; a.rel = 'noopener'; a.appendChild(el('span', { 'class': 'visually-hidden' }, ' (opens in a new tab)')); }
     (host || doc.body).appendChild(a);
     a.click();
     a.remove();

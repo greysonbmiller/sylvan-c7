@@ -167,7 +167,8 @@ export async function waitUntil(page, fn, arg = null, { timeout = 5_000, interva
 export function countMainWords(excludeOptions) {
   const main = document.querySelector('main');
   if (!main) return -1;
-  const skip = 'script,style,noscript,template,svg,[aria-hidden="true"]' + (excludeOptions ? ',option' : '');
+  // Screen-reader-only text (e.g. a link's hidden "(opens in a new tab)") isn't visible reading.
+  const skip = 'script,style,noscript,template,svg,[aria-hidden="true"],.visually-hidden,.sr-only' + (excludeOptions ? ',option' : '');
   const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
   const parts = [];
   for (let n = walker.nextNode(); n; n = walker.nextNode()) {
