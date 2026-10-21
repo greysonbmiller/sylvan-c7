@@ -2219,3 +2219,56 @@ html.js .showcase__item--bibooks .showcase__media { position: relative; padding-
   border-top-width: 3px;
   border-radius: 2px;
 }
+
+
+/* =========================================
+   Sylvan C7 — Enlarged browser text (WCAG 1.4.4 / 1.4.10)
+   A larger text size set in the browser or the phone's system font setting (Android scales
+   web text with it) keeps the viewport width but makes 1rem bigger: at 200% the layouts that
+   fit at 16px overflowed sideways or clipped (nowrap buttons, prices and links widened their
+   one-column grids; the five desktop links no longer fit beside the CTA).
+   em media queries follow that setting and px ones don't, so each clause below pairs one of
+   the site's px layout steps with the same width in em (1em = 16px by default):
+   "(min-width: 1024px) and (max-width: 63.99em)" means "the desktop layout is in use, but the
+   text is bigger than it was designed for". At the default size no clause can match (each
+   em bound sits just under its px bound), so nothing here changes the default rendering.
+   The same list is repeated in css/page-contact.css for its page-only rule.
+   ========================================= */
+@media (max-width: 19.99em), (min-width: 480px) and (max-width: 29.99em), (min-width: 768px) and (max-width: 47.99em), (min-width: 1024px) and (max-width: 63.99em) {
+  /* A word longer than its column (a heading word, an address) breaks instead of widening the
+     column, which would push the whole page sideways. */
+  body { overflow-wrap: anywhere; }
+  h1, h2, h3, h4, h5, h6 { overflow-wrap: anywhere; } /* they opt out of mid-word breaks above */
+  /* 404: the garden canvas keeps the pixel width it was first drawn at; don't let it set the column. */
+  .not-found__grid > *,
+  .fx-garden__canvas { min-width: 0; max-width: 100%; }
+  /* Buttons, arrow links and prices may wrap rather than force their column wider than the
+     screen. */
+  .btn { white-space: normal; text-align: center; max-width: 100%; }
+  .link-arrow { white-space: normal; }
+  .price__variant { white-space: normal; }
+  .price-toggle { flex-wrap: wrap; max-width: 100%; }
+  .price-toggle__label { white-space: normal; }
+  .badge { white-space: normal; }
+  .price-card__badge { max-width: calc(100% - 2 * var(--space-5)); } /* pinned to the card's right edge */
+  .terminal { white-space: normal; } /* the hero's typed command wraps instead of being cut off */
+  .terminal > [data-typer] { min-width: 0; }
+  .terminal .typer__text { white-space: pre-wrap !important; } /* js/components.js sets pre inline */
+  /* The illustration's address bar is decoration: let it shrink away instead of setting a width. */
+  .browser-bar__url { flex-basis: 0; }
+}
+
+/* The desktop layout with enlarged text: the links can't fit in one row beside the CTA, so the
+   header works as it does below 1024px: hamburger + drawer (js/main.js's DESKTOP query
+   carries the same em bound, so the drawer isn't closed as if the screen were wide). */
+@media (min-width: 1024px) and (max-width: 63.99em) {
+  html.js .nav__links { display: none; }
+  html.js .nav__toggle { display: inline-grid; }
+  html.js .nav-drawer { display: flex; }
+  html.js .nav-overlay { display: block; }
+  html.js .fx-nav-ind { display: none; } /* the sliding underline belongs to the hidden links */
+  /* No JS: the drawer can't open, so the links take a scrollable second row (as below 1024px). */
+  html:not(.js) .site-header { height: auto; }
+  html:not(.js) .nav { flex-wrap: wrap; padding-block: var(--space-2); }
+  html:not(.js) .nav__links { order: 3; width: 100%; overflow-x: auto; margin-inline: calc(-1 * var(--space-3)); }
+}
