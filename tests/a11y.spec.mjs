@@ -1,7 +1,8 @@
 // SPEC "Performance & a11y" (headings, landmarks, skip link, alt text, form labels, FAQPage JSON-LD)
 // and SPEC "Motion & interaction" (content visible without JS; reduced motion = finished state, no autoplay).
 import { test, expect } from '@playwright/test';
-import { LIVE_PAGES, open, invisibleText } from './helpers.mjs';
+import { createRequire } from 'node:module';
+import { LIVE_PAGES, open, invisibleText, scrollThrough } from './helpers.mjs';
 
 const norm = (s) => s.replace(/\s+/g, ' ').trim();
 
@@ -136,4 +137,94 @@ test('index: the process stepper autoplays (5 s) when motion is allowed — posi
   const selected = () => root.locator('[role="tab"]').evaluateAll((ts) => ts.findIndex((t) => t.getAttribute('aria-selected') === 'true'));
   const start = await selected();
   await expect.poll(selected, { timeout: 8000 }).not.toBe(start);
+});
+
+// ---------------------------------------------------------------------------------------------
+// axe-core (devDependency): WCAG 2.2 A/AA + best-practice rules on every page, at phone and desktop
+// widths, after the late effects layer has injected its DOM and the page has been scrolled through
+// (reveals, illustrations, keycap, back-to-top all exist by then).
+// AXE_CORE_PATH may point at another axe.min.js (e.g. a scratch install) when node_modules lacks it.
+const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
+function axePath() {
+  if (process.env.AXE_CORE_PATH) return process.env.AXE_CORE_PATH;
+  try {
+    return createRequire(import.meta.url).resolve('axe-core/axe.min.js');
+  } catch {
+    throw new Error('axe-core is not installed: run `npm install` (it is a devDependency), or set AXE_CORE_PATH');
+  }
+}
+
+for (const width of [390, 1440]) {
+  for (const p of LIVE_PAGES) {
+    test(`${p.name} @${width}: axe finds no WCAG 2.2 A/AA or best-practice violations`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await open(page, p.path);
+      await scrollThrough(page);
+      await page.addScriptTag({ path: axePath() });
+      const violations = await page.evaluate((tags) => window.axe.run(document, { runOnly: { type: 'tag', values: tags }, resultTypes: ['violations'] })
+        .then((r) => r.violations.map((v) => `${v.id} (${v.impact}): ${v.nodes.map((n) => n.target.join(' ')).slice(0, 5).join(' | ')}`)), AXE_TAGS);
+      expect(violations).toEqual([]);
+    });
+  }
+}
+
+test('links say where they go: no bare "read more" / "click here" / "learn more" accessible names', async ({ page }) => {
+  const bad = [];
+  for (const p of LIVE_PAGES) {
+    await open(page, p.path, { settle: 0 });
+    const found = await page.evaluate(() => [...document.querySelectorAll('a[href]')]
+      .map((a) => (a.getAttribute('aria-label') || a.textContent).replace(/\s+/g, ' ').trim())
+      .filter((n) => /^(read more|learn more|more|click here|here|link|details|see more)\W*$/i.test(n)));
+    for (const n of found) bad.push(`${p.name}: "${n}"`);
+  }
+  expect(bad).toEqual([]);
+});
+
+test('contact: personal-data fields declare their autocomplete purpose (WCAG 1.3.5)', async ({ page }) => {
+  await open(page, 'contact.html', { settle: 0 });
+  const ac = await page.evaluate(() => Object.fromEntries(
+    ['f-name', 'f-email', 'f-company', 'f-phone', 'f-site'].map((id) => [id, document.getElementById(id).getAttribute('autocomplete')])));
+  expect(ac).toEqual({ 'f-name': 'name', 'f-email': 'email', 'f-company': 'organization', 'f-phone': 'tel', 'f-site': 'url' });
+});
+
+// A larger default text size set in the browser (Chrome: Settings → Appearance → Font size). That
+// setting, unlike zoom, keeps the viewport width, so the phone layout has to hold 2× text. Page
+// .setFontSizes is that setting; em media queries follow it like they do in a real browser.
+test.describe('200% browser text size on phones', () => {
+  for (const width of [320, 390]) {
+    test(`${width}: header keeps the menu button on screen and never clips the CTA; footer fits`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      const cdp = await page.context().newCDPSession(page);
+      await cdp.send('Page.setFontSizes', { fontSizes: { standard: 32, fixed: 26 } });
+      for (const path of ['about.html', 'lab/square-word-calligraphy/']) {
+        await open(page, path, { settle: 200 });
+        const r = await page.evaluate(() => {
+          const iw = document.documentElement.clientWidth;
+          const cta = document.querySelector('.site-header .nav__cta');
+          const toggle = document.querySelector('.nav__toggle').getBoundingClientRect();
+          const footer = document.querySelector('.site-footer__inner');
+          const past = [...footer.querySelectorAll('a, p, li')].filter((e) => e.getBoundingClientRect().right > iw + 1)
+            .map((e) => e.textContent.trim().slice(0, 30));
+          return {
+            rootPx: parseFloat(getComputedStyle(document.documentElement).fontSize),
+            ctaClipped: cta.getClientRects().length > 0 && cta.scrollWidth > cta.clientWidth + 8,
+            toggleOnScreen: toggle.left >= 0 && toggle.right <= iw,
+            footerPast: past,
+          };
+        });
+        expect(r.rootPx, 'guard: the 2× text setting took effect').toBe(32);
+        expect(r.ctaClipped, `${path}: header CTA clipped`).toBe(false);
+        expect(r.toggleOnScreen, `${path}: menu button on screen`).toBe(true);
+        expect(r.footerPast, `${path}: footer text past the right edge`).toEqual([]);
+      }
+    });
+  }
+
+  test('default text size: the header CTA is still shown at 320 and 390 (control)', async ({ page }) => {
+    for (const width of [320, 390]) {
+      await page.setViewportSize({ width, height: 800 });
+      await open(page, 'about.html', { settle: 0 });
+      await expect(page.locator('.site-header .nav__cta'), `${width}`).toBeVisible();
+    }
+  });
 });
