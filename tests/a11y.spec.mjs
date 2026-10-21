@@ -20,6 +20,26 @@ for (const p of LIVE_PAGES) {
       expect(skips).toEqual([]);
     });
 
+    // WCAG G201: a link that opens a new tab says so to screen readers, after its visible text
+    // (so the visible label still starts the accessible name), in the site's .visually-hidden class.
+    test('every target=_blank link announces "(opens in a new tab)" via visually-hidden text', async ({ page }) => {
+      await open(page, p.path, { settle: 0 });
+      const links = page.locator('a[target="_blank"]');
+      const n = await links.count();
+      for (let i = 0; i < n; i++) {
+        const a = links.nth(i);
+        const href = await a.getAttribute('href');
+        const shown = norm(await a.evaluate((el) => {
+          const c = el.cloneNode(true);
+          c.querySelectorAll('.visually-hidden').forEach((s) => s.remove());
+          return c.textContent;
+        }));
+        expect(shown, `${href}: has visible text`).not.toBe('');
+        await expect(a, href).toHaveAccessibleName(`${shown} (opens in a new tab)`);
+        await expect(a.locator('.visually-hidden', { hasText: '(opens in a new tab)' }), href).toHaveCount(1);
+      }
+    });
+
     test('header, nav, main and footer landmarks', async ({ page }) => {
       await open(page, p.path, { settle: 0 });
       const lm = await page.evaluate(() => ({
