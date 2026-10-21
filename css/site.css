@@ -709,6 +709,15 @@ html.nav-open .site-header {
 }
 html.nav-open .site-header .nav__cta { visibility: hidden; }
 
+/* A larger text size set in the browser (up to 200%) makes the brand, the CTA and the menu button
+   too wide for a phone's header row: the CTA got clipped to "a pr" and, at 320px, the menu button
+   was pushed off screen. em media queries follow that setting (px ones don't), and 20em is 320px at
+   the default 16px, so this only kicks in once the text is bigger than the header was designed
+   for. The menu has its own "Start a project", so nothing is lost. */
+@media (max-width: 19.99em) {
+  .site-header .nav__cta { display: none; }
+}
+
 /* Menu toggle (hamburger → X) */
 .nav__toggle {
   display: inline-grid;
@@ -911,6 +920,14 @@ html.nav-open { overflow: hidden; }
 
 /* The email address never breaks mid-word; the column is wide enough for it from 320px up. */
 .site-footer__contact a[href^='mailto:'] { white-space: nowrap; }
+
+/* ...at the default text size. With a larger text size set in the browser (up to 200%), the
+   address alone is wider than a phone screen, and the one-column footer grew to fit it, pushing
+   the whole page sideways. On phones, let it wrap only when it can't fit (WCAG 1.4.4 / 1.4.10). */
+@media (max-width: 767.98px) {
+  .site-footer__inner > * { min-width: 0; }
+  .site-footer__contact a[href^='mailto:'] { white-space: normal; overflow-wrap: anywhere; }
+}
 
 .site-footer__bottom {
   position: relative;
