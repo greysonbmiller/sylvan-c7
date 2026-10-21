@@ -135,6 +135,9 @@
 /* Measure: the measure test reads 60ch as ~81 characters; 54ch keeps prose ≤ 75. */
 #main p { max-width: calc(54 * var(--ch-body)); }
 #main .lead { max-width: calc(50 * var(--ch-body)); }
+/* The pledge is lead-size (--fs-lead) text, so it gets the lead measure: 54ch at 21px is ~76 characters,
+   held under 75 only while the blockquote's own --measure (resolved at the 18px body size) is narrower. */
+#main .work-pledge p { max-width: calc(50 * var(--ch-body)); }
 
 /* ---- Project rows: text and media start on the same line. From 1024 up the media column
    sticks under the header while the (taller) text scrolls past it, so no empty hole opens
