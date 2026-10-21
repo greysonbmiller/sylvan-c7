@@ -4,7 +4,7 @@ import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const REPO = fileURLToPath(new URL('..', import.meta.url));
-export const ORIGIN = 'http://127.0.0.1:4180';
+export const ORIGIN = `http://127.0.0.1:${process.env.PW_PORT || 4180}`; // must match playwright.config.mjs
 export const BASE = `${ORIGIN}/sylvan-c7/`;
 export const PROD = 'https://greysonbmiller.github.io/sylvan-c7/';
 
