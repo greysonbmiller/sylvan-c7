@@ -3,7 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test"
+    "build:css": "node scripts/build-css.mjs",
+    "check:css": "node scripts/build-css.mjs --check",
+    "serve": "node tests/serve.mjs",
+    "test": "playwright test",
+    "test:lcp": "playwright test --project=lcp --no-deps",
+    "ci": "npm run check:css && playwright test"
   },
   "devDependencies": {
     "@playwright/test": "1.49.1",

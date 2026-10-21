@@ -3,7 +3,7 @@
 // toggle (real prices never change; only the care add-on slides in), the build frame's live page-weight
 // figure, browser-chrome screenshot frames with the lazily loaded tall Bibooks pan, and Work row layout.
 import { test, expect } from '@playwright/test';
-import { open, waitUntil } from './helpers.mjs';
+import { open, waitUntil, settleAnimations } from './helpers.mjs';
 
 const KEYS = ['websites', 'web-apps', 'integrations', 'instrument', 'data', 'care'];
 const PAGES = [{ name: 'index', path: './' }, { name: 'services', path: 'services.html' }];
@@ -743,8 +743,11 @@ test('services @1440: "Every project includes" intro column sticks under the hea
     return { frameTop: f.top + scrollY, travel: f.height - i.height };
   });
   expect(g.travel, 'positive control: the checklist is taller than the intro').toBeGreaterThan(150);
-  await page.evaluate((v) => scrollTo(0, v), g.frameTop - cs.top + g.travel / 2);
+  // Jump there: the page scrolls smoothly (scroll-behavior), and a smooth scroll of ~3,000 px is still
+  // under way after a fixed wait on a slow machine. Then let the intro's reveal transition finish.
+  await page.evaluate((v) => scrollTo({ top: v, behavior: 'instant' }), g.frameTop - cs.top + g.travel / 2);
   await page.waitForTimeout(150);
+  await settleAnimations(page);
   const r = await page.evaluate(() => {
     const i = document.querySelector('section[aria-labelledby="includes-title"] .grid--split > :first-child').getBoundingClientRect();
     const f = document.querySelector('.build-frame').getBoundingClientRect();

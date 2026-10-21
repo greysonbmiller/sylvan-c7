@@ -1,0 +1,47 @@
+# Runs the contract suite on Linux, macOS and Windows. A thin wrapper: everything it checks is
+# `npm run ci`, which runs the same way on any machine or CI provider. It only tests; GitHub Pages
+# still publishes `main` with its own (legacy) build, which this workflow never touches.
+name: test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Playwright's own Chromium (the version @playwright/test pins), plus its system libraries and
+      # fonts on Linux. --no-shell: the suite uses the full browser, not the headless shell.
+      - run: npx playwright install --with-deps --no-shell chromium
+      # Includes the throttled-4G LCP runs (tests/perf.spec.mjs, @lcp). They time page loads, but under
+      # emulated network and CPU, judged on the median of 3, and every OS measured 1.0-1.8 s against
+      # the 2.5 s budget on these runners, so they stay blocking everywhere: a slow page should fail.
+      - run: npm run ci
+      - uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: playwright-report-${{ matrix.os }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

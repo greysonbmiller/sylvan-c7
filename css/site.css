@@ -51,10 +51,14 @@
    from 320 to 1440 px. Ascent/descent are the web fonts' (Inter 0.969/0.241 em, Geist 1.005/0.295 em)
    divided by size-adjust, because Chrome scales the overrides by it. Geist Mono's fallback has the
    same 0.6 em advance, so mono widths and its ch are identical. Measures are in --ch-body/--ch-head
-   (below), never ch, which would follow whichever font is on screen. */
+   (below), never ch, which would follow whichever font is on screen.
+   local() matches a font's exact installed name, with no aliasing, so each list names every face
+   with Arial's widths: Arial (Windows, macOS), Helvetica (macOS), Liberation Sans (most Linux
+   distributions) and Arimo (ChromeOS). Without the last two a Linux visitor got no fallback face
+   at all, and the hero jumped when the web fonts arrived. */
 @font-face {
   font-family: 'Inter Fallback'; /* Inter 400 */
-  src: local('Arial'), local('ArialMT'), local('Helvetica');
+  src: local('Arial'), local('ArialMT'), local('Helvetica'), local('Liberation Sans'), local('LiberationSans'), local('Arimo'), local('Arimo-Regular');
   font-weight: 100 450;
   size-adjust: 106.9%;
   ascent-override: 90.62%;
@@ -63,7 +67,7 @@
 }
 @font-face {
   font-family: 'Inter Fallback'; /* Inter 500: regular glyphs, Inter 500 widths */
-  src: local('Arial'), local('ArialMT'), local('Helvetica');
+  src: local('Arial'), local('ArialMT'), local('Helvetica'), local('Liberation Sans'), local('LiberationSans'), local('Arimo'), local('Arimo-Regular');
   font-weight: 451 550;
   size-adjust: 108.5%;
   ascent-override: 89.29%;
@@ -72,7 +76,7 @@
 }
 @font-face {
   font-family: 'Inter Fallback'; /* Inter 600 */
-  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold');
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold'), local('Arimo-Bold');
   font-weight: 551 900;
   size-adjust: 101.35%;
   ascent-override: 95.58%;
@@ -81,7 +85,7 @@
 }
 @font-face {
   font-family: 'Geist Fallback'; /* Geist 600 (and 500, which renders as 600) */
-  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold');
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold'), local('Arimo-Bold');
   font-weight: 100 650;
   size-adjust: 100.15%;
   ascent-override: 100.34%;
@@ -90,7 +94,7 @@
 }
 @font-face {
   font-family: 'Geist Fallback'; /* Geist 700 */
-  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold');
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold'), local('Arimo-Bold');
   font-weight: 651 900;
   size-adjust: 102.2%;
   ascent-override: 98.33%;
@@ -113,6 +117,15 @@
   size-adjust: 99.66%;
   ascent-override: 100.83%;
   descent-override: 29.59%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist Mono Fallback Liberation'; /* Linux, ChromeOS: 1229/2048 em advance */
+  src: local('Liberation Mono'), local('LiberationMono'), local('Cousine'), local('Cousine-Regular');
+  font-weight: 100 900;
+  size-adjust: 99.98%;
+  ascent-override: 100.5%;
+  descent-override: 29.49%;
   line-gap-override: 0%;
 }
 
@@ -163,7 +176,7 @@
   /* ---- Font families ---- */
   --font-heading: 'Geist', 'Geist Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
   --font-body:    'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
-  --font-mono:    'Geist Mono', 'Geist Mono Fallback', 'Geist Mono Fallback Menlo', ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  --font-mono:    'Geist Mono', 'Geist Mono Fallback', 'Geist Mono Fallback Menlo', 'Geist Mono Fallback Liberation', ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
   --font-display: var(--font-heading); /* alias (lab app.css) */
 
   /* ---- Type scale (fluid) ---- */

@@ -2,7 +2,7 @@
 // one footer link on every page, contextual in-copy links on home/work/about, and
 // SoftwareApplication structured data on work. Followed links only (no nofollow/noreferrer).
 import { test, expect } from '@playwright/test';
-import { LIVE_PAGES, PROD, BASE, url, open } from './helpers.mjs';
+import { LIVE_PAGES, PROD, BASE, REPO, url, open } from './helpers.mjs';
 
 const isBibooks = (href) => /^https:\/\/bibooks\.org\/?$/.test(href);
 
@@ -86,9 +86,11 @@ test('work: Bibooks JSON-LD links its Google Play listing', async ({ page }) => 
 
 test('IndexNow: exactly one key file at the site root, containing its own name', async ({ request }) => {
   const { readdirSync, readFileSync } = await import('node:fs');
-  const keys = readdirSync('.').filter((f) => /^[0-9a-f]{32}\.txt$/.test(f));
+  const { join } = await import('node:path');
+  // From the repo root, not the working directory (which is wherever the runner was started).
+  const keys = readdirSync(REPO).filter((f) => /^[0-9a-f]{32}\.txt$/.test(f));
   expect(keys).toHaveLength(1);
-  expect(readFileSync(keys[0], 'utf8')).toBe(keys[0].replace('.txt', ''));
+  expect(readFileSync(join(REPO, keys[0]), 'utf8')).toBe(keys[0].replace('.txt', ''));
   expect((await request.get(keys[0])).status()).toBe(200);
 });
 
