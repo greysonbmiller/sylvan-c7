@@ -17,31 +17,37 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  "url": "https://greysonbmiller.github.io/sylvan-c7/about.html",
-  "mainEntity": {
-    "@type": "Person",
-    "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson",
-    "name": "Greyson Miller",
-    "url": "https://greysonbmiller.github.io/sylvan-c7/about.html",
-    "jobTitle": "Software engineer",
-    "image": "https://greysonbmiller.github.io/sylvan-c7/img/greyson-miller@2x.jpg",
-    "sameAs": [
-      "https://github.com/greysonbmiller"
-    ],
-    "worksFor": {
-      "@type": "Organization",
-      "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice",
-      "name": "Sylvan C7",
-      "url": "https://greysonbmiller.github.io/sylvan-c7/"
+  "@graph": [
+    {
+      "@type": "ProfilePage",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#webpage",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/about.html",
+      "name": "About Greyson Miller | Sylvan C7",
+      "description": "Sylvan C7 is Greyson Miller, a software engineer in Los Angeles. The person who answers your email writes your code: websites, web apps, integrations and instrument-control software.",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#website" },
+      "breadcrumb": { "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#breadcrumb" },
+      "mainEntity": {
+        "@type": "Person",
+        "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson",
+        "name": "Greyson Miller",
+        "url": "https://greysonbmiller.github.io/sylvan-c7/about.html",
+        "jobTitle": "Software engineer",
+        "image": "https://greysonbmiller.github.io/sylvan-c7/img/greyson-miller@2x.jpg",
+        "sameAs": ["https://github.com/greysonbmiller"],
+        "worksFor": { "@type": "Organization", "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice", "name": "Sylvan C7", "url": "https://greysonbmiller.github.io/sylvan-c7/" },
+        "address": { "@type": "PostalAddress", "addressLocality": "Los Angeles", "addressRegion": "CA", "addressCountry": "US" }
+      }
     },
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Los Angeles",
-      "addressRegion": "CA",
-      "addressCountry": "US"
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://greysonbmiller.github.io/sylvan-c7/" },
+        { "@type": "ListItem", "position": 2, "name": "About", "item": "https://greysonbmiller.github.io/sylvan-c7/about.html" }
+      ]
     }
-  }
+  ]
 }
   </script>
 

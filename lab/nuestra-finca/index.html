@@ -33,25 +33,41 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Nuestra Finca",
-  "url": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/",
-  "description": "A 3D walkthrough of a small hillside farm, rebuilt from 17 phone photos and a few measurements. Walk or fly through it in a web browser, on a computer or a phone.",
-  "applicationCategory": "MultimediaApplication",
-  "operatingSystem": "Any (runs in a web browser)",
-  "isAccessibleForFree": true,
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "image": "https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg",
-  "author": {
-    "@type": "Person",
-    "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson",
-    "name": "Greyson Miller",
-    "url": "https://greysonbmiller.github.io/sylvan-c7/about.html"
-  }
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#webpage",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/",
+      "name": "Nuestra Finca: a 3D farm walkthrough in your browser | Sylvan C7",
+      "description": "Walk or fly through a 3D model of a small hillside farm, rebuilt by Greyson Miller from 17 phone photos and a few tape-measure numbers. It runs in your browser, on a phone or an ordinary laptop.",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#website" },
+      "breadcrumb": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#breadcrumb" },
+      "mainEntity": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#app" }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#app",
+      "name": "Nuestra Finca",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/",
+      "description": "A 3D walkthrough of a small hillside farm, rebuilt from 17 phone photos and a few measurements. Walk or fly through it in a web browser, on a computer or a phone.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in a web browser)",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "image": "https://greysonbmiller.github.io/sylvan-c7/img/lab-nuestra-finca.jpg",
+      "author": { "@type": "Person", "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson", "name": "Greyson Miller", "url": "https://greysonbmiller.github.io/sylvan-c7/about.html" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://greysonbmiller.github.io/sylvan-c7/" },
+        { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://greysonbmiller.github.io/sylvan-c7/work.html" },
+        { "@type": "ListItem", "position": 3, "name": "Nuestra Finca", "item": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/" }
+      ]
+    }
+  ]
 }
   </script>
 

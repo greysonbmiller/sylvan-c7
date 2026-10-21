@@ -6,6 +6,12 @@ import { LIVE_PAGES, open } from './helpers.mjs';
 
 const isBibooks = (href) => /^https:\/\/bibooks\.org\/?$/.test(href);
 
+/** Top-level JSON-LD nodes on the page: each block's @graph members, or the block itself. Throws on bad JSON. */
+async function jsonLdNodes(page) {
+  const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+  return blocks.map((t) => JSON.parse(t)).flatMap((d) => d['@graph'] || [d]);
+}
+
 for (const p of LIVE_PAGES) {
   test(`${p.name}: footer links to Bibooks with descriptive anchor text`, async ({ page }) => {
     await open(page, p.path, { settle: 0 });
@@ -42,8 +48,7 @@ test('Bibooks links stay modest: at most 4 per page (footer + copy + button + he
 
 test('work: SoftwareApplication JSON-LD for Bibooks authored by Greyson Miller', async ({ page }) => {
   await open(page, 'work.html', { settle: 0 });
-  const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
-  const app = blocks.map((t) => JSON.parse(t)).find((d) => d['@type'] === 'SoftwareApplication');
+  const app = (await jsonLdNodes(page)).find((d) => d['@type'] === 'SoftwareApplication');
   expect(app).toBeTruthy();
   expect(isBibooks(app.url)).toBe(true);
   expect(app.author?.name).toBe('Greyson Miller');
@@ -66,8 +71,7 @@ test('index: Search Console verification meta is present (removing it unverifies
 
 test('index: Organization JSON-LD has a logo that resolves, and names Bibooks as its brand', async ({ page, request }) => {
   await open(page, './', { settle: 0 });
-  const org = (await page.locator('script[type="application/ld+json"]').allTextContents()).map((t) => JSON.parse(t))
-    .find((d) => d['@id'] === 'https://greysonbmiller.github.io/sylvan-c7/#practice');
+  const org = (await jsonLdNodes(page)).find((d) => d['@id'] === 'https://greysonbmiller.github.io/sylvan-c7/#practice');
   expect(org).toBeTruthy();
   const logo = org.logo.replace('https://greysonbmiller.github.io/sylvan-c7/', '');
   expect((await request.get(logo)).status()).toBe(200);
@@ -76,8 +80,7 @@ test('index: Organization JSON-LD has a logo that resolves, and names Bibooks as
 
 test('work: Bibooks JSON-LD links its Google Play listing', async ({ page }) => {
   await open(page, 'work.html', { settle: 0 });
-  const app = (await page.locator('script[type="application/ld+json"]').allTextContents()).map((t) => JSON.parse(t))
-    .find((d) => d['@type'] === 'SoftwareApplication');
+  const app = (await jsonLdNodes(page)).find((d) => d['@type'] === 'SoftwareApplication');
   expect(app.sameAs).toContain('https://play.google.com/store/apps/details?id=org.bibooks.app');
 });
 

@@ -38,34 +38,62 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Bibooks",
-  "alternateName": "Bibooks.org",
-  "url": "https://bibooks.org/",
-  "sameAs": [
-    "https://play.google.com/store/apps/details?id=org.bibooks.app"
-  ],
-  "description": "Bilingual audiobooks for language learners: read and listen to bilingual books, or turn any text into your own bilingual audiobook. Every sentence is read aloud in the language you are learning and one you know, highlighted as it is spoken, in any pair of 49 languages.",
-  "applicationCategory": "EducationalApplication",
-  "operatingSystem": "Web, Android",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "author": {
-    "@type": "Person",
-    "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson",
-    "name": "Greyson Miller",
-    "url": "https://greysonbmiller.github.io/sylvan-c7/about.html"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice",
-    "name": "Sylvan C7",
-    "url": "https://greysonbmiller.github.io/sylvan-c7/"
-  },
-  "image": "https://greysonbmiller.github.io/sylvan-c7/img/work-bibooks.jpg"
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#webpage",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/work.html",
+      "name": "Work: Bibooks, the lab and how I run a project | Sylvan C7",
+      "description": "Sylvan C7 is a new one-person practice with no client work published yet. Here is a live product and two lab experiments I built and run solo, how a project runs, and standards you can check yourself.",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#website" },
+      "breadcrumb": { "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#breadcrumb" },
+      "about": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice" },
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": { "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#bibooks" }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/square-word-calligraphy/#app" }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": { "@id": "https://greysonbmiller.github.io/sylvan-c7/lab/nuestra-finca/#app" }
+          }
+        ]
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#bibooks",
+      "name": "Bibooks",
+      "alternateName": "Bibooks.org",
+      "url": "https://bibooks.org/",
+      "sameAs": ["https://play.google.com/store/apps/details?id=org.bibooks.app"],
+      "description": "Bilingual audiobooks for language learners: read and listen to bilingual books, or turn any text into your own bilingual audiobook. Every sentence is read aloud in the language you are learning and one you know, highlighted as it is spoken, in any pair of 49 languages.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web, Android",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson", "name": "Greyson Miller", "url": "https://greysonbmiller.github.io/sylvan-c7/about.html" },
+      "publisher": { "@type": "Organization", "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice", "name": "Sylvan C7", "url": "https://greysonbmiller.github.io/sylvan-c7/" },
+      "image": "https://greysonbmiller.github.io/sylvan-c7/img/work-bibooks.jpg"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/work.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://greysonbmiller.github.io/sylvan-c7/" },
+        { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://greysonbmiller.github.io/sylvan-c7/work.html" }
+      ]
+    }
+  ]
 }
   </script>
 </head>
