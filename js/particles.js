@@ -24,6 +24,9 @@
    Budget: callers start it after `load` + idle; grown traces are baked once into an offscreen layer,
    so a frame is one drawImage plus a handful of glow sprites; DPR capped at 2; paused while
    offscreen or the tab is hidden. prefers-reduced-motion: one static, fully grown frame.
+   Once the baked layer stops changing, a frame repaints only the boxes the moving marks (pulses,
+   glows, flashes) covered last frame or cover now, and leaves every other pixel as it is: the same
+   picture as a full repaint, for a few percent of the pixels (api.fullFrames / api.repaintShare).
 
    Colour: accent-green family only (blue is reserved for the About name-morph).
 
@@ -139,6 +142,7 @@
 
     var api = o.api || {};
     api.frames = 0; api.running = false; api.grown = false; api.settled = false; api.nodes = 0; api.maxFrameMs = 0; api.growMs = 0;
+    api.fullFrames = 0; api.partialFrames = 0; api.repaintShare = 0; api.repaintMismatch = 0;
     api.seed = function () { return false; };
     api.rebuild = function () {};
 
@@ -152,6 +156,10 @@
     var dctx = dots.getContext('2d');
     var dotsMerged = !o.dots;
     var clock = 0, lastTs = 0, raf = 0, inView = true, started = false, building = false;
+    // This frame's moving marks (glows and pulse strokes), drawn after the baked layer; the device-px
+    // boxes last frame's marks covered (null: repaint everything); whether the baked layer changed.
+    var marks = [], markedBoxes = null, baseChanged = true;
+    var verify = !!window.__fxVerifyRepaint, scratch = null; // tests: compare each partial frame with a full one
     var growEnd = 0, nextPulse = 0;
     var pointer = { x: 0, y: 0, active: false };
 
@@ -615,6 +623,7 @@
     }
 
     function bakeVia(x, y) {
+      baseChanged = true;
       bctx.fillStyle = VIA_FILL;
       bctx.beginPath();
       bctx.arc(x, y, 2.3, 0, Math.PI * 2);
@@ -622,6 +631,7 @@
     }
 
     function bakePad(x, y) {
+      baseChanged = true;
       bctx.fillStyle = PAD_CORE;
       bctx.strokeStyle = PAD_RING;
       bctx.lineWidth = 1.3;
@@ -632,6 +642,7 @@
     }
 
     function bakeHub(h) {
+      baseChanged = true;
       bctx.fillStyle = PAD_CORE;
       bctx.strokeStyle = PAD_RING;
       bctx.lineWidth = 1.5;
@@ -651,6 +662,7 @@
       if (b.done || t < b.t0) return false;
       var tA = Math.max(b.drawnT, b.t0), tB = Math.min(t, b.tEnd);
       if (tB > tA) {
+        baseChanged = true;
         var a = posAt(b, tA);
         bctx.strokeStyle = b.style.color;
         bctx.lineWidth = b.style.width;
@@ -685,8 +697,7 @@
 
     function glow(x, y, r, a) {
       if (a <= 0.01) return;
-      ctx.globalAlpha = Math.min(1, a);
-      ctx.drawImage(sprite, x - r, y - r, r * 2, r * 2);
+      marks.push([x, y, r, Math.min(1, a)]);
     }
 
     function pathTo(b) {
@@ -734,15 +745,56 @@
       var head = pointOnPath(p.path, p.d);
       var tailD = Math.max(0, p.d - 46);
       var tail = pointOnPath(p.path, tailD);
-      ctx.globalAlpha = 0.9;
-      ctx.strokeStyle = 'rgb(120,255,196)';
-      ctx.lineWidth = 1.8;
-      ctx.beginPath();
-      ctx.moveTo(tail.x, tail.y);
-      for (var k = tail.i + 1; k <= head.i; k++) ctx.lineTo(p.path.pts[k][0], p.path.pts[k][1]);
-      ctx.lineTo(head.x, head.y);
-      ctx.stroke();
+      var line = [[tail.x, tail.y]];
+      for (var k = tail.i + 1; k <= head.i; k++) line.push(p.path.pts[k]);
+      line.push([head.x, head.y]);
+      marks.push({ line: line });
       glow(head.x, head.y, 9, 0.95);
+    }
+
+    // Draw the recorded marks onto c (canvas px transform, additive), in the order they were made.
+    function drawMarks(c) {
+      c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      c.globalCompositeOperation = 'lighter';
+      c.lineCap = 'round';
+      c.lineJoin = 'round';
+      for (var k = 0; k < marks.length; k++) {
+        var m = marks[k];
+        if (m.line) {
+          c.globalAlpha = 0.9;
+          c.strokeStyle = 'rgb(120,255,196)';
+          c.lineWidth = 1.8;
+          c.beginPath();
+          c.moveTo(m.line[0][0], m.line[0][1]);
+          for (var q = 1; q < m.line.length; q++) c.lineTo(m.line[q][0], m.line[q][1]);
+          c.stroke();
+        } else {
+          c.globalAlpha = m[3];
+          c.drawImage(sprite, m[0] - m[2], m[1] - m[2], m[2] * 2, m[2] * 2);
+        }
+      }
+      c.globalAlpha = 1;
+      c.globalCompositeOperation = 'source-over';
+    }
+
+    // Each mark's box in whole device pixels, 2 px wider all round than its stroke / sprite
+    // (anti-aliasing and sprite filtering never reach that far).
+    function markBoxes() {
+      var out = [];
+      for (var k = 0; k < marks.length; k++) {
+        var m = marks[k], x0, y0, x1, y1;
+        if (m.line) {
+          x0 = x1 = m.line[0][0]; y0 = y1 = m.line[0][1];
+          for (var q = 1; q < m.line.length; q++) {
+            x0 = Math.min(x0, m.line[q][0]); x1 = Math.max(x1, m.line[q][0]);
+            y0 = Math.min(y0, m.line[q][1]); y1 = Math.max(y1, m.line[q][1]);
+          }
+        } else { x0 = m[0] - m[2]; y0 = m[1] - m[2]; x1 = m[0] + m[2]; y1 = m[1] + m[2]; }
+        var bx = Math.max(0, Math.floor((x0 - 2) * dpr)), by = Math.max(0, Math.floor((y0 - 2) * dpr));
+        var bw = Math.min(canvas.width, Math.ceil((x1 + 2) * dpr)) - bx, bh = Math.min(canvas.height, Math.ceil((y1 + 2) * dpr)) - by;
+        if (bw > 0 && bh > 0) out.push([bx, by, bw, bh]);
+      }
+      return out;
     }
 
     function render(dt) {
@@ -755,12 +807,10 @@
       bakeHubs(clock);
       if (!api.grown && clock >= growEnd && started) api.grown = true;
 
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.globalAlpha = 1;
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      marks = [];
+      var da = 1;
       if (!dotsMerged) {
-        var da = dt ? Math.min(1, Math.max(0, (clock - 150) / 1600)) : 1;
+        da = dt ? Math.min(1, Math.max(0, (clock - 150) / 1600)) : 1;
         if (da >= 1) {
           // fully faded in: slide the substrate under the baked traces once, then stop drawing it
           bctx.save();
@@ -769,86 +819,174 @@
           bctx.drawImage(dots, 0, 0);
           bctx.restore();
           dotsMerged = true;
-        } else if (da > 0) { ctx.globalAlpha = da; ctx.drawImage(dots, 0, 0); ctx.globalAlpha = 1; }
-      }
-      ctx.drawImage(base, 0, 0);
-      if (!dt) { clearZones(); return; } // static frame: the baked layers only
-
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.globalCompositeOperation = 'lighter';
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-
-      // growing tips
-      for (var g = 0; g < growing.length; g++) {
-        var tb = growing[g];
-        if (clock < tb.t0) continue;
-        var tip = posAt(tb, clock);
-        glow(tip[0], tip[1], tb.depth ? 8 : 11, tb.depth ? 0.7 : 0.95);
-      }
-
-      // pad / via flashes
-      for (var f = flashes.length - 1; f >= 0; f--) {
-        var fl = flashes[f];
-        var age = (clock - fl.t) / fl.dur;
-        if (age >= 1) { flashes.splice(f, 1); continue; }
-        if (age < 0) continue;
-        glow(fl.x, fl.y, fl.r * (0.6 + age * 0.4), (1 - age) * (1 - age));
-      }
-
-      if (o.ambient) {
-        // pulses
-        if (api.grown && clock > nextPulse && pulses.length < 3) {
-          spawnPulse(null);
-          nextPulse = clock + rand(700, 1500);
+          baseChanged = true;
         }
-        for (var p = pulses.length - 1; p >= 0; p--) {
-          var pu = pulses[p];
-          pu.d += PULSE_SPEED * dt;
-          if (pu.d >= pu.path.len) {
-            flashes.push({ x: pu.leaf.x, y: pu.leaf.y, t: clock, dur: 600, r: GLOW_MAX * 0.85 });
-            pulses.splice(p, 1);
-            continue;
+      }
+
+      if (dt) { // a static frame (dt 0) is the baked layers only
+        // growing tips
+        for (var g = 0; g < growing.length; g++) {
+          var tb = growing[g];
+          if (clock < tb.t0) continue;
+          var tip = posAt(tb, clock);
+          glow(tip[0], tip[1], tb.depth ? 8 : 11, tb.depth ? 0.7 : 0.95);
+        }
+
+        // pad / via flashes
+        for (var f = flashes.length - 1; f >= 0; f--) {
+          var fl = flashes[f];
+          var age = (clock - fl.t) / fl.dur;
+          if (age >= 1) { flashes.splice(f, 1); continue; }
+          if (age < 0) continue;
+          glow(fl.x, fl.y, fl.r * (0.6 + age * 0.4), (1 - age) * (1 - age));
+        }
+
+        if (o.ambient) {
+          // pulses
+          if (api.grown && clock > nextPulse && pulses.length < 3) {
+            spawnPulse(null);
+            nextPulse = clock + rand(700, 1500);
           }
-          drawPulse(pu);
-        }
-      }
-
-      if (o.interactive) {
-        // pointer energy
-        var R = 130;
-        for (var n = 0; n < nodes.length; n++) {
-          var nd = nodes[n];
-          var target = 0;
-          if (pointer.active) {
-            var dx = nd.x - pointer.x, dy = nd.y - pointer.y;
-            var d2 = dx * dx + dy * dy;
-            if (d2 < R * R) { var q = 1 - Math.sqrt(d2) / R; target = q * q; }
+          for (var p = pulses.length - 1; p >= 0; p--) {
+            var pu = pulses[p];
+            pu.d += PULSE_SPEED * dt;
+            if (pu.d >= pu.path.len) {
+              flashes.push({ x: pu.leaf.x, y: pu.leaf.y, t: clock, dur: 600, r: GLOW_MAX * 0.85 });
+              pulses.splice(p, 1);
+              continue;
+            }
+            drawPulse(pu);
           }
-          if (target === 0 && nd.e < 0.005) { nd.e = 0; continue; }
-          nd.e += (target - nd.e) * Math.min(1, dt / 90);
-          glow(nd.x, nd.y, (nd.kind === 'pad' ? 12 : 9) + 8 * nd.e, nd.e * 0.9);
-          if (nd.kind === 'pad' && nd.e > 0.45 && nd.branch && nd.branch.done && clock - nd.last > 1600 && pulses.length < 6) spawnPulse(nd);
+        }
+
+        if (o.interactive) {
+          // pointer energy
+          var R = 130;
+          for (var n = 0; n < nodes.length; n++) {
+            var nd = nodes[n];
+            var target = 0;
+            if (pointer.active) {
+              var dx = nd.x - pointer.x, dy = nd.y - pointer.y;
+              var d2 = dx * dx + dy * dy;
+              if (d2 < R * R) { var q = 1 - Math.sqrt(d2) / R; target = q * q; }
+            }
+            if (target === 0 && nd.e < 0.005) { nd.e = 0; continue; }
+            nd.e += (target - nd.e) * Math.min(1, dt / 90);
+            glow(nd.x, nd.y, (nd.kind === 'pad' ? 12 : 9) + 8 * nd.e, nd.e * 0.9);
+            if (nd.kind === 'pad' && nd.e > 0.45 && nd.branch && nd.branch.done && clock - nd.last > 1600 && pulses.length < 6) spawnPulse(nd);
+          }
         }
       }
-      ctx.globalAlpha = 1;
-      ctx.globalCompositeOperation = 'source-over';
-      clearZones();
+      paint(dt, da);
     }
 
-    // Hard mask: whatever this frame drew (traces, pads, glows, pulses, the substrate) is erased
-    // from the clear zones, so nothing is ever painted within the clear distance of the copy.
-    function clearZones() {
-      if (!clips.length) return;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Put this frame on the canvas: baked layer (+ the fading substrate), the marks, the clear zones.
+    // While the baked layer changes (growth, a burst, the substrate fading in) or after a resize,
+    // everything is repainted. Otherwise only the boxes last frame's marks and this frame's marks
+    // cover are reset to the baked layer before the marks are drawn: last frame's marks are gone,
+    // this frame's land on clean ground, and every other pixel already is what a full repaint would
+    // make it.
+    function paint(dt, da) {
+      var boxes = markBoxes();
+      var full = !dt || baseChanged || !dotsMerged || !markedBoxes;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.globalAlpha = 1;
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.fillStyle = '#000';
-      for (var k = 0; k < clips.length; k++) {
-        var c = clips[k];
-        ctx.fillRect(Math.floor(c[0]) - 1, Math.floor(c[1]) - 1, Math.ceil(c[2] - c[0]) + 2, Math.ceil(c[3] - c[1]) + 2);
-      }
       ctx.globalCompositeOperation = 'source-over';
+      if (full) {
+        api.fullFrames++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!dotsMerged && da > 0) { ctx.globalAlpha = da; ctx.drawImage(dots, 0, 0); ctx.globalAlpha = 1; }
+        ctx.drawImage(base, 0, 0);
+        drawMarks(ctx);
+        clearZones(ctx);
+      } else {
+        var region = disjoint(markedBoxes.concat(boxes));
+        if (region.length) {
+          api.partialFrames++;
+          var area = 0;
+          for (var k = 0; k < region.length; k++) {
+            var r = region[k];
+            ctx.clearRect(r[0], r[1], r[2], r[3]);
+            ctx.drawImage(base, r[0], r[1], r[2], r[3], r[0], r[1], r[2], r[3]);
+            area += r[2] * r[3];
+          }
+          // Unclipped on purpose: every mark lies inside its own box, which was just reset, and a clip
+          // would change how strokes are anti-aliased. The clear zones are re-applied inside the reset
+          // boxes only: elsewhere they already are, and erasing a soft (fractional-pixel) zone edge
+          // twice would fade it further than a full repaint does.
+          drawMarks(ctx);
+          for (var z = 0; z < region.length; z++) clearZones(ctx, region[z]);
+          // running mean of the share of the canvas repainted per partial frame
+          api.repaintShare += (Math.min(1, area / (canvas.width * canvas.height)) - api.repaintShare) / api.partialFrames;
+          if (verify) checkRepaint();
+        }
+      }
+      markedBoxes = boxes;
+      baseChanged = false;
+    }
+
+    // Boxes merged until none overlap (each overlapping pair becomes its bounding box), so every
+    // pixel is reset, and has its clear zone re-applied, exactly once.
+    function disjoint(list) {
+      var out = list.slice(), merged = true;
+      while (merged) {
+        merged = false;
+        for (var i = 0; i < out.length && !merged; i++) {
+          for (var j = i + 1; j < out.length; j++) {
+            var a = out[i], b = out[j];
+            if (a[0] < b[0] + b[2] && b[0] < a[0] + a[2] && a[1] < b[1] + b[3] && b[1] < a[1] + a[3]) {
+              var x = Math.min(a[0], b[0]), y = Math.min(a[1], b[1]);
+              out[i] = [x, y, Math.max(a[0] + a[2], b[0] + b[2]) - x, Math.max(a[1] + a[3], b[1] + b[3]) - y];
+              out.splice(j, 1);
+              merged = true;
+              break;
+            }
+          }
+        }
+      }
+      return out;
+    }
+
+    // Test support (window.__fxVerifyRepaint): draw this frame in full on a scratch canvas and count
+    // the pixels where the partially repainted canvas differs.
+    function checkRepaint() {
+      if (!scratch) scratch = document.createElement('canvas');
+      scratch.width = canvas.width; scratch.height = canvas.height;
+      var sc = scratch.getContext('2d');
+      sc.drawImage(base, 0, 0);
+      drawMarks(sc);
+      clearZones(sc);
+      var a = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      var b = sc.getImageData(0, 0, canvas.width, canvas.height).data;
+      for (var i = 0; i < a.length; i += 4) {
+        if (a[i] !== b[i] || a[i + 1] !== b[i + 1] || a[i + 2] !== b[i + 2] || a[i + 3] !== b[i + 3]) api.repaintMismatch++;
+      }
+    }
+
+    // `within` (optional): a device-px box [x, y, w, h]; only that box is touched.
+    function clearZones(c, within) {
+      if (!clips.length) return;
+      var hit = clips;
+      if (within) {
+        var bx0 = within[0] / dpr - 1, by0 = within[1] / dpr - 1, bx1 = (within[0] + within[2]) / dpr + 1, by1 = (within[1] + within[3]) / dpr + 1;
+        hit = clips.filter(function (z) { return z[0] - 2 < bx1 && z[2] + 2 > bx0 && z[1] - 2 < by1 && z[3] + 2 > by0; });
+        if (!hit.length) return;
+        c.save();
+        c.setTransform(1, 0, 0, 1, 0, 0);
+        c.beginPath();
+        c.rect(within[0], within[1], within[2], within[3]);
+        c.clip();
+      }
+      c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      c.globalAlpha = 1;
+      c.globalCompositeOperation = 'destination-out';
+      c.fillStyle = '#000';
+      for (var k = 0; k < hit.length; k++) {
+        var z = hit[k];
+        c.fillRect(Math.floor(z[0]) - 1, Math.floor(z[1]) - 1, Math.ceil(z[2] - z[0]) + 2, Math.ceil(z[3] - z[1]) + 2);
+      }
+      c.globalCompositeOperation = 'source-over';
+      if (within) c.restore();
     }
 
     function frame(ts) {
@@ -894,6 +1032,7 @@
       H = Math.max(1, Math.round(rect.height));
       canvas.width = base.width = Math.round(W * dpr);
       canvas.height = base.height = Math.round(H * dpr);
+      markedBoxes = null; // resizing cleared the canvas
       if (o.dots) { dots.width = canvas.width; dots.height = canvas.height; dctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
       bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       bctx.lineCap = 'round';
