@@ -33,6 +33,9 @@ jobs:
       # Playwright's own Chromium (the version @playwright/test pins), plus its system libraries and
       # fonts on Linux. --no-shell: the suite uses the full browser, not the headless shell.
       - run: npx playwright install --with-deps --no-shell chromium
+      # Includes the throttled-4G LCP runs (tests/perf.spec.mjs, @lcp). They time page loads, but under
+      # emulated network and CPU, judged on the median of 3, and every OS measured 1.0-1.8 s against
+      # the 2.5 s budget on these runners, so they stay blocking everywhere: a slow page should fail.
       - run: npm run ci
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
