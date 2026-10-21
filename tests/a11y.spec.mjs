@@ -1,6 +1,7 @@
 // SPEC "Performance & a11y" (headings, landmarks, skip link, alt text, form labels, FAQPage JSON-LD)
 // and SPEC "Motion & interaction" (content visible without JS; reduced motion = finished state, no autoplay).
 import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { LIVE_PAGES, open, invisibleText, scrollThrough } from './helpers.mjs';
 
@@ -160,7 +161,9 @@ for (const width of [390, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       await open(page, p.path);
       await scrollThrough(page);
-      await page.addScriptTag({ path: axePath() });
+      // Injected over the DevTools protocol (page.evaluate of the source), not as a <script> tag: the
+      // page's CSP allows no inline script, and axe should audit the page as served, CSP included.
+      await page.evaluate(readFileSync(axePath(), 'utf8'));
       const violations = await page.evaluate((tags) => window.axe.run(document, { runOnly: { type: 'tag', values: tags }, resultTypes: ['violations'] })
         .then((r) => r.violations.map((v) => `${v.id} (${v.impact}): ${v.nodes.map((n) => n.target.join(' ')).slice(0, 5).join(' | ')}`)), AXE_TAGS);
       expect(violations).toEqual([]);
