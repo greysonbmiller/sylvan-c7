@@ -42,6 +42,28 @@ test.describe('command palette', () => {
     }
   });
 
+  test('the results list shows its options: a full list scrolls, a single match is fully visible', async ({ page }) => {
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      await open(page, './');
+      await page.keyboard.press('Control+k');
+      const list = palette(page).locator('[role="listbox"]');
+      const fit = () => list.evaluate((l) => {
+        const opt = l.querySelector('[role="option"]').getBoundingClientRect();
+        const box = l.getBoundingClientRect();
+        return { list: box.height, opt: opt.height, inside: opt.top >= box.top && opt.bottom <= box.bottom };
+      });
+      // All 15 entries: the list is several options tall (then scrolls), not a collapsed strip.
+      const all = await fit();
+      expect(all.list, `${width}: list height with every entry`).toBeGreaterThan(all.opt * 4);
+      await page.keyboard.type('pricng');
+      await expect(options(page)).toHaveCount(1);
+      const one = await fit();
+      expect(one.inside, `${width}: the single match is inside the list box (${JSON.stringify(one)})`).toBe(true);
+      await page.keyboard.press('Escape');
+    }
+  });
+
   test('"/" opens it when not typing, but not from inside a form field', async ({ page }) => {
     await open(page, 'contact.html');
     await page.locator('#f-name').focus();

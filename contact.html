@@ -3,12 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formsubmit.co; form-action 'self' https://formsubmit.co; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>document.documentElement.classList.add('js')</script>
   <title>Start a project | Sylvan C7</title>
   <meta name="description" content="Tell me what you need built: a website, web app, integration or instrument-control software. Email, call or use the short form. I reply within two business days.">
   <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/contact.html">
   <meta name="theme-color" content="#060a08">
+  <meta name="color-scheme" content="dark">
+  <!-- sizes="32x32" (not "any") keeps browsers that understand SVG icons on favicon.svg -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Sylvan C7">
@@ -16,10 +23,41 @@
   <meta property="og:description" content="Tell me what you need built: a website, web app, integration or instrument-control software. Email, call or use the short form. I reply within two business days.">
   <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/contact.html">
   <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Start a project with Sylvan C7">
   <meta name="twitter:description" content="Tell me what you need built: a website, web app, integration or instrument-control software. Email, call or use the short form. I reply within two business days.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta name="twitter:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ContactPage",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/contact.html#webpage",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/contact.html",
+      "name": "Start a project | Sylvan C7",
+      "description": "Tell me what you need built: a website, web app, integration or instrument-control software. Email, call or use the short form. I reply within two business days.",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#website" },
+      "breadcrumb": { "@id": "https://greysonbmiller.github.io/sylvan-c7/contact.html#breadcrumb" },
+      "about": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/contact.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://greysonbmiller.github.io/sylvan-c7/" },
+        { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://greysonbmiller.github.io/sylvan-c7/contact.html" }
+      ]
+    }
+  ]
+}
+  </script>
 
   <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
@@ -85,17 +123,17 @@
           <form class="form" id="contactForm" action="https://formsubmit.co/greysonbmiller@protonmail.com" method="POST" aria-labelledby="form-title">
             <div class="field">
               <label class="field__label" for="f-name">Name</label>
-              <input class="field__input" id="f-name" name="name" type="text" autocomplete="name" required>
+              <input class="field__input" id="f-name" name="name" type="text" autocomplete="name" maxlength="100" required>
               <p class="field__error" id="f-name-error">Please tell me your name.</p>
             </div>
             <div class="field">
               <label class="field__label" for="f-email">Email</label>
-              <input class="field__input" id="f-email" name="email" type="email" autocomplete="email" required>
+              <input class="field__input" id="f-email" name="email" type="email" autocomplete="email" maxlength="254" required>
               <p class="field__error" id="f-email-error">Please enter an email address I can reply to.</p>
             </div>
             <div class="field">
               <label class="field__label" for="f-message">What do you need?</label>
-              <textarea class="field__textarea" id="f-message" name="message" rows="5" required></textarea>
+              <textarea class="field__textarea" id="f-message" name="message" rows="5" maxlength="5000" required></textarea>
               <p class="field__error" id="f-message-error">Please tell me a little about the project.</p>
             </div>
             <details class="form__optional">
@@ -105,17 +143,19 @@
                   <select class="field__select" id="f-type" name="project_type"><option value="">Choose one</option><option>A new website</option><option>Redesign of an existing site</option><option>Online store or booking</option><option>Custom web app or internal tool</option><option>Integration or automation</option><option>Hardware, instrument or data software</option><option>Ongoing care</option><option>Not sure yet</option></select></div>
                 <div class="field"><label class="field__label" for="f-budget">Budget</label>
                   <select class="field__select" id="f-budget" name="budget"><option value="">Choose one</option><option>Under $5,500</option><option>$5,500–$10,000</option><option>$10,000–$25,000</option><option>$25,000+</option><option>Not sure — help me scope it</option></select></div>
-                <div class="field"><label class="field__label" for="f-timeline">Timeline</label><input class="field__input" id="f-timeline" name="timeline" type="text"></div>
-                <div class="field"><label class="field__label" for="f-company">Company</label><input class="field__input" id="f-company" name="company" type="text" autocomplete="organization"></div>
-                <div class="field"><label class="field__label" for="f-phone">Phone</label><input class="field__input" id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
-                <div class="field"><label class="field__label" for="f-site">Current website</label><input class="field__input" id="f-site" name="website" type="url" placeholder="https://"></div>
+                <div class="field"><label class="field__label" for="f-timeline">Timeline</label><input class="field__input" id="f-timeline" name="timeline" type="text" maxlength="100"></div>
+                <div class="field"><label class="field__label" for="f-company">Company</label><input class="field__input" id="f-company" name="company" type="text" autocomplete="organization" maxlength="100"></div>
+                <div class="field"><label class="field__label" for="f-phone">Phone</label><input class="field__input" id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="30"></div>
+                <div class="field"><label class="field__label" for="f-site">Current website</label><input class="field__input" id="f-site" name="website" type="url" placeholder="https://" maxlength="300"></div>
               </div>
             </details>
             <input type="hidden" name="package" value="">
             <input type="hidden" name="_subject" value="New project inquiry: Sylvan C7 site">
             <input type="hidden" name="_template" value="table">
             <input type="hidden" name="_next" value="https://greysonbmiller.github.io/sylvan-c7/contact.html?sent=1">
-            <div class="form__hp" aria-hidden="true"><label for="f-honey">Leave this empty</label><input id="f-honey" type="text" name="_honey" tabindex="-1" autocomplete="off"></div>
+            <!-- Honeypot: FormSubmit drops any message that fills it. hidden (not merely off-screen), so no
+                 browser or password manager autofills it and mistakes a visitor for a bot. -->
+            <div class="form__hp" aria-hidden="true" hidden><label for="f-honey">Leave this empty</label><input id="f-honey" type="text" name="_honey" tabindex="-1" autocomplete="off"></div>
             <div class="form__actions">
               <button class="btn btn--primary" type="submit"><span class="btn__label">Send message</span></button>
               <p class="form__note form__note--live">I reply within two business days. No mailing list.</p>

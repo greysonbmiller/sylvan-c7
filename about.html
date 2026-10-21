@@ -3,40 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>document.documentElement.classList.add('js')</script>
   <title>About Greyson Miller | Sylvan C7</title>
   <meta name="description" content="Sylvan C7 is Greyson Miller, a software engineer in Los Angeles. The person who answers your email writes your code: websites, web apps, integrations and instrument-control software.">
   <link rel="canonical" href="https://greysonbmiller.github.io/sylvan-c7/about.html">
   <meta name="theme-color" content="#060a08">
+  <meta name="color-scheme" content="dark">
+  <!-- sizes="32x32" (not "any") keeps browsers that understand SVG icons on favicon.svg -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  "url": "https://greysonbmiller.github.io/sylvan-c7/about.html",
-  "mainEntity": {
-    "@type": "Person",
-    "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson",
-    "name": "Greyson Miller",
-    "url": "https://greysonbmiller.github.io/sylvan-c7/about.html",
-    "jobTitle": "Software engineer",
-    "image": "https://greysonbmiller.github.io/sylvan-c7/img/greyson-miller@2x.jpg",
-    "sameAs": [
-      "https://github.com/greysonbmiller"
-    ],
-    "worksFor": {
-      "@type": "Organization",
-      "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice",
-      "name": "Sylvan C7",
-      "url": "https://greysonbmiller.github.io/sylvan-c7/"
+  "@graph": [
+    {
+      "@type": "ProfilePage",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#webpage",
+      "url": "https://greysonbmiller.github.io/sylvan-c7/about.html",
+      "name": "About Greyson Miller | Sylvan C7",
+      "description": "Sylvan C7 is Greyson Miller, a software engineer in Los Angeles. The person who answers your email writes your code: websites, web apps, integrations and instrument-control software.",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://greysonbmiller.github.io/sylvan-c7/#website" },
+      "breadcrumb": { "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#breadcrumb" },
+      "mainEntity": {
+        "@type": "Person",
+        "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#greyson",
+        "name": "Greyson Miller",
+        "url": "https://greysonbmiller.github.io/sylvan-c7/about.html",
+        "jobTitle": "Software engineer",
+        "image": "https://greysonbmiller.github.io/sylvan-c7/img/greyson-miller@2x.jpg",
+        "sameAs": ["https://github.com/greysonbmiller"],
+        "worksFor": { "@type": "Organization", "@id": "https://greysonbmiller.github.io/sylvan-c7/#practice", "name": "Sylvan C7", "url": "https://greysonbmiller.github.io/sylvan-c7/" },
+        "address": { "@type": "PostalAddress", "addressLocality": "Los Angeles", "addressRegion": "CA", "addressCountry": "US" }
+      }
     },
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Los Angeles",
-      "addressRegion": "CA",
-      "addressCountry": "US"
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://greysonbmiller.github.io/sylvan-c7/about.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://greysonbmiller.github.io/sylvan-c7/" },
+        { "@type": "ListItem", "position": 2, "name": "About", "item": "https://greysonbmiller.github.io/sylvan-c7/about.html" }
+      ]
     }
-  }
+  ]
 }
   </script>
 
@@ -46,10 +59,15 @@
   <meta property="og:description" content="Sylvan C7 is Greyson Miller, a software engineer in Los Angeles. The person who answers your email writes your code: websites, web apps, integrations and instrument-control software.">
   <meta property="og:url" content="https://greysonbmiller.github.io/sylvan-c7/about.html">
   <meta property="og:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="About Greyson Miller, founder of Sylvan C7">
   <meta name="twitter:description" content="Sylvan C7 is Greyson Miller, a software engineer in Los Angeles. The person who answers your email writes your code: websites, web apps, integrations and instrument-control software.">
   <meta name="twitter:image" content="https://greysonbmiller.github.io/sylvan-c7/og-image.png">
+  <meta name="twitter:image:alt" content="Sylvan C7: Software that keeps working. Websites, web apps, integrations, instrument control.">
 
   <link rel="preload" href="fonts/geist-latin-wght600-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght400-600.woff2" as="font" type="font/woff2" crossorigin>
@@ -99,7 +117,11 @@
     <section class="hero about-hero" aria-labelledby="hero-title">
       <div class="container hero__inner about-hero__inner">
         <div class="about-portrait">
-          <img class="about-hero__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" width="192" height="192" alt="Greyson Miller" fetchpriority="high" decoding="async">
+          <picture>
+            <source type="image/avif" srcset="img/greyson-miller-192.avif 192w, img/greyson-miller-288.avif 288w, img/greyson-miller-384.avif 384w, img/greyson-miller-576.avif 576w" sizes="(min-width: 768px) 192px, 136px">
+            <source type="image/webp" srcset="img/greyson-miller-192.webp 192w, img/greyson-miller-288.webp 288w, img/greyson-miller-384.webp 384w, img/greyson-miller-576.webp 576w" sizes="(min-width: 768px) 192px, 136px">
+            <img class="about-hero__photo" src="img/greyson-miller.jpg" srcset="img/greyson-miller.jpg 1x, img/greyson-miller@2x.jpg 2x" width="192" height="192" alt="Greyson Miller" fetchpriority="high" decoding="async">
+          </picture>
           <svg class="about-portrait__trace" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
             <path class="apt-ring" pathLength="1" d="M120 14A106 106 0 0 1 120 226A106 106 0 0 1 120 14"/>
             <path class="apt-bus" pathLength="1" d="M169.8 26.4L174 18.5A115 115 0 0 1 228.1 80.7"/>

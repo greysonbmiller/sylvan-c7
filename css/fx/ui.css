@@ -211,7 +211,10 @@ html.fx-nav .nav__link.active::after { opacity: 0; }
   padding: var(--space-2);
   overflow-y: auto;
   overscroll-behavior: contain;
-  flex: 1;
+  /* auto, not 0%: the dialog has no fixed height, and Safari resolves a 0% basis against it as
+     zero, collapsing the results to an empty strip. With auto the list takes its content height
+     and still shrinks (and scrolls) once the dialog reaches its max-height. */
+  flex: 1 1 auto;
 }
 .fx-palette__opt {
   display: flex;
