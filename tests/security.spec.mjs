@@ -242,3 +242,85 @@ test.describe('Content-Security-Policy: zero violations in use', () => {
     }
   });
 });
+
+// ---------------------------------------------------------------------------------------------
+// Contact form robustness. FormSubmit is never reached: helpers.open() aborts formsubmit.co for the
+// whole context, and each test answers (or holds) the request itself.
+
+test.describe('contact form robustness', () => {
+  const FS_ROUTE = 'https://formsubmit.co/**';
+  const OK = { status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ success: 'true' }) };
+  const fill = async (page) => {
+    await page.fill('#f-name', 'Ada');
+    await page.fill('#f-email', 'ada@example.com');
+    await page.fill('#f-message', 'A new site');
+  };
+
+  test('one request at a time: a second click, Enter or requestSubmit() while sending sends nothing more', async ({ page }) => {
+    const seen = [];
+    let release;
+    const held = new Promise((r) => { release = r; });
+    await page.route(FS_ROUTE, async (route) => { seen.push(route.request().url()); await held; await route.fulfill(OK); });
+    await open(page, 'contact.html');
+    await fill(page);
+    const btn = page.locator('#contactForm [type="submit"]');
+    await btn.click();
+    await expect(btn).toBeDisabled();
+    await expect(btn).toHaveAttribute('aria-busy', 'true');
+    await btn.click({ force: true }).catch(() => {});
+    await page.locator('#f-name').press('Enter');
+    await page.evaluate(() => document.getElementById('contactForm').requestSubmit());
+    await page.waitForTimeout(300);
+    expect(seen, 'one request while the first is out').toHaveLength(1);
+    release();
+    await expect(page.locator('#formStatus')).toContainText('Thanks, that came through.');
+    await expect(btn).toBeEnabled();
+  });
+
+  test('no answer within 20 s: the request is abandoned and the visitor gets the email hand-off', async ({ page }) => {
+    // Real time (Playwright's fake clock proved flaky with the page's own timers running).
+    test.slow();
+    const seen = [];
+    const failed = [];
+    await page.route(FS_ROUTE, (route) => { seen.push(route.request().url()); /* never answers */ });
+    page.on('requestfailed', (r) => { if (r.url().startsWith('https://formsubmit.co/')) failed.push(r.failure()?.errorText); });
+    await open(page, 'contact.html');
+    await fill(page);
+    const btn = page.locator('#contactForm [type="submit"]');
+    await btn.click();
+    const t0 = Date.now();
+    await expect(btn).toBeDisabled();
+    await page.waitForTimeout(15_000);
+    await expect(page.locator('#formStatus'), 'still waiting at 15 s').toHaveText('');
+    await expect(page.locator('#formStatus')).toContainText('your message has not been sent yet', { timeout: 15_000 });
+    expect(Date.now() - t0, 'gave up at about 20 s').toBeGreaterThan(19_000);
+    await expect(page.locator('#formStatus a[href^="mailto:greysonbmiller@protonmail.com"]').first()).toBeVisible();
+    await expect(btn).toBeEnabled();
+    await expect(page.locator('#f-message'), 'the visitor keeps what they typed').toHaveValue('A new site');
+    expect(seen).toHaveLength(1);
+    await expect.poll(() => failed.length, 'the request itself was aborted').toBe(1);
+  });
+
+  test('every free-text field has a length limit', async ({ page }) => {
+    await open(page, 'contact.html');
+    const fields = await page.locator('#contactForm').evaluate((f) => [...f.querySelectorAll('input, textarea')]
+      .filter((el) => !['hidden', 'submit', 'button', 'checkbox', 'radio'].includes(el.type) && el.name !== '_honey')
+      .map((el) => ({ name: el.name, max: el.maxLength })));
+    expect(fields.length).toBeGreaterThanOrEqual(7);
+    for (const f of fields) {
+      expect(f.max, `${f.name} has a maxlength`).toBeGreaterThan(0);
+      expect(f.max, `${f.name}: limit stays generous`).toBeGreaterThanOrEqual(f.name === 'phone' ? 20 : 100);
+    }
+    expect(fields.find((f) => f.name === 'email').max, 'RFC 5321 address limit').toBe(254);
+    expect(fields.find((f) => f.name === 'message').max).toBeGreaterThanOrEqual(2000);
+  });
+
+  test('honeypot: not rendered at all (so nothing autofills it), still posted, out of the accessibility tree', async ({ page }) => {
+    await open(page, 'contact.html');
+    const hp = page.locator('#contactForm .form__hp');
+    await expect(hp).toHaveAttribute('hidden', '');
+    await expect(hp).toHaveCSS('display', 'none');
+    await expect(hp.locator('input[name="_honey"]')).toBeHidden();
+    expect(await page.locator('#contactForm').evaluate((f) => new FormData(f).has('_honey')), 'still sent, empty, for FormSubmit to check').toBe(true);
+  });
+});
