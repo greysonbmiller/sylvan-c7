@@ -804,7 +804,7 @@
     var still = doc.createElement('canvas');
     var sctx = still.getContext('2d');
     var F = null, W = 0, H = 0, DPR = 1;
-    var state = 'idle', growStart = 0, speed = 1, clock = 0, last = 0, raf = 0, lastDraw = 0;
+    var state = 'idle', growStart = 0, speed = 1, clock = 0, last = 0, raf = 0, lastDraw = 0, idleTimer = 0;
     var visible = false, flies = [], blips = [], nextBlip = 1200, glowUntil = 0;
     var seed = opts.seed || 7;
     var self = { canvas: canvas };
@@ -922,12 +922,21 @@
         if (state === 'grown' && clock >= nextBlip && opts.blips !== false) { spawnBlip(clock, Math.random()); nextBlip = clock + 1800 + Math.random() * 2600; }
         paint();
       }
-      raf = requestAnimationFrame(frame);
+      // While drifting, sleep until just before the next ~30 fps draw instead of waking every
+      // display frame for nothing (raf = -1 marks the pending timer). Growth/burst stay per-frame.
+      var wait = busy ? 0 : 32 - (ts - lastDraw) - 10;
+      if (wait > 4) {
+        raf = -1;
+        idleTimer = setTimeout(function () { idleTimer = 0; raf = requestAnimationFrame(frame); }, wait);
+      } else raf = requestAnimationFrame(frame);
     }
 
     function kick() {
       if (opts.isStatic || !F) return;
-      if (!raf && visible && !doc.hidden) { setRunning(true); raf = requestAnimationFrame(frame); }
+      if ((!raf || idleTimer) && visible && !doc.hidden) {
+        clearTimeout(idleTimer); idleTimer = 0;
+        setRunning(true); raf = requestAnimationFrame(frame);
+      }
     }
 
     self.resize = resize;
@@ -946,7 +955,11 @@
       for (var i = 0; i < 7; i++) spawnBlip(clock + i * 90, Math.random());
       kick();
     };
-    self.stop = function () { visible = false; if (raf) cancelAnimationFrame(raf); raf = 0; setRunning(false); };
+    self.stop = function () {
+      visible = false; clearTimeout(idleTimer); idleTimer = 0;
+      if (raf > 0) cancelAnimationFrame(raf);
+      raf = 0; setRunning(false);
+    };
     canvas.setAttribute('data-state', 'idle');
     setRunning(false);
     if (opts.isStatic) canvas.setAttribute('data-static', '1');
