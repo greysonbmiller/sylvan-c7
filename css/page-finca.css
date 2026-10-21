@@ -267,6 +267,13 @@ main > section[aria-labelledby="cta-title"] { contain-intrinsic-size: auto 325px
   .site-footer { contain-intrinsic-size: auto 515px; }
 }
 
+/* Not in Safari (WebKit flashes default link colours as a skipped section first renders): see
+   css/page-home.css. Only WebKit implements hanging-punctuation. */
+@supports (hanging-punctuation: first) {
+  main > section:not(.finca-top),
+  .site-footer { content-visibility: visible; }
+}
+
 /* ---- The "↗" on "Open on its own page" (U+2197) ----
    No font in the button's stack has this glyph, so on its first layout the browser walks the whole
    list, loading each system font to look (Inter Fallback's Arial, Segoe UI, -apple-system, Arial
